@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settings</class>
+ <widget class="QMainWindow" name="settings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>529</width>
+    <height>633</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Настройки</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Документы</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QGridLayout" name="gridLayout" columnstretch="3,1">
+          <property name="horizontalSpacing">
+           <number>7</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>6</number>
+          </property>
+          <item row="1" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>12</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="radio_Law44">
+              <property name="minimumSize">
+               <size>
+                <width>63</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>№ 44</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radio_Law223">
+              <property name="text">
+               <string>№ 223</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_TendMethod">
+            <property name="text">
+             <string>Для способа закупки</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QComboBox" name="combo_tendMethod">
+            <property name="minimumSize">
+             <size>
+              <width>210</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Способ закупки&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="btn_tendMethod">
+            <property name="minimumSize">
+             <size>
+              <width>105</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>105</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Открыть окно редактирования списка способов закупок.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Редактировать</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_Law">
+            <property name="text">
+             <string>Федеральный закон</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="topMargin">
+           <number>18</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Список документов</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_pushTotree">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+            </property>
+            <property name="text">
+             <string>Добавить</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>interface/icons/add.ico</normaloff>interface/icons/add.ico</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_removeFromtree">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgba(255, 255, 255, 5);</string>
+            </property>
+            <property name="text">
+             <string>Удалить</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>interface/icons/remove.ico</normaloff>interface/icons/remove.ico</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTreeWidget" name="treeDocuments">
+          <property name="minimumSize">
+           <size>
+            <width>437</width>
+            <height>179</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Список документов&lt;/span&gt; прикладываемых к текущему способу закупки, по выбранному закону. Установите флажок &amp;quot;всегда прикладывать&amp;quot; для повторяющихся в каждой заявке документов&lt;/p&gt;&lt;p&gt;например: Декларация СМП или Сведения об ИНН&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <column>
+           <property name="text">
+            <string>Наименование</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Дата создания</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Всегда прикладывать</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_clear">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+            </property>
+            <property name="text">
+             <string>Отчистить</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>interface/icons/clear.ico</normaloff>interface/icons/clear.ico</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Переменные</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTabWidget" name="tabWidget_2">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Стандартное значение&lt;/span&gt; представляет собой динамически изменяемые поля, такие как Начальная максимальная цена. Текущая дата прописью, цифрами и т.д.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="currentIndex">
+           <number>2</number>
+          </property>
+          <widget class="QWidget" name="tab_4">
+           <attribute name="title">
+            <string>Word</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <layout class="QGridLayout" name="gridLayout_3" columnminimumwidth="1,1">
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <item row="1" column="0">
+               <widget class="QLineEdit" name="word_editline">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Имя переменной.&lt;/span&gt; Программа будет искать данное значение во всех приложенных документах&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;%ФИО%&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>Переменная</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="word_chbx_default">
+                <property name="text">
+                 <string>Стандартное значение</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="word_combo_default">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Стандартное значение&lt;/span&gt; представляет собой динамически изменяемые поля, такие как Начальная максимальная цена. Текущая дата прописью, цифрами и т.д.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_16">
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Текст</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="word_value">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>88</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы можете указать свое статическое значение переменной, на которое будет произведена замена в документах.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>13</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_9">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="word_btn_add">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                </property>
+                <property name="text">
+                 <string>Добавить</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>interface/icons/add.ico</normaloff>interface/icons/add.ico</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="word_btn_del">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                </property>
+                <property name="text">
+                 <string>Удалить</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>interface/icons/remove.ico</normaloff>interface/icons/remove.ico</iconset>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTreeWidget" name="word_tree">
+              <column>
+               <property name="text">
+                <string>Переменная</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Текст</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Стандартное значение</string>
+               </property>
+              </column>
+              <item>
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_5">
+           <attribute name="title">
+            <string>Excel</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="1,1">
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="1,20">
+                <item>
+                 <widget class="QRadioButton" name="excel_radio_cell">
+                  <property name="text">
+                   <string>Ячейка</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="excel_radio_var">
+                  <property name="text">
+                   <string>Переменная</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_22">
+                <item>
+                 <widget class="QCheckBox" name="excel_chbx_default">
+                  <property name="text">
+                   <string>Стандартное значение</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_23">
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="excel_editline">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Имя переменной или ячейки.&lt;/span&gt;          Программа произведет замену указанной ячейки или переменной в документах&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример переменной: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;%НМЦК%&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример ячейки: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;А1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="excel_combo_default">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Лист</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0">
+              <item>
+               <widget class="QComboBox" name="excel_combo_sheet">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поиск и замена будет производится в указанном листе. Вы можете перечислить необходимые листы через запятую&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;Лист 1, Лист 2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Активный</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Все листы</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Введите свой лист</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Текст / Значение</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="excel_value">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>88</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;
+&lt;head/&gt;
+	&lt;body&gt;
+		&lt;p&gt;Данный текст вставляется на место найденной в документе переменной или ячейки&lt;/p&gt;
+	&lt;/body&gt;
+&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_14">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>13</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_add_5">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                </property>
+                <property name="text">
+                 <string>Добавить</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>interface/icons/add.ico</normaloff>interface/icons/add.ico</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_del_5">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                </property>
+                <property name="text">
+                 <string>Удалить</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>interface/icons/remove.ico</normaloff>interface/icons/remove.ico</iconset>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTreeWidget" name="excel_tree">
+              <column>
+               <property name="text">
+                <string>Переменная</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Ячейка</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Лист</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Значение / текст</string>
+               </property>
+              </column>
+              <item>
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_8">
+           <attribute name="title">
+            <string>Стандартные значения</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <widget class="QTreeWidget" name="default_tree">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Стандартное значение&lt;/span&gt; представляет собой динамически изменяемые поля, такие как Начальная максимальная цена. Текущая дата прописью, цифрами и т.д. &lt;/p&gt;&lt;p&gt;Вставте нужную переменную обозначенную процентами с обеих сторон &lt;span style=&quot; color:#ff5500;&quot;&gt;%&lt;/span&gt;&lt;span style=&quot; color:#07b607;&quot;&gt;ПЕРЕМЕННАЯ&lt;/span&gt;&lt;span style=&quot; color:#ff5500;&quot;&gt;%&lt;/span&gt; в ваш документ &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <column>
+               <property name="text">
+                <string>Наименование</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Переменная</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Значение</string>
+               </property>
+              </column>
+              <item>
+               <property name="text">
+                <string>Дата</string>
+               </property>
+               <property name="font">
+                <font>
+                 <italic>true</italic>
+                </font>
+               </property>
+               <property name="text">
+                <string>%ДАТА%</string>
+               </property>
+               <property name="font">
+                <font>
+                 <italic>true</italic>
+                </font>
+               </property>
+               <property name="text">
+                <string>12.03.2019</string>
+               </property>
+               <property name="font">
+                <font>
+                 <italic>true</italic>
+                </font>
+               </property>
+               <property name="flags">
+                <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Общие</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_save">
+        <property name="minimumSize">
+         <size>
+          <width>105</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Сохранить</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
