@@ -14,11 +14,22 @@ class Variables(ExcelTab):
             restoredData -> list
     """
     params = pyqtSignal(object)
-    def __init__(self, restoredData):
-        ExcelTab.__init__(self, restoredData)
+    def __init__(self, restoredData, setView=False):
+        ExcelTab.__init__(self, restoredData, setView)
         self.lets = restoredData["variables"]['default']
         self.__updateTreeWidget()
         self.btn_save.clicked.connect(self._save)
+
+    def displayDesired(self, data):
+        if data[0] == '44':
+            print(44)
+            self.radio_Law44.setChecked(True)
+            self.law = 44
+        else:
+            print(223)
+            self.law = 223
+            self.radio_Law223.setChecked(True)
+        self.innerUpdate(data[1])
 
     def _save(self):
         self.params.emit(1)
@@ -53,3 +64,6 @@ class Variables(ExcelTab):
             treetop(index).setText(2, _translate("settings", item["val"]) )
             tree.resizeColumnToContents(0)
             tree.resizeColumnToContents(1)
+
+    def generalInit(self):
+        pass

@@ -12,8 +12,8 @@ class ExcelTab(WordTab):
         Keyword arguments:
             @param restoredData: list
     """
-    def __init__(self, restoredData):
-        WordTab.__init__(self, restoredData)
+    def __init__(self, restoredData, setView=False):
+        WordTab.__init__(self, restoredData, setView)
         self.updateComboBox(self.excel_combo_default)
         self.variables = restoredData["variables"]
         self.__updateTree()
@@ -50,19 +50,16 @@ class ExcelTab(WordTab):
                 if not re.match(r'[A-Z{1,3}]{1,3}\d{1,3}', value):
                     self.msg(0, "Проверьте правильность указанного имени ячейки, рекомендуется скопировать его из программы Excel", "Ошибка в заполнении поля ячейка Excel")
                 else:
-                    
                     find = False
                     for let in self.variables['excel']:
                         if let['cell'] == value:
                             find = True
                         else:
                             continue
-                    
                     if find:
                         self.msg(0, "Ячейка уже используется")
                     else:
                         self.__addItem()
-
             else:
                 self.__addItem()
 
@@ -100,20 +97,15 @@ class ExcelTab(WordTab):
             condition = "cell"
             required = var
 
-
         if len(lets) > 0:
-            
-            
             find = False
             for let in lets:
                 if let[condition] == required:
                     find = True
                 else:
                     continue
-            
             if not find:
                 lets.append(item)
-
         else:
             lets.append(item)
 

@@ -1,13 +1,14 @@
 """ Восстанавливает данные.
     
     Keyword arguments:
-        restoredData -> []
-        [0] -> список документов - {}
-        [1] -> название способов закупок - []
-        [2] -> {
-            "excel":[{...}], -> var, cell, sheet, default, value
-            "word": [{...}], -> var, default, value
-            "default": [{...}] -> name, var, val
+        restoredData -> [] 
+        [0] -> documentList - {} checked, name, dir, method, law
+        [1] -> tenderMethodNames - []
+        [2] -> variables {
+            "excel": -> var, cell, sheet, default, value
+            "word": -> var, default, value
+            "default": -> name, var, val
+            'general'-> mainPath,paymentPath, sheetName, cellTopLeft, cellBotDn
             }
 """
 
@@ -119,12 +120,20 @@ new = {
                 "val": None
             }
         ]
+    },
+    'general': {
+        'mainPath': 'test 0',
+        'paymentPath': 'test 1',
+        'sheetName': 'test 2',
+        'cellTopLeft': 'test 3',
+        'cellBotDn': 'test 4'
     }
 }
 
 if __name__ == "__main__":
-    m = read()
-    # m.append(variables)
-    # m.remove({})
-    print(m)
-    save(m)
+    # m = read()
+    # print(m)
+    # # m.append(variables)
+    # # m.remove({})
+    # print(m)
+    save(new)

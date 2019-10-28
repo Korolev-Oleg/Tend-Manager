@@ -18,7 +18,7 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
                 - tenderMethodsNames -> Последовательность строк с названиями способов закупок
 
     """
-    def __init__(self, restoredData):
+    def __init__(self, restoredData, setView=False):
         super().__init__()
         self.setupUi(self)  # инициализация формы
         self.restoredData = restoredData
@@ -34,6 +34,13 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
         self.btn_tendMethod.clicked.connect(self.__openEditForm)
         self.btn_clear.clicked.connect(self.__clearAll)
 
+    def innerUpdate(self, combodata):
+        # self.__toggleCheck()
+        self.__updateComboTend()
+        self.__updateTreeWidget()
+        self.combo_tendMethod.addItem(combodata)
+        item = self.combo_tendMethod.findText(combodata)
+        self.combo_tendMethod.setCurrentIndex(item)
     def save(self):
         print("save")
 
@@ -52,22 +59,32 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
         """ Переключает чекбокс. """
 
         self.btn_removeFromtree.setEnabled(True)
+
+        
         
         obj = self.treeDocuments.currentItem()
-
-        for item in self.listDocuments:
-            if item['name'] == obj.text(0) and item['law'] == self.law:
-                if item["method"] == self.methodName:
-                    if obj.checkState(2):
-                        item['checked'] = False # - checked
-                        obj.setCheckState(2, QtCore.Qt.Unchecked)
-                    else:
-                        item['checked'] = True
-                        obj.setCheckState(2, QtCore.Qt.Checked)
+        try:
+            count = self.treeDocuments.topLevelItemCount()
+            for i in range(count):
+                obj = self.treeDocuments.topLevelItem(i)
+                for item in self.listDocuments:
+                    if item['name'] == obj.text(0) and item['law'] == self.law:
+                        if item["method"] == self.methodName:
+                            if obj.checkState(2):
+                                item['checked'] = True
+                                print('set True')
+                            else:
+                                item['checked'] = False
+                                print('set False')
+                
+        except AttributeError:
+            print("atrr error")
+            pass
 
 
     def __updateComboTend(self):
         """ Обновляет Combobox способов закупок. """
+
         self.combo_tendMethod.clear()
         listDocuments = self.restoredData['documentList']
 
@@ -155,13 +172,15 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
                     
                     item_0 = Qtw.QTreeWidgetItem(self.treeDocuments)
                     item_0.setCheckState(2, check)
-                    item_0.setFlags(Qcore.ItemIsSelectable|                                    Qcore.ItemIsDragEnabled|                                   Qcore.ItemIsEnabled)
+                    # item_0.setFlags(Qcore.ItemIsSelectable|                                    Qcore.ItemIsDragEnabled|                                   Qcore.ItemIsEnabled)
 
                     self.treeDocuments.resizeColumnToContents(0)
                     self.treeDocuments.topLevelItem(index).setText(0,                   _translate ( "settings", item["name"] ))
 
                     index += 1
 
+        item = self.treeDocuments.topLevelItem(0)
+        self.treeDocuments.setCurrentItem(item)
         # активирует btn_clear() в зависимости от наличия элементов в дереве
         if index:
             self.btn_clear.setEnabled(True)

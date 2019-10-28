@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>755</width>
-    <height>492</height>
+    <height>536</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>492</height>
+    <width>755</width>
+    <height>536</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777215</width>
-    <height>492</height>
+    <width>1000</width>
+    <height>536</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -191,34 +191,55 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_8">
+              <widget class="QLabel" name="label_appSecurity">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Обеспечение заявки</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_lineAppSecurity"/>
+              <widget class="QLineEdit" name="_lineAppSecurity">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_9">
+              <widget class="QLabel" name="label_contractSecurity">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Обеспечение контракта</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_lineContractSecurity"/>
+              <widget class="QLineEdit" name="_lineContractSecurity">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_11">
+              <widget class="QLabel" name="label_currentPrice">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Начальная цена</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_lineCurrentPrice"/>
+              <widget class="QLineEdit" name="_lineCurrentPrice">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -238,34 +259,55 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="label_place">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Место поставки</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_linePlace"/>
+              <widget class="QLineEdit" name="_linePlace">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_10">
+              <widget class="QLabel" name="label_period">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Срок поставки</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_linePeriod"/>
+              <widget class="QLineEdit" name="_linePeriod">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_12">
+              <widget class="QLabel" name="label_positionCount">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Количество позиций</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_linePositionCount"/>
+              <widget class="QLineEdit" name="_linePositionCount">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -274,7 +316,10 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <property name="topMargin">
-            <number>6</number>
+            <number>21</number>
+           </property>
+           <property name="bottomMargin">
+            <number>8</number>
            </property>
            <item>
             <spacer name="horizontalSpacer_3">
@@ -336,6 +381,9 @@
            </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="label_6">
                <property name="maximumSize">
@@ -346,59 +394,6 @@
                </property>
                <property name="text">
                 <string>Документация</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_4">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="_btnAdd">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normaloff>interface/icons/add.ico</normaloff>interface/icons/add.ico</iconset>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="_btnDel">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normaloff>interface/icons/remove.ico</normaloff>interface/icons/remove.ico</iconset>
                </property>
               </widget>
              </item>
@@ -415,7 +410,7 @@
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>383</height>
+               <height>433</height>
               </size>
              </property>
             </widget>
@@ -440,6 +435,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="_btnView">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>

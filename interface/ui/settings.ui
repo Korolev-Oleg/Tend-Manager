@@ -48,7 +48,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -507,6 +507,9 @@
                <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="1,20">
                 <item>
                  <widget class="QRadioButton" name="excel_radio_cell">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                   <property name="text">
                    <string>Ячейка</string>
                   </property>
@@ -514,6 +517,9 @@
                 </item>
                 <item>
                  <widget class="QRadioButton" name="excel_radio_var">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                   <property name="text">
                    <string>Переменная</string>
                   </property>
@@ -805,6 +811,142 @@
        <attribute name="title">
         <string>Общие</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Путь к папке с заявками</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLineEdit" name="projectspath">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnProjectpath">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_16">
+          <property name="text">
+           <string>Файл расчета xlsx</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLineEdit" name="paymentpath">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnPaymentpath">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_32">
+          <item>
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>Имя листа</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Левая верхняя ячейка</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Правая нижняя ячейка</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_31">
+          <item>
+           <widget class="QLineEdit" name="sheetName"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="cellTopLeft"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="cellBotDn"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string>Структура проекта</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTreeWidget" name="treeProjectStruct">
+          <column>
+           <property name="text">
+            <string>Корневая папка заявки</string>
+           </property>
+          </column>
+          <item>
+           <property name="text">
+            <string>./Заказчик</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>./Состав заявки</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>./WORD</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Изменяемые документы</string>
+             </property>
+            </item>
+           </item>
+           <item>
+            <property name="text">
+             <string>Документация</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Расчет.xlsx</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

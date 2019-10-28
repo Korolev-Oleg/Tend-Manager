@@ -13,8 +13,8 @@ class WordTab(DocumentsTab):
         Keyword arguments:
             @param restoredData: list
     """
-    def __init__(self, restoredData):
-        super().__init__(restoredData)
+    def __init__(self, restoredData, setView=False):
+        super().__init__(restoredData, setView)
         self.variables = restoredData["variables"]
         self.updateComboBox(self.word_combo_default)
         self.__updateTreeWidget()
