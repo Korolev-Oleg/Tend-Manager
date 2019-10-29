@@ -1,14 +1,11 @@
 import docx
 
-class Linking():
-    pass
-
 class Word():
     def __init__(self):
         pass
 
     def findReplace(self, file, lets, savePath=False):
-        """ Функция производит поиск в абзацах и таблицах производя замену.
+        """ Производит поиск в абзацах, таблицах производя замену.
             
             Keyword arguments:
                 file -> str path

@@ -159,6 +159,7 @@ class Ui_Ui(object):
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem1)
         self._btnGenerate = QtWidgets.QPushButton(self.frame)
+        self._btnGenerate.setEnabled(False)
         self._btnGenerate.setMinimumSize(QtCore.QSize(105, 0))
         self._btnGenerate.setObjectName("_btnGenerate")
         self.horizontalLayout_4.addWidget(self._btnGenerate)

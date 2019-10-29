@@ -336,6 +336,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="_btnGenerate">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimumSize">
               <size>
                <width>105</width>

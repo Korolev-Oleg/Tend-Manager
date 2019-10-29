@@ -5,6 +5,7 @@ from PyQt5          import QtCore, QtGui
 from PyQt5.QtCore   import pyqtSignal
 
 from interface.excelTab import ExcelTab
+from interface.edit import EditForm
 
 
 class Variables(ExcelTab):
@@ -19,7 +20,7 @@ class Variables(ExcelTab):
         self.lets = restoredData["variables"]['default']
         self.__updateTreeWidget()
         self.btn_save.clicked.connect(self._save)
-        self.generalInit()
+        self.generalInit() # __________вкладка основные__________
 
     def displayDesired(self, data):
         if data[0] == '44':
@@ -67,6 +68,7 @@ class Variables(ExcelTab):
             tree.resizeColumnToContents(1)
 
     def generalInit(self):
+        """ Вкладка основные."""
         def update():
             general = self.restoredData['general']
             self.projectspath.setText(general['mainPath'])
@@ -74,6 +76,23 @@ class Variables(ExcelTab):
             self.sheetName.setText(general['sheetName'])
             self.cellTopLeft.setText(general['cellTopLeft'])
             self.cellBotDn.setText(general['cellBotDn'])
+            comboDataSet()
+
+
+        def __signalHandler(signal):
+            """ Получает сигнал из EditForm о сохранении. """
+            if signal:
+                comboDataSet()
+
+        def __openEditForm():
+            """ Открывает окно редактирования объекта {tenderMethodNames}. """
+            self.form = EditForm(self.restoredData, 1)
+            self.form.params.connect(__signalHandler)
+            self.form.show()
+
+        def comboDataSet():
+            self._catCombo.clear()
+            self._catCombo.addItems(self.restoredData['categories'])
 
         def choseProjectpath():
             text = r"Выберите основную папку проектов"
@@ -112,4 +131,5 @@ class Variables(ExcelTab):
         self.btnProjectpath.clicked.connect(choseProjectpath)
         self.btnPaymentpath.clicked.connect(chosePaymentpath)
         self.saveDataGeneral.clicked.connect(datasave)
+        self._catComboBtn.clicked.connect(__openEditForm)
         update()
