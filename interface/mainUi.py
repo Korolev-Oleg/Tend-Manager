@@ -174,7 +174,7 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
     def __checkNewComboItem(self, combo, data):
         line = combo.currentText().strip()
         if line:
-            search = self._comboCat.findText(line)
+            search = combo.findText(line)
             if search == -1:
                 data.append(line)
 
