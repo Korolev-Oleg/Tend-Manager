@@ -197,7 +197,12 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
                         if doc['often'] <= 3: 
                             doc['often'] += 1
 
-        
+        def get_cash(line):
+            line = line.text().strip()
+            if '.' in line:
+                return line.replace('.', ',')
+            else:
+                return line
         try:
             form = {
                 'law': self.law,
@@ -207,9 +212,9 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
                 'method': self._comboMethod.currentText().strip(),
                 'object': self._lineObject.text().strip(),
                 'calculation': self._checkBoxPayment.isChecked(),
-                'appSecurity': self._lineAppSecurity.text().strip(),
-                'contractSecurity': self._lineContractSecurity.text().strip(),
-                'currentPrice': self._lineCurrentPrice.text().strip(),
+                'appSecurity': get_cash(self._lineAppSecurity),
+                'contractSecurity': get_cash(self._lineContractSecurity),
+                'currentPrice': get_cash(self._lineCurrentPrice),
                 'place': self._linePlace.text().strip(),
                 'peiod': self._linePeriod.text().strip(),
                 'positionCount': self._linePositionCount.text().strip(),

@@ -10,6 +10,8 @@ def make_dist(restored, form):
         Keyword arguments:
             restored -> all restored data
             form -> completed form
+    
+        return (static_path, dynamic_path, payment_path)
         
     """
 
@@ -74,13 +76,20 @@ def push_files(dist, static_files, dynamic_files, payment):
     dynamic_dist = dist[1]
     payment_dist = dist[2]
 
+    links = []
     for file in static_files:
         name = os.path.basename(file)
-        copyfile( file, '%s/%s' % (static_dist, name) )
+        path = '%s/%s' % (static_dist, name)
+        copyfile( file, path )
+        links.append(path)
     
     for file in dynamic_files:
         name = os.path.basename(file)
-        copyfile( file, '%s/%s' % (dynamic_dist, name) )
+        path = '%s/%s' % (dynamic_dist, name)
+        copyfile( file, path )
+        links.append(path)
 
     if payment_dist:
         copyfile(payment, payment_dist)
+
+    return links

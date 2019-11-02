@@ -31,3 +31,16 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
 
 def find_replace():
     pass
+
+def init(links, payment_path, variables, general, form):
+    payment_path = payment_path.replace('/', '\\')
+    if payment_path:
+        if general['cellTopLeft']:
+            count = int(form['positionCount'])
+            top_cell = general['cellTopLeft']
+            end_cell = general['cellBotDn']
+            sheet = False
+            if general['sheetName']:
+                sheet = general['sheetName']
+    
+        rangeDelete(payment_path, count, top_cell, end_cell, sheet)
