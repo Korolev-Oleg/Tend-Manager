@@ -15,7 +15,7 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     calc_rows = end_indx - (end_indx - count) + top_indx
     vrange = '%s%s:%s' % (top_char, calc_rows, end_cell)
     print(vrange)
-
+    print(file)
     wbook = Excel.Workbooks.Open(file)
     if sheet:
         ws = wbook.Sheets(sheet)
@@ -29,11 +29,29 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     wbook.Close()
     Excel.Quit()
 
-def find_replace():
-    pass
+def find_replace(link, variables):
+
+    print(variables)
+
+    if link.count('xlsx'):
+        doc = openpyxl.open(link)
+        try:
+            for sheet in doc:
+                for rows in sheet:
+                    for cell in rows:
+                        for var in variables:
+                            if var['var'] == cell.value:
+                                cell.value = var['val']
+        except TypeError:
+            pass
+        doc.save(link)
+    else:
+        pass
 
 def init(links, payment_path, variables, general, form):
     payment_path = payment_path.replace('/', '\\')
+    
+    # range delete from payment 
     if payment_path:
         if general['cellTopLeft']:
             count = int(form['positionCount'])
@@ -43,4 +61,16 @@ def init(links, payment_path, variables, general, form):
             if general['sheetName']:
                 sheet = general['sheetName']
     
-        rangeDelete(payment_path, count, top_cell, end_cell, sheet)
+            rangeDelete(payment_path, count, top_cell, end_cell, sheet)
+
+    ex_variables = []
+    for var in variables['excel']:
+        ex_variables.append(var)
+
+    for var in variables['default']:
+        ex_variables.append(var)
+
+    # replace variables
+    for link in links:
+        if link.count('xls'):
+            find_replace(link, ex_variables)

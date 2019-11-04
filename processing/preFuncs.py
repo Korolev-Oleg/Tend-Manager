@@ -4,44 +4,47 @@ import requests, urllib3
 
 from win32api import MessageBox
 
-# from processing.num2t4ru import num2text, decimal2text
-from num2t4ru import num2text, decimal2text
+from processing.num2t4ru import num2text, decimal2text
+# from num2t4ru import num2text, decimal2text
 
 def getStrCash(cash):
-    declensions = [' рубль', ' рубля', ' рублей']
-    if ',' in cash:
-        prime_cash = int(cash.split(',')[0])
-        decim_cash = int(cash.split(',')[1])
+    if isinstance(cash, int):
+        declensions = [' рубль', ' рубля', ' рублей']
+        if ',' in cash:
+            prime_cash = int(cash.split(',')[0])
+            decim_cash = int(cash.split(',')[1])
 
-        text_prime = num2text(
-                        prime_cash,
-                        main_units=((u'рубль', u'рубля', u'рублей'), 'm'))
-
-        for declen in declensions:
-            if declen in text_prime:
-                text_prime = text_prime.replace(declen, '')
-                ending = declen
-                
-        text_decim = num2text(
-                        decim_cash,
-                        main_units=((u'копейка', u'копейки', u'копеек'), 'm'))
-
-        formated_prime = '{0:,}'.format(prime_cash).replace(',', ' ')
-
-        result = '%s (%s)%s %s %s' % (
-                            formated_prime, text_prime, ending, decim_cash, text_decim) 
-    else:
-        text_cash = num2text(
-                            int(cash),
+            text_prime = num2text(
+                            prime_cash,
                             main_units=((u'рубль', u'рубля', u'рублей'), 'm'))
-        for declen in declensions:
-            if declen in text_cash:
-                text_cash = text_cash.replace(declen, '')
-                ending = declen
 
-        formated_cash = '{0:,}'.format(int(cash)).replace(',', ' ')
-        result = '%s (%s)%s' % (formated_cash, text_cash, ending)
-    return result
+            for declen in declensions:
+                if declen in text_prime:
+                    text_prime = text_prime.replace(declen, '')
+                    ending = declen
+                    
+            text_decim = num2text(
+                            decim_cash,
+                            main_units=((u'копейка', u'копейки', u'копеек'), 'm'))
+
+            formated_prime = '{0:,}'.format(prime_cash).replace(',', ' ')
+
+            result = '%s (%s)%s %s %s' % (
+                                formated_prime, text_prime, ending, decim_cash, text_decim) 
+        else:
+            text_cash = num2text(
+                                int(cash),
+                                main_units=((u'рубль', u'рубля', u'рублей'), 'm'))
+            for declen in declensions:
+                if declen in text_cash:
+                    text_cash = text_cash.replace(declen, '')
+                    ending = declen
+
+            formated_cash = '{0:,}'.format(int(cash)).replace(',', ' ')
+            result = '%s (%s)%s' % (formated_cash, text_cash, ending)
+        return result
+    else:
+        return cash
 
 def getDate(full=0, day=0, mounth=0, year=0, monstr=0):
     date = time.gmtime()
@@ -83,5 +86,3 @@ def getPublishDate(reg_num):
         return date[0]
     else:
         MessageBox(0, 'Не удалось получить дату размещения закупки \n№%s в ЕИС \nвнесите изменения вручную!' % reg_num )
-
-print(getPublishDate('573974953782676367'))
