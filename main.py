@@ -4,21 +4,21 @@ from PyQt5 import QtWidgets
 from interface.mainUi import MainUi
 # from interface.variablesTab import Variables as MainUi  
 
-from processing import dbase, linking, excel, preVars
+from processing import dbase, linking, excel, preVars, word
 
 restored = dbase.read()
 
 ## start interface
-app = QtWidgets.QApplication(sys.argv) 
-window = MainUi(restored)
-window.show()
-app.exec_()
-dbase.save(restored)
-form = window.getLinks()
+# app = QtWidgets.QApplication(sys.argv) 
+# window = MainUi(restored)
+# window.show()
+# app.exec_()
+# dbase.save(restored)
+# form = window.getLinks()
 
 ### Testing
 # print(form, end='\n\n\n')
-# form = {'law': '44', 'name': 'НПЦ Спец.Мед.Помощи Детям ДЗМ, ГБУЗ', 'regnumber': '0373200099719001010', 'category': 'Бакалея', 'method': 'Аукцион', 'object': 'продуктов питания (бакалея)', 'calculation': True, 'appSecurity': '4544,57', 'contractSecurity': '22722,85', 'currentPrice': '454457,05', 'place': 'город Москва, улица Авиаторов, дом 38', 'peiod': '31.12.2019', 'positionCount': '21', 'links': ['C:/Users/Huston/Pictures/26935327.gif', 'C:/Users/Huston/Pictures/minus_PNG64.png', 'C:/Users/Huston/Pictures/26935327.gif', 'C:/Users/Huston/Pictures/minus_PNG64.png']}
+form = {'law': '44', 'name': 'Маи, ФГБУ', 'regnumber': '0373100065619000154', 'category': 'Фрукты', 'method': 'Аукцион', 'object': 'продуктов питания', 'calculation': True, 'appSecurity': '10 949,65', 'contractSecurity': '10 949,65', 'currentPrice': '10 949,65', 'place': 'место', 'peiod': 'срок', 'positionCount': '50', 'links': ['C:/Users/Huston/Documents/Тендерная_Документация/WORD/Декларация СМП.doc', 'C:/Users/Huston/Documents/Тендерная_Документация/WORD/Декларация соответствия требованиям.doc', 'C:/Users/Huston/Documents/Тендерная_Документация/WORD/Заявка на участие.docx', 'C:/Users/Huston/Documents/Тендерная_Документация/WORD/Сведения об ИНН.doc', 'C:/Users/Huston/Documents/Тендерная_Документация/Декларации/Декларация 832.docx']}
 
 
 if form:
@@ -37,5 +37,7 @@ if form:
 
     payment = dist[-1]
     excel.init(links, payment, variables, general, form)
+
+    word.init(links, variables)
 
 dbase.save(restored)

@@ -62,7 +62,6 @@ def make_static_srcs(docs, form):
             if doc['method'] == form['method']:
                 if doc['checked']:
                     paths.append(doc['dir'])
-    print(paths)
     return paths
 
 
