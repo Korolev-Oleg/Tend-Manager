@@ -215,6 +215,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 while not rowTop:
                     title = ''
                     rowTop, ok = QInputDialog.getText(self, title, text)
+                    ok
                     if check_row(rowTop):
                         rowTop = ''
                 general['cellTopLeft'] = rowTop
@@ -370,7 +371,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 self.__updateList()
 
         def getData(path):
-            path = '%s\data' % path
+            path = r'%s\data' % path
             with open(path, "rb") as file:
                 form = pickle.load(file)
             setform(form)
