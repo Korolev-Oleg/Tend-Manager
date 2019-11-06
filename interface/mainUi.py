@@ -1,24 +1,20 @@
-import sys  
-import os
+import os, sys, re, pickle
 
-from PyQt5.QtCore   import pyqtSignal
-from PyQt5.QtCore   import QCoreApplication
-from PyQt5.QtCore   import Qt
-
-from PyQt5.QtWidgets import QMainWindow 
-from PyQt5.QtWidgets import QFileDialog 
-from PyQt5.QtWidgets import QListWidgetItem 
-from PyQt5.QtWidgets import QInputDialog
-from PyQt5.QtWidgets import QCompleter
-
-from win32api       import MessageBox as msg
-from win32con       import MB_OKCANCEL
-
-
+from PyQt5.QtCore           import pyqtSignal
+from PyQt5.QtCore           import QCoreApplication
+from PyQt5.QtCore           import Qt    
+from PyQt5.QtWidgets        import QMainWindow 
+from PyQt5.QtWidgets        import QFileDialog 
+from PyQt5.QtWidgets        import QListWidgetItem 
+from PyQt5.QtWidgets        import QInputDialog
+from PyQt5.QtWidgets        import QCompleter
+from PyQt5.QtWidgets        import QAction
+from PyQt5.QtWidgets        import QLineEdit
+from win32api               import MessageBox as msg
+from win32con               import MB_OKCANCEL
 
 from interface.ui           import mainUi
-# from interface.variablesTab import VariablesTab
-from interface.generalTab import GeneralTab
+from interface.generalTab   import GeneralTab
 
 class MainUi(QMainWindow, mainUi.Ui_Ui):
     """ Главное окно.
@@ -33,43 +29,53 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         self.restoredData = restoredData
         self.__upgateTendMethod()
         self.__updateCategories()
+        self.clean_completed_apps()
+        self.__set_popup_actions()
         self.save = False
 
         self._radio44.clicked.connect(self.__eventHandling)
         self._radio223.clicked.connect(self.__eventHandling)
         self._btnGenerate.clicked.connect(self.__generateDict)
-        self._btnView.clicked.connect(self.__opet_liest_editor)
+        self._btnView.clicked.connect(self.__opet_list_editor)
         self.openSettings.triggered.connect(self.__openSettings)
         self._checkBoxPayment.clicked.connect(self.__tougglePayment)
         self._comboMethod.currentIndexChanged.connect(self.__updateList)
+    
+    def clean_completed_apps(self):
+        items = self.restoredData['completedApps']
+        for item in items:
+            if not os.path.exists(item['path']):
+                items.remove(item)
+        print(items)
 
     def checkInitPaths(self):
+        """ Проверяет наличие путей к файлу расчета и к папке с заявками. """
         general = self.restoredData['general']
         path = os.path.exists(general['mainPath'])
         if not path:
-            text = 'Выберете директорию в которой будут хранится и создаваться новые заявки'
+            text = 'выберите директорию в которой будут хранится и создаваться новые заявки'
             self.__setGeneralPath(general, text)
         if self._checkBoxPayment.isChecked():
             path = os.path.exists(general['paymentPath'])
             if not path:
-                text = 'Выберете файл расчета в формате xlsx'
+                text = 'Выберите файл расчета в формате Excel'
                 self.__setGeneralPath(general, text, 1)
 
     def __setGeneralPath(self, obj, text, flag=0):
-        """ Обновляет ссылку на дирректорию или файл расчета.
-        
-            Keyword arguments:
+        """ Обновляет ссылку на дирректорию или файл расчета в restoredData.
                 obj -> {obj} link to file or path
                 text -> str message
                 flag -> str xlsx filter
-        
         """
+        path = ''
         msg(0, text, 'Внимание!')
         if flag:
-            path = QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx)")
+            while not path:
+                path = QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx; *.xls)")
             obj['paymentPath'] = path[0]
         else:
-            path = QFileDialog.getExistingDirectory(self, text)
+            while not path:
+                path = QFileDialog.getExistingDirectory(self, text)
             obj['mainPath'] = path
 
     def __tougglePayment(self):
@@ -106,7 +112,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         self._comboCat.addItems(catrgories)
         self._comboCat.setCurrentIndex(-1)
 
-    def __opet_liest_editor(self):
+    def __opet_list_editor(self):
         """ Открывает страницу настроек для текущей заявки. """
         self.__openSettings( [self.law, self._comboMethod.currentText()] )
 
@@ -122,6 +128,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.setCurrentIndex(-1)
 
     def __eventHandling(self):
+        """ Обработчик радиобоксов. """
         law44 = self._radio44.isChecked()
         law223 = self._radio223.isChecked()
         self.law = "44" if law44 else "223"
@@ -183,6 +190,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
             return(False)
 
     def __checkNewComboItem(self, combo, data):
+        """ Проверяент наличие элемента combobox в списке. """
         line = combo.currentText().strip()
         if line:
             search = combo.findText(line)
@@ -190,14 +198,41 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 data.append(line)
 
     def chech_excel_fields(self):
-        general = self.restoredData['general']
+        """ Проверяет заполненость полей для расчета. """
+        def check_row(row):
+            ru = re.search(r'[А-я]', row)
+            en = re.search(r'[A-z]', row)
+            ex = re.search(r'\W', row)
+            if ru or en or ex:
+                msg(0, 'Укажите числовой номер!')
+                return True
 
-        if not general['cellTopLeft']:
-            text, okPressed = QInputDialog.getText(self, "Get text","Your name:", QLineEdit.Normal, "")
+        general = self.restoredData['general']
+        if self._checkBoxPayment.isChecked():    
+            if not general['cellTopLeft']:
+                text = "Укажите номер строки с первой позицией в расчете\n"
+                rowTop = ''
+                while not rowTop:
+                    title = ''
+                    rowTop, ok = QInputDialog.getText(self, title, text)
+                    if check_row(rowTop):
+                        rowTop = ''
+                general['cellTopLeft'] = rowTop
+
+            if not general['cellBotDn']:
+                text = "Укажите номер строки с последней позицией в расчете\n"
+                rowBot = ''
+                while not rowBot:
+                    title = ''
+                    rowBot, ok = QInputDialog.getText(self, title, text)
+                    if check_row(rowBot):
+                        rowBot = ''
+                    
+                general['cellBotDn'] = rowBot
 
     def __generateDict(self):
-
         """ Создает объект с данными формы. """
+        
         self.__checkNewComboItem(\
                     self._comboCat, self.restoredData['categories'])
         self.__checkNewComboItem(\
@@ -238,7 +273,8 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 'positionCount': self._linePositionCount.text().strip(),
                 'links': links
             }
-            self.checkInitPaths()
+            self.checkInitPaths() # проверка основных путей 
+            self.chech_excel_fields() # проверка полей для расчета
             if self.__check_form_data(form):
                 msg(0, 'Пожалуйста заполните все данные формы!')
             else:
@@ -258,12 +294,86 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                     break
 
     def __openSettings(self, data=False):
-        """ Открывает окно редактирования настройки """
+        """ Открывает окно редактирования настроек """
         self.settingsform = GeneralTab(self.restoredData)
         self.settingsform.params.connect(self.__signalHandler)
         self.settingsform.show()
         if data:
             self.settingsform.displayDesired(data)
+
+    def __set_popup_actions(self):
+        apps = self.restoredData['completedApps']
+        if len(apps) > 0:
+            i = -1
+            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            self.action0 = QAction(self)
+            self.action0.setText( name )
+            self.chose_lasts.addAction(self.action0)
+            self.action0.triggered.connect(lambda: getData(apps[-1]['path']))
+            print(apps[i]['path'])
+        if len(apps) > 1:
+            i = -2
+            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            self.action1 = QAction(self)
+            self.action1.setText( name )
+            self.chose_lasts.addAction(self.action1)
+            self.action1.triggered.connect(lambda: getData(apps[-2]['path']))
+            print(apps[i]['path'])
+        if len(apps) > 2:
+            i = -3
+            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            self.action2 = QAction(self)
+            self.action2.setText( name )
+            self.chose_lasts.addAction(self.action2)
+            self.action2.triggered.connect(lambda: getData(apps[-3]['path']))
+            print(apps[i]['path'])
+        if len(apps) > 3:
+            i = -4
+            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            self.action2 = QAction(self)
+            self.action2.setText( name )
+            self.chose_lasts.addAction(self.action2)
+            self.action2.triggered.connect(lambda: getData(apps[-4]['path']))
+            print(apps[i]['path'])
+        if len(apps) > 4:
+            i = -5
+            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            self.action2 = QAction(self)
+            self.action2.setText( name )
+            self.chose_lasts.addAction(self.action2)
+            self.action2.triggered.connect(lambda: getData(apps[-5]['path']))
+            print(apps[i]['path'])
+
+        def setform(form):
+            if form['law'] == '44':
+                self._radio44.setChecked(True)
+            else:
+                self._radio223.setChecked(True)
+            self.__eventHandling()
+
+            self._lineName.setText(form['name'])
+            self._lineRegNumber.setText(form['regnumber'])
+            self._comboCat.setCurrentText(form['category'])
+            self._comboMethod.setCurrentText(form['method'])
+            self._lineObject.setText(form['object'])
+
+            if form['calculation']:
+                print(form)
+                self._checkBoxPayment.setChecked(True)
+                self.__tougglePayment()
+                self._lineAppSecurity.setText(form['appSecurity'])
+                self._lineContractSecurity.setText(form['contractSecurity'])
+                self._lineCurrentPrice.setText(form['currentPrice'])
+                self._linePlace.setText(form['place'])
+                self._linePeriod.setText(form['peiod'])
+                self._linePositionCount.setText(form['positionCount'])
+                self.__updateList()
+
+        def getData(path):
+            path = '%s\data' % path
+            with open(path, "rb") as file:
+                form = pickle.load(file)
+            setform(form)
 
     def __signalHandler(self, signal):
         """ Получает сигнал из настроек. """

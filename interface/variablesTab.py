@@ -44,6 +44,6 @@ class VariablesTab(ExcelTab):
 
             treetop(index).setText(0, _translate("settings", item["name"]) )
             treetop(index).setText(1, _translate("settings", item["var"]) )
-            treetop(index).setText(2, _translate("settings", item["val"]) )
+            treetop(index).setText(2, _translate("settings", item['value']) )
             tree.resizeColumnToContents(0)
             tree.resizeColumnToContents(1)

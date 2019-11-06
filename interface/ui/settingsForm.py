@@ -419,7 +419,7 @@ class Ui_settings(object):
         settings.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(settings)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         self.tabWidget_2.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(settings)
 
@@ -466,8 +466,8 @@ class Ui_settings(object):
         self.excel_editline.setToolTip(_translate("settings", "<html><head/><body><p><span style=\" font-weight:600;\">Имя переменной или ячейки.</span>          Программа произведет замену указанной ячейки или переменной в документах</p><p><br/><span style=\" font-weight:600; color:#141c68;\">Пример переменной: </span><span style=\" font-weight:600; color:#ff530f;\">%НМЦК%</span></p><p><span style=\" font-weight:600; color:#141c68;\">Пример ячейки: </span><span style=\" font-weight:600; color:#ff530f;\">А1</span></p></body></html>"))
         self.label_14.setText(_translate("settings", "Лист"))
         self.excel_combo_sheet.setToolTip(_translate("settings", "<html><head/><body><p>Поиск и замена будет производится в указанном листе. Вы можете перечислить необходимые листы через запятую</p><p><span style=\" font-weight:600; color:#141c68;\">Пример: </span><span style=\" font-weight:600; color:#ff530f;\">Лист 1, Лист 2</span></p></body></html>"))
-        self.excel_combo_sheet.setItemText(0, _translate("settings", "Активный"))
-        self.excel_combo_sheet.setItemText(1, _translate("settings", "Все листы"))
+        self.excel_combo_sheet.setItemText(0, _translate("settings", "Все листы"))
+        self.excel_combo_sheet.setItemText(1, _translate("settings", "Активный"))
         self.excel_combo_sheet.setItemText(2, _translate("settings", "Введите свой лист"))
         self.label_4.setText(_translate("settings", "Текст / Значение"))
         self.excel_value.setToolTip(_translate("settings", "<html>\n"
@@ -501,8 +501,8 @@ class Ui_settings(object):
         self.groupBox_2.setTitle(_translate("settings", "Документ расчета xlsx"))
         self.btnPaymentpath.setText(_translate("settings", "..."))
         self.label_13.setText(_translate("settings", "Имя листа"))
-        self.label_3.setText(_translate("settings", "Левая верхняя ячейка"))
-        self.label_17.setText(_translate("settings", "Правая нижняя ячейка"))
+        self.label_3.setText(_translate("settings", "Номер первой ячейки"))
+        self.label_17.setText(_translate("settings", "Номер последней ячейки"))
         self.groupBox.setTitle(_translate("settings", "Категории товаров"))
         self._catCombo.setToolTip(_translate("settings", "<html><head/><body><p>Способ закупки</p></body></html>"))
         self._catComboBtn.setText(_translate("settings", "Редактировать"))

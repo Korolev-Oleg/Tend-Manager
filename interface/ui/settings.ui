@@ -48,7 +48,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -596,12 +596,12 @@
                 </property>
                 <item>
                  <property name="text">
-                  <string>Активный</string>
+                  <string>Все листы</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Все листы</string>
+                  <string>Активный</string>
                  </property>
                 </item>
                 <item>
@@ -765,11 +765,6 @@
                 <string>Переменная</string>
                </property>
               </column>
-              <column>
-               <property name="text">
-                <string>Значение</string>
-               </property>
-              </column>
               <item>
                <property name="text">
                 <string>Дата</string>
@@ -781,14 +776,6 @@
                </property>
                <property name="text">
                 <string>%ДАТА%</string>
-               </property>
-               <property name="font">
-                <font>
-                 <italic>true</italic>
-                </font>
-               </property>
-               <property name="text">
-                <string>12.03.2019</string>
                </property>
                <property name="font">
                 <font>
@@ -848,14 +835,14 @@
              <item>
               <widget class="QLabel" name="label_3">
                <property name="text">
-                <string>Номер первой строки</string>
+                <string>Номер первой ячейки</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="label_17">
                <property name="text">
-                <string>Номер последней строки</string>
+                <string>Номер последней ячейки</string>
                </property>
               </widget>
              </item>

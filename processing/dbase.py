@@ -6,26 +6,30 @@ def data_init():
     return new
 
 def set_storage():
-    storage_path = os.path.expanduser('~\Documents\TendManager')
+    storage_path = os.path.expanduser(r'~\Documents\TendManager')
     if not os.path.exists(storage_path):
         os.makedirs(storage_path)
     return storage_path
 
 
-def read():
-    print( "Восстановление данных...." )
-    storage_path = set_storage()
-    path = '%s\storage' % storage_path
-    if os.path.exists(path):
+def read(path=False):
+    if path:
         with open(path, "rb") as file:
             restored = pickle.load(file)
     else:
-        restored = data_init()
+        print( "Восстановление данных...." )
+        storage_path = set_storage()
+        path = r'%s\storage' % storage_path
+        if os.path.exists(path):
+            with open(path, "rb") as file:
+                restored = pickle.load(file)
+        else:
+            restored = data_init()
     
     return restored
 
 def save(data, path=False):
-    """ Сохраняет бинарный файл.
+    r""" Сохраняет бинарный файл.
 
         Keyword arguments:
             path -> Default - ~\Documents\TendManager\storage
@@ -36,7 +40,7 @@ def save(data, path=False):
     print('save')
     if not path:
         storage = set_storage()
-        path = '%s\storage' % storage
+        path = r'%s\storage' % storage
 
     with open(path, "wb") as file:
         pickle.dump(data, file)

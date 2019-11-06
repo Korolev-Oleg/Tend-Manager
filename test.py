@@ -1,7 +1,7 @@
-from pywin.mfc.dialog import GetSimpleInput as _input
-i = None
-while i == None:
-    i = _input('номер строки:', '2','Номер строки с первой позицией в расчете')
-    i = _input('номер строки:', '2','Номер строки с последней позицией в расчете')
+import os
 
-print(i)
+path = r'C:\Users\Huston\Documents\Заявки\Аукцион\Маи, ФГБУ\Овощи\Торг №0373100065619000154'
+payment = r'C:\Users\Huston\Documents\Заявки\Аукцион\Маи, ФГБУ\Овощи\Торг №0373100065619000154\Расчет Маи, ФГБУ(Овощи).xlsx'
+
+
+os.system('explorer "%s"' % path)

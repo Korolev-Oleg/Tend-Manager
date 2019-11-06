@@ -31,83 +31,83 @@ def get(full=1, variables=False):
             "default": [{
                     "name": "Наименование заказчика",           # 0
                     "var": "%ЗАКАЗЧИК%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Реестровый номер закупки",         # 1
                     "var": "%РЕЕСТРОВЫЙ НОМЕР%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Категория",                        # 2
                     "var": "%КАТЕГОРИЯ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Способ закупки",                   # 3
                     "var": "%СПОСОБ ЗАКУПКИ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Предмет закупки",                  # 4
                     "var": "%ПРЕДМЕТ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Обеспечение заявки",               # 5
                     "var": "%ОБЕСПЕЧЕНИЕ ЗАЯВКИ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Обеспечение заявки прописью",      # 6
                     "var": "%ОБЕСПЕЧЕНИЕ ЗАЯВКИ% СТРОКА",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Обеспечение контракта",            # 7
                     "var": "%ОБЕСПЕЧЕНИЕ КОНТРАКТА%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Обеспечение контракта прописью",   # 8
                     "var": "%ОБЕСПЕЧЕНИЕ КОНТРАКТА СТРОКА%",    
-                    "val": None
+                    'value': None
                 },{
                     "name": "Начальная цена",                   # 9
                     "var": "%НМЦК%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Начальная цена прописью",          # 10
                     "var": "%НМЦК СТРОКА%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Место поставки",                   # 11
                     "var": "%МЕСТО ПОСТАВКИ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Срок поставки",                    # 12
                     "var": "%СРОК ПОСТАВКИ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Количество позиций",               # 13
                     "var": "%ПОЗИЦИИ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Текущая дата",                     # 14
                     "var": "%ДАТА%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "День",                             # 15
                     "var": "%ДЕНЬ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Месяц",                            # 16
                     "var": "%МЕСЯЦ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Год",                              # 17
                     "var": "%ГОД%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Месяц прописью",                   # 118
                     "var": "%МЕСЯЦ ТЕКСТ%",
-                    "val": None
+                    'value': None
                 },{
                     "name": "Дата размещения в ЕИС",            # 19
                     "var": "%ЕИС ДАТА%",
-                    "val": None
+                    'value': None
                 }
             ]
         },

@@ -15,10 +15,10 @@ window.show()
 app.exec_()
 dbase.save(restored)
 form = window.getLinks()
-
+print(form)
 ### Testing
 # print(form, end='\n\n\n')
-# form = {'law': '44', 'name': 'Маи, ФГБУ', 'regnumber': '0373100065619000154', 'category': 'Фрукты', 'method': 'Аукцион', 'object': 'продуктов питания', 'calculation': True, 'appSecurity': '10 949,65', 'contractSecurity': '10 949,65', 'currentPrice': '10 949,65', 'place': 'место', 'peiod': 'срок', 'positionCount': '50', 'links': ['C:/Users/Huston/Documents/Тендерная_Документация/WORD/Декларация СМП.doc', 'C:/Users/Huston/Documents/Тендерная_Документация/WORD/Декларация соответствия требованиям.doc', 'C:/Users/Huston/Documents/Тендерная_Документация/WORD/Заявка на участие.docx', 'C:/Users/Huston/Documents/Тендерная_Документация/WORD/Сведения об ИНН.doc', 'C:/Users/Huston/Documents/Тендерная_Документация/Декларации/Декларация 832.docx']}
+# form = {'law': '44', 'name': 'ГАИ', 'regnumber': '0373100065619000154', 'category': 'Овощи', 'method': '4', 'object': 'продуктов питания', 'calculation': True, 'appSecurity': '10 949,65', 'contractSecurity': '--', 'currentPrice': '1 094 965,00', 'place': '--', 'peiod': 'до 31 декабря 2020 года', 'positionCount': '90', 'links': ['C:/Users/Huston/Documents/Тендерная_Документация/test.docx']}
 
 
 if form:
@@ -45,11 +45,11 @@ if form:
 
     project_path = project_path.replace('/', '\\')
     if general['openfolder']:
-        os.system('explorer %s' % project_path)
+        os.system('explorer "%s"' % project_path)
 
     if general['openpayment']:
         payment = payment.replace('/', '\\')
-        os.system('explorer %s' % payment)
+        os.system('explorer "%s"' % payment)
 
     complete_app = {
         'name': form['name'],

@@ -46,24 +46,27 @@ class GeneralTab(VariablesTab):
         sheetName = self.sheetName.text().strip()
         self.restoredData['general']['sheetName'] = sheetName
         if self.validateCells():
-            self.msg(0, "Неверный формат ячейки")
+            self.msg(0, "Введите числовой номер ячейки!")
             self.tabWidget.setCurrentIndex(2)
         else:
             cellTopLeft = self.cellTopLeft.text().strip()
             self.restoredData['general']['cellTopLeft'] = cellTopLeft
             cellBotDn = self.cellBotDn.text().strip()
             self.restoredData['general']['cellBotDn'] = cellBotDn
-            self.msg(0, "Готово!", "")
             self.params.emit(1)
             self.hide()
 
     def validateCells(self):
-            cell = self.cellTopLeft.text()
-            if not re.match(r'[A-Z{1,3}]{1,3}\d{1,3}', cell):
-                return True
-            cell = self.cellBotDn.text()
-            if not re.match(r'[A-Z{1,3}]{1,3}\d{1,3}', cell):
-                return True
+        cell = self.cellTopLeft.text()
+        ru_symbols = re.search(r'[А-я]', cell)
+        en_symbols = re.search(r'[A-z]', cell)
+        other = re.search(r'\W', cell)
+        if ru_symbols or en_symbols:
+            return True
+
+        cell = self.cellBotDn.text()
+        if ru_symbols or en_symbols:
+            return True
 
     def closeEvent(self, event):
         self.params.emit(1)
@@ -113,14 +116,16 @@ class GeneralTab(VariablesTab):
         def choseProjectpath():
             text = r"Выберите основную папку проектов"
             path = QFileDialog.getExistingDirectory(self, text)
-            self.restoredData['general']['mainPath'] = path
+            if path:
+                self.restoredData['general']['mainPath'] = path
             update()
 
         def chosePaymentpath():
             text = r"Выберите файл расчета"
             path = QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx)")
-            print(path)
-            self.restoredData['general']['paymentPath'] = path[0]
+            print(path[0])
+            if path[0]:
+                self.restoredData['general']['paymentPath'] = path[0]
             update()
 
         self.btnProjectpath.clicked.connect(choseProjectpath)

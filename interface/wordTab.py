@@ -137,7 +137,7 @@ class WordTab(DocumentsTab):
         item = {
             "var": var,
             "default": default,
-            "value": value
+            'value': value
         }
 
         if len(lets) > 0:
@@ -187,6 +187,6 @@ class WordTab(DocumentsTab):
             item_0.setFlags(Qcore.ItemIsSelectable|                                            Qcore.ItemIsDragEnabled|                                           Qcore.ItemIsEnabled)
 
             tree(index).setText(0, _translate("settings", item["var"]) )
-            tree(index).setText(1, _translate("settings", item["value"]) )
+            tree(index).setText(1, _translate("settings", item['value']) )
             tree(index).setText(2, _translate("settings", item["default"]) )
             self.word_tree.resizeColumnToContents(0)

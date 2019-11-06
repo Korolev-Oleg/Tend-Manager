@@ -73,6 +73,6 @@ class Ui_editForm(object):
 
     def retranslateUi(self, editForm):
         _translate = QtCore.QCoreApplication.translate
-        editForm.setWindowTitle(_translate("editForm", "Новый способ закупки"))
+        editForm.setWindowTitle(_translate("editForm", "Новый элемент"))
         self.label.setText(_translate("editForm", "Наименование"))
         self.pushButton.setText(_translate("editForm", "Сохранить"))
