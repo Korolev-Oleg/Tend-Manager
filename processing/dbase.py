@@ -37,9 +37,6 @@ def save(data, path=False):
     if not path:
         storage = set_storage()
         path = '%s\storage' % storage
-    
-    if not os.path.exists(path):
-        pass
 
     with open(path, "wb") as file:
         pickle.dump(data, file)

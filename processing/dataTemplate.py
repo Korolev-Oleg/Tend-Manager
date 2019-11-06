@@ -124,8 +124,11 @@ def get(full=1, variables=False):
             'paymentPath': '', # Расчет
             'sheetName': '', # имя основного листа в расчете
             'cellTopLeft': '',
-            'cellBotDn': ''
-        }
+            'cellBotDn': '',
+            'openfolder': True,
+            'openpayment': True
+        },
+        'completedApps': []
     }
     if variables:
         return template['variables']

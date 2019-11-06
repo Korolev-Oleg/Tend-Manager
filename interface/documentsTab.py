@@ -1,15 +1,20 @@
 import sys  
 import os
 
-from PyQt5          import QtCore
-from PyQt5.QtCore   import pyqtSignal
-from PyQt5          import QtWidgets as Qtw
-from win32api       import MessageBox as msg
+from PyQt5.QtCore       import pyqtSignal
+from PyQt5.QtCore       import QCoreApplication
+from PyQt5.QtCore       import Qt
 
-from interface.ui   import settingsForm
-from interface.edit import EditForm
+from PyQt5.QtWidgets    import QMainWindow
+from PyQt5.QtWidgets    import QFileDialog
+from PyQt5.QtWidgets    import QTreeWidgetItem
+from PyQt5.QtWidgets    import QApplication
+from win32api           import MessageBox as msg
 
-class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
+from interface.ui       import settingsForm
+from interface.edit     import EditForm
+
+class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
     """ Открывает окно настроек.
         
         Keyword arguments:
@@ -118,7 +123,7 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
     def __pushNewItems(self):
         """ Добавляет новый объект в {listDocuments}.. """
         text = r"Выберите файлы, необходимые для дайнной категории"
-        dirs = Qtw.QFileDialog.getOpenFileNames\
+        dirs = QFileDialog.getOpenFileNames\
                (self, text, "", r"Документы (*.*)")
 
         for url in dirs[0]:
@@ -162,9 +167,9 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
 
     def __updateTreeWidget(self):
         """ Заполняет threeWidget из {listDocuments}. """
-        _translate = QtCore.QCoreApplication.translate
+        _translate = QCoreApplication.translate
         self.treeDocuments.clear()
-        Qcore = QtCore.Qt
+        Qcore = Qt
 
         index = 0
         for item in self.restoredData["documentList"]:
@@ -172,7 +177,7 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
                 if item["method"] == self.methodName:
                     check = Qcore.Checked if item["checked"] else                                           Qcore.Unchecked
                     
-                    item_0 = Qtw.QTreeWidgetItem(self.treeDocuments)
+                    item_0 = QTreeWidgetItem(self.treeDocuments)
                     item_0.setCheckState(2, check)
                     # item_0.setFlags(Qcore.ItemIsSelectable|                                    Qcore.ItemIsDragEnabled|                                   Qcore.ItemIsEnabled)
 
@@ -202,7 +207,7 @@ class DocumentsTab(Qtw.QMainWindow, settingsForm.Ui_settings):
 
 def main(restoredData):
     import sys
-    app = Qtw.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = DocumentsTab(restoredData)
     window.show()
     app.exec_()

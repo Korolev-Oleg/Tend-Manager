@@ -16,8 +16,8 @@ def make_dist(restored, form):
     """
 
     general = restored['general']
-    collected_path = '/%s/%s/Торг №%s'%\
-        (form['name'], form['category'], form['regnumber'])
+    collected_path = '/%s/%s/%s/Торг №%s'%\
+        (form['method'], form['name'], form['category'], form['regnumber'])
 
     full_path = '{}{}'.format(general['mainPath'], collected_path)
 
@@ -46,7 +46,8 @@ def make_dist(restored, form):
         except FileExistsError:
             pass
 
-    return (static_path, dynamic_path, payment_path)
+    payment_path = payment_path.replace('//', '/')
+    return (static_path, dynamic_path, full_path, payment_path)
 
 def make_static_srcs(docs, form):
     """ Create static files paths from Doc List and Form data.
@@ -73,7 +74,7 @@ def push_files(dist, static_files, dynamic_files, payment):
     """
     static_dist = dist[0]
     dynamic_dist = dist[1]
-    payment_dist = dist[2]
+    payment_dist = dist[-1]
 
     links = []
     for file in static_files:

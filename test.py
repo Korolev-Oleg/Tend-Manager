@@ -1,3 +1,7 @@
-string = "123678293  ewofje f21 8 901 ej"
+from pywin.mfc.dialog import GetSimpleInput as _input
+i = None
+while i == None:
+    i = _input('номер строки:', '2','Номер строки с первой позицией в расчете')
+    i = _input('номер строки:', '2','Номер строки с последней позицией в расчете')
 
-print(string.count(1))
+print(i)

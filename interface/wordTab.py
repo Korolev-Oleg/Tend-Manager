@@ -1,7 +1,7 @@
 import sys
 
-from PyQt5 import QtWidgets as Qtw
-from PyQt5 import QtCore
+from PyQt5.QtWidgets    import QTreeWidgetItem
+from PyQt5              import QtCore
 
 
 from interface.documentsTab import DocumentsTab
@@ -183,7 +183,7 @@ class WordTab(DocumentsTab):
         self.word_tree.clear()
 
         for index, item in enumerate(self.variables["word"]):
-            item_0 = Qtw.QTreeWidgetItem(self.word_tree)
+            item_0 = QTreeWidgetItem(self.word_tree)
             item_0.setFlags(Qcore.ItemIsSelectable|                                            Qcore.ItemIsDragEnabled|                                           Qcore.ItemIsEnabled)
 
             tree(index).setText(0, _translate("settings", item["var"]) )

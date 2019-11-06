@@ -1,17 +1,26 @@
 import sys  
 import os
 
-from PyQt5          import QtCore
-from PyQt5          import QtWidgets
 from PyQt5.QtCore   import pyqtSignal
-from PyQt5          import QtWidgets as Qtw
+from PyQt5.QtCore   import QCoreApplication
+from PyQt5.QtCore   import Qt
+
+from PyQt5.QtWidgets import QMainWindow 
+from PyQt5.QtWidgets import QFileDialog 
+from PyQt5.QtWidgets import QListWidgetItem 
+from PyQt5.QtWidgets import QInputDialog
+from PyQt5.QtWidgets import QCompleter
+
 from win32api       import MessageBox as msg
 from win32con       import MB_OKCANCEL
 
-from interface.ui           import mainUi
-from interface.variablesTab import Variables
 
-class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
+
+from interface.ui           import mainUi
+# from interface.variablesTab import VariablesTab
+from interface.generalTab import GeneralTab
+
+class MainUi(QMainWindow, mainUi.Ui_Ui):
     """ Главное окно.
         
         Возвращает заполненую форму с выбранными ссылками на документы
@@ -57,10 +66,10 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
         """
         msg(0, text, 'Внимание!')
         if flag:
-            path = Qtw.QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx)")
+            path = QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx)")
             obj['paymentPath'] = path[0]
         else:
-            path = Qtw.QFileDialog.getExistingDirectory(self, text)
+            path = QFileDialog.getExistingDirectory(self, text)
             obj['mainPath'] = path
 
     def __tougglePayment(self):
@@ -88,13 +97,14 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
         catrgories.sort()
 
         # авто комплит
-        completer = QtWidgets.QCompleter( self )
+        completer = QCompleter( self )
         completer.setModel( self._comboCat.model() )
         completer.setCaseSensitivity( 0 )
         self._comboCat.setCompleter(completer)
         
         self._comboCat.clear()
         self._comboCat.addItems(catrgories)
+        self._comboCat.setCurrentIndex(-1)
 
     def __opet_liest_editor(self):
         """ Открывает страницу настроек для текущей заявки. """
@@ -109,6 +119,7 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.clear()
         items = self.restoredData['tenderMethodNames']
         self._comboMethod.addItems(items)
+        self._comboMethod.setCurrentIndex(-1)
 
     def __eventHandling(self):
         law44 = self._radio44.isChecked()
@@ -122,10 +133,10 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
 
     def __updateList(self):
         """ Обновляет список имен. """
-        _translate = QtCore.QCoreApplication.translate
+        _translate = QCoreApplication.translate
         self.methodName = self._comboMethod.currentText()
         self._listDocuments.clear()
-        Qcore = QtCore.Qt
+        Qcore = Qt
         self.checkboxes = []
         index = 0
         for doc in self.restoredData['documentList']:
@@ -134,7 +145,7 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
                     if doc['law'] == self.law and doc['method'] == self.methodName:
                         if not doc['checked']:
                             check = Qcore.Checked if doc['often'] >= 2 else                                    Qcore.Unchecked
-                            _item = Qtw.QListWidgetItem()
+                            _item = QListWidgetItem()
                             _item.setCheckState(check)
                             _item.setText(doc['name'])
                             self._listDocuments.addItem(_item)
@@ -153,7 +164,7 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
                 if chose == 6:
                     # edit Path
                     text = r"Выберите файлы, необходимые для дайнной категории"
-                    path = Qtw.QFileDialog.getOpenFileName\
+                    path = QFileDialog.getOpenFileName\
                            (self, text, "", r"Документы (*.*)")
 
                     name = os.path.basename(path[0])
@@ -178,7 +189,14 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
             if search == -1:
                 data.append(line)
 
+    def chech_excel_fields(self):
+        general = self.restoredData['general']
+
+        if not general['cellTopLeft']:
+            text, okPressed = QInputDialog.getText(self, "Get text","Your name:", QLineEdit.Normal, "")
+
     def __generateDict(self):
+
         """ Создает объект с данными формы. """
         self.__checkNewComboItem(\
                     self._comboCat, self.restoredData['categories'])
@@ -241,7 +259,7 @@ class MainUi(Qtw.QMainWindow, mainUi.Ui_Ui):
 
     def __openSettings(self, data=False):
         """ Открывает окно редактирования настройки """
-        self.settingsform = Variables(self.restoredData)
+        self.settingsform = GeneralTab(self.restoredData)
         self.settingsform.params.connect(self.__signalHandler)
         self.settingsform.show()
         if data:

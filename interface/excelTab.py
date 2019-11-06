@@ -1,8 +1,9 @@
 import sys
 import re
 
-from PyQt5 import QtWidgets as Qtw
-from PyQt5 import QtCore
+from PyQt5.QtWidgets    import QTreeWidgetItem
+from PyQt5.QtCore       import Qt
+from PyQt5.QtCore       import QCoreApplication
 
 from interface.wordTab import WordTab
 
@@ -132,15 +133,15 @@ class ExcelTab(WordTab):
         self.__updateTree()
 
     def __updateTree(self):
-        Qcore = QtCore.Qt
-        _translate = QtCore.QCoreApplication.translate
+        Qcore = Qt
+        _translate = QCoreApplication.translate
         tree = self.excel_tree.topLevelItem
         
         self.excel_tree.clear()
 
 
         for index, item in enumerate(self.variables["excel"]):
-            item_0 = Qtw.QTreeWidgetItem(self.excel_tree)
+            item_0 = QTreeWidgetItem(self.excel_tree)
             item_0.setFlags(Qcore.ItemIsSelectable|                                            Qcore.ItemIsDragEnabled|                                           Qcore.ItemIsEnabled)
 
             if item['default'] == None:

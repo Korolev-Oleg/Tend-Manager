@@ -49,19 +49,19 @@ def find_replace(link, variables):
         pass
 
 def init(links, payment_path, variables, general, form):
-    payment_path = payment_path.replace('/', '\\')
     
     # range delete from payment 
     if payment_path:
-        if general['cellTopLeft']:
-            count = int(form['positionCount'])
-            top_cell = general['cellTopLeft']
-            end_cell = general['cellBotDn']
-            sheet = False
-            if general['sheetName']:
-                sheet = general['sheetName']
-    
-            rangeDelete(payment_path, count, top_cell, end_cell, sheet)
+        payment_path = payment_path.replace('/', '\\')
+        count = int(form['positionCount'])
+
+        if not general['cellTopLeft']:
+            input_payment_settings()
+
+        top_cell = general['cellTopLeft']
+        end_cell = general['cellBotDn']
+        sheet = general['sheetName']
+        rangeDelete(payment_path, count, top_cell, end_cell, sheet)
 
     ex_variables = []
     for var in variables['excel']:
@@ -74,3 +74,6 @@ def init(links, payment_path, variables, general, form):
     for link in links:
         if link.count('xls'):
             find_replace(link, ex_variables)
+
+def input_payment_settings():
+    pass
