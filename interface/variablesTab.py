@@ -1,11 +1,15 @@
-import re, sys, datetime
+import re, sys, datetime, pyperclip, time
 
 from PyQt5.QtWidgets import  QTreeWidgetItem
-from PyQt5.QtGui    import QFont 
+from PyQt5.QtGui    import QFont
+from PyQt5.QtGui    import QBrush
+from PyQt5.QtGui    import QColor
 from PyQt5.QtCore   import pyqtSignal
 from PyQt5.QtCore   import QCoreApplication
 from PyQt5.QtCore   import Qt
 from PyQt5          import QtCore
+from PyQt5          import QtGui
+
 
 
 from interface.excelTab import ExcelTab
@@ -22,6 +26,21 @@ class VariablesTab(ExcelTab):
         ExcelTab.__init__(self, restoredData, setView)
         self.lets = restoredData["variables"]['default']
         self.__updateTreeWidget()
+        self.default_tree.doubleClicked.connect(self.copy)
+
+    def copy(self):
+        current_item = self.default_tree.currentItem()
+        pyperclip.copy(current_item.text(1))
+        pyperclip.paste()
+        
+        to = time.time() + 0.2
+        while time.time() < to:
+            QCoreApplication.processEvents()
+            current_item.setForeground(1, QBrush(QColor('#08f')))
+            current_item.setForeground(0, QBrush(QColor('#08f')))        
+
+        current_item.setForeground(1, QBrush(QColor('#000')))
+        current_item.setForeground(0, QBrush(QColor('#000')))
 
     def __updateTreeWidget(self):
         """ Обновляет treeWidget. """

@@ -1,7 +1,7 @@
 import re, sys, datetime
 
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore   import pyqtSignal
+from PyQt5.QtCore   import pyqtSignal, Qt
 
 from interface.variablesTab import VariablesTab
 from interface.edit import EditForm
@@ -10,6 +10,7 @@ class GeneralTab(VariablesTab):
     params = pyqtSignal(object)
     def __init__(self, restoredData, setView=False):
         VariablesTab.__init__(self, restoredData, setView)
+        self.setWindowModality(Qt.ApplicationModal)
         self.lets = restoredData["variables"]['default']
         self.btn_save.clicked.connect(self._save)
         self.generalInit() # __________вкладка основные__________
@@ -101,11 +102,13 @@ class GeneralTab(VariablesTab):
         def __signalHandler(signal):
             """ Получает сигнал из EditForm о сохранении. """
             if signal:
+                self.setDisabled(False)
                 comboDataSet()
 
         def __openEditForm():
             """ Открывает окно редактирования объекта {tenderMethodNames}. """
-            self.form = EditForm(self.restoredData, 1)
+            self.setDisabled(True)
+            self.form = EditForm(self.restoredData, 1, title='Новая категория')
             self.form.params.connect(__signalHandler)
             self.form.show()
 

@@ -29,6 +29,7 @@ def make_dist(restored, form):
         payment_name = 'Расчет %s(%s).xlsx' % (form['name'], form['category'])
         payment_path = '%s/%s/%s' %\
                         (full_path, path_model['payment'], payment_name)
+        payment_path = payment_path.replace('//', '/')
     else: 
         payment_path = False
 
@@ -46,7 +47,7 @@ def make_dist(restored, form):
         except FileExistsError:
             pass
 
-    payment_path = payment_path.replace('//', '/')
+    
     return (static_path, dynamic_path, full_path, payment_path)
 
 def make_static_srcs(docs, form):
@@ -81,16 +82,19 @@ def push_files(dist, static_files, dynamic_files, payment):
         name = os.path.basename(file)
         path = '%s/%s' % (static_dist, name)
         copyfile( file, path )
-        links.append(path)
+        if not path in links:
+            links.append(path)
     
     for file in dynamic_files:
         name = os.path.basename(file)
         path = '%s/%s' % (dynamic_dist, name)
         copyfile( file, path )
-        links.append(path)
+        if not path in links:
+            links.append(path)
 
     if payment_dist:
         copyfile(payment, payment_dist)
-        links.append(payment_dist)
+        if not path in links:
+            links.append(payment_dist)
 
     return links

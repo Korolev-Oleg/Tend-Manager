@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>settings</class>
  <widget class="QMainWindow" name="settings">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -280,6 +283,16 @@
            </spacer>
           </item>
           <item>
+           <widget class="QCheckBox" name="choseAllCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Пометить все</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="btn_clear">
             <property name="enabled">
              <bool>false</bool>
@@ -323,7 +336,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_2">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Стандартное значение&lt;/span&gt; представляет собой динамически изменяемые поля, такие как Начальная максимальная цена. Текущая дата прописью, цифрами и т.д.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="currentIndex">
            <number>2</number>
@@ -334,60 +347,36 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <layout class="QGridLayout" name="gridLayout_3" columnminimumwidth="1,1">
+             <layout class="QGridLayout" name="gridLayout_3">
               <property name="topMargin">
                <number>10</number>
               </property>
               <item row="1" column="0">
                <widget class="QLineEdit" name="word_editline">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Имя переменной.&lt;/span&gt; Программа будет искать данное значение во всех приложенных документах&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;%ФИО%&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Имя переменной.&lt;/span&gt; Программа будет искать данное значение в ваших документах. Придумаете оригинальное значение которое нигде больше не встречается.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример переменной: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;_ФИО_ &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="0">
                <widget class="QLabel" name="label_7">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
                 <property name="text">
                  <string>Переменная</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="word_chbx_default">
-                <property name="text">
-                 <string>Стандартное значение</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QComboBox" name="word_combo_default">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Стандартное значение&lt;/span&gt; представляет собой динамически изменяемые поля, такие как Начальная максимальная цена. Текущая дата прописью, цифрами и т.д.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_16">
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
              </layout>
             </item>
             <item>
              <widget class="QLabel" name="label_9">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
-               <string>Текст</string>
+               <string>Значение</string>
               </property>
              </widget>
             </item>
@@ -406,7 +395,7 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы можете указать свое статическое значение переменной, на которое будет произведена замена в документах.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Значение данного поля вставляется на место найденной в документе переменной&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
@@ -469,6 +458,9 @@
             </item>
             <item>
              <widget class="QTreeWidget" name="word_tree">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Список всех переменных для документов в формате word 2010 и выше&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <column>
                <property name="text">
                 <string>Переменная</string>
@@ -476,12 +468,7 @@
               </column>
               <column>
                <property name="text">
-                <string>Текст</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Стандартное значение</string>
+                <string>Значение</string>
                </property>
               </column>
               <item>
@@ -499,137 +486,36 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="1,1">
+             <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0,0">
               <property name="topMargin">
                <number>10</number>
               </property>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="1,20">
-                <item>
-                 <widget class="QRadioButton" name="excel_radio_cell">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                  <property name="text">
-                   <string>Ячейка</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="excel_radio_var">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                  <property name="text">
-                   <string>Переменная</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <widget class="QLabel" name="label_5">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Переменная</string>
+                </property>
+               </widget>
               </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_22">
-                <item>
-                 <widget class="QCheckBox" name="excel_chbx_default">
-                  <property name="text">
-                   <string>Стандартное значение</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_23">
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QLineEdit" name="excel_editline">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Имя переменной или ячейки.&lt;/span&gt;          Программа произведет замену указанной ячейки или переменной в документах&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример переменной: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;%НМЦК%&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример ячейки: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;А1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Имя переменной.&lt;/span&gt; Программа будет искать данное значение в ваших документах. Придумаете оригинальное значение которое нигде больше не встречается.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример переменной: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;_НМЦК_ &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="excel_combo_default">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_9">
-              <item>
-               <widget class="QLabel" name="label_14">
-                <property name="text">
-                 <string>Лист</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0">
-              <item>
-               <widget class="QComboBox" name="excel_combo_sheet">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поиск и замена будет производится в указанном листе. Вы можете перечислить необходимые листы через запятую&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#141c68;&quot;&gt;Пример: &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff530f;&quot;&gt;Лист 1, Лист 2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="editable">
-                 <bool>true</bool>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Все листы</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Активный</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Введите свой лист</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_8">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </item>
             <item>
              <widget class="QLabel" name="label_4">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
-               <string>Текст / Значение</string>
+               <string>Значение</string>
               </property>
              </widget>
             </item>
@@ -648,12 +534,7 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;
-&lt;head/&gt;
-	&lt;body&gt;
-		&lt;p&gt;Данный текст вставляется на место найденной в документе переменной или ячейки&lt;/p&gt;
-	&lt;/body&gt;
-&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Значение данного поля вставляется на место найденной в документе переменной&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
@@ -716,6 +597,9 @@
             </item>
             <item>
              <widget class="QTreeWidget" name="excel_tree">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Список все переменных для документов Excel всех версий&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <column>
                <property name="text">
                 <string>Переменная</string>
@@ -723,20 +607,13 @@
               </column>
               <column>
                <property name="text">
-                <string>Ячейка</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Лист</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Значение / текст</string>
+                <string>Значение</string>
                </property>
               </column>
               <item>
+               <property name="text">
+                <string/>
+               </property>
                <property name="text">
                 <string/>
                </property>
@@ -753,7 +630,7 @@
             <item>
              <widget class="QTreeWidget" name="default_tree">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Стандартное значение&lt;/span&gt; представляет собой динамически изменяемые поля, такие как Начальная максимальная цена. Текущая дата прописью, цифрами и т.д. &lt;/p&gt;&lt;p&gt;Вставте нужную переменную обозначенную процентами с обеих сторон &lt;span style=&quot; color:#ff5500;&quot;&gt;%&lt;/span&gt;&lt;span style=&quot; color:#07b607;&quot;&gt;ПЕРЕМЕННАЯ&lt;/span&gt;&lt;span style=&quot; color:#ff5500;&quot;&gt;%&lt;/span&gt; в ваш документ &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Стандартные переменные&lt;/span&gt; заменяются на значения полей основной формы.&lt;br&gt; Вставте нужную переменную обозначенную нижними подчеркиваними с обеих сторон &lt;span style=&quot; color:#ff5500;&quot;&gt;_&lt;/span&gt;&lt;span style=&quot; color:#07b607;&quot;&gt;ПЕРЕМЕННАЯ&lt;/span&gt;&lt;span style=&quot; color:#ff5500;&quot;&gt;_&lt;br/&gt;&lt;/span&gt;в ваш документ &lt;span style=&quot; font-weight:600;&quot;&gt;Excel &lt;/span&gt;или &lt;span style=&quot; font-weight:600;&quot;&gt;Word&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#0a91d9;&quot;&gt;Двойной щелчек мыши для копирования&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <column>
                <property name="text">
@@ -799,6 +676,47 @@
         <string>Общие</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Категории товаров</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QComboBox" name="_catCombo">
+             <property name="minimumSize">
+              <size>
+               <width>210</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Способ закупки&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="_catComboBtn">
+             <property name="minimumSize">
+              <size>
+               <width>105</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>105</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Редактировать</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="title">
@@ -860,47 +778,6 @@
               <widget class="QLineEdit" name="cellBotDn"/>
              </item>
             </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>Категории товаров</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_11">
-           <item>
-            <widget class="QComboBox" name="_catCombo">
-             <property name="minimumSize">
-              <size>
-               <width>210</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Способ закупки&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="_catComboBtn">
-             <property name="minimumSize">
-              <size>
-               <width>105</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>105</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Редактировать</string>
-             </property>
-            </widget>
            </item>
           </layout>
          </widget>

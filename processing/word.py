@@ -33,10 +33,9 @@ def init(links, variables):
 
 
 def findReplace(obj, variables):
-    print(variables)
     """ Производит поиск и замену в документах."""
     for paragraph in obj.paragraphs:
         for var in variables:
             if paragraph.text.count(var['var']):
-                print(var['var'], end='\n\n')
+                
                 paragraph.text = paragraph.text.replace(var['var'], str(var['value']))

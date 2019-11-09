@@ -27,46 +27,57 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         super().__init__()
         self.setupUi(self)  # инициализация формы
         self.restoredData = restoredData
-        self.__updateComboTend()   # востановление параметров формы
+        self.__update_combo_tend()   # востановление параметров формы
         self.msg = msg
 
-        self.treeDocuments.clicked.connect(self.__toggleCheck)
-        self.radio_Law44.clicked.connect(self.__eventHandling)
-        self.radio_Law223.clicked.connect(self.__eventHandling)
-        self.btn_pushTotree.clicked.connect(self.__pushNewItems)
-        self.combo_tendMethod.currentIndexChanged.connect(self.__eventHandling)
-        self.btn_removeFromtree.clicked.connect(self.__removeSelectedItem)
-        self.btn_tendMethod.clicked.connect(self.__openEditForm)
-        self.btn_clear.clicked.connect(self.__clearAll)
+        self.treeDocuments.clicked.connect(self.__toggle_check)
+        self.radio_Law44.clicked.connect(self.__event_handling)
+        self.radio_Law223.clicked.connect(self.__event_handling)
+        self.btn_pushTotree.clicked.connect(self.__push_new_items)
+        self.choseAllCheckBox.clicked.connect(self.__chose_all)
+        self.btn_removeFromtree.clicked.connect(self.__remove_selected_item)
+        self.btn_tendMethod.clicked.connect(self.__open_edit_form)
+        self.btn_clear.clicked.connect(self.__clear_all)
+        self.combo_tendMethod.currentIndexChanged.connect                                                 (self.__event_handling)
 
     def innerUpdate(self, combodata):
-        # self.__toggleCheck()
-        self.__updateComboTend()
-        self.__updateTreeWidget()
+        # self.__toggle_check()
+        self.__update_combo_tend()
+        self.__update_tree_widget()
         self.combo_tendMethod.addItem(combodata)
         item = self.combo_tendMethod.findText(combodata)
         self.combo_tendMethod.setCurrentIndex(item)
     def save(self):
         print("save")
 
-    def __openEditForm(self):
+    def __open_edit_form(self):
         """ Открывает окно редактирования объекта {tenderMethodNames}. """
-        self.form = EditForm(self.restoredData)
-        self.form.params.connect(self.__signalHandler)
+        self.setDisabled(True)
+        self.form = EditForm(self.restoredData, title='Новый способ закупки')
+        self.form.params.connect(self.__signal_handler)
         self.form.show()
 
-    def __signalHandler(self, signal):
+    def __signal_handler(self, signal):
         """ Получает сигнал из EditForm о сохранении. """
+        self.setDisabled(False)
         if signal:
-            self.__updateComboTend()
+            self.__update_combo_tend()
 
-    def __toggleCheck(self):
+    def __chose_all(self):
+        checkBox = self.choseAllCheckBox
+        print(checkBox.checkState())
+        check = Qt.Checked if checkBox.checkState() else Qt.Unchecked
+
+        len_items = self.treeDocuments.topLevelItemCount()
+        for i in range(len_items):
+           current_item = self.treeDocuments.topLevelItem(i)
+           current_item.setCheckState(2, check)
+        self.__toggle_check()
+
+    def __toggle_check(self):
         """ Переключает чекбокс. """
-
         self.btn_removeFromtree.setEnabled(True)
 
-        
-        
         obj = self.treeDocuments.currentItem()
         try:
             count = self.treeDocuments.topLevelItemCount()
@@ -87,7 +98,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             pass
 
 
-    def __updateComboTend(self):
+    def __update_combo_tend(self):
         """ Обновляет Combobox способов закупок. """
 
         self.combo_tendMethod.clear()
@@ -101,8 +112,9 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.combo_tendMethod.addItems(tenderMethodsNames)
 
 
-    def __eventHandling(self, delete=False):
+    def __event_handling(self, delete=False):
         """ обрабатывает события radioBox и ComboBox. """
+        self.choseAllCheckBox.setCheckState(Qt.Unchecked)
         law44 = self.radio_Law44.isChecked()
         law223 = self.radio_Law223.isChecked()
         self.methodName = self.combo_tendMethod.currentText()
@@ -112,7 +124,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         if law44 or law223:
             if self.combo_tendMethod.currentText():
                 self.btn_pushTotree.setEnabled(True)
-                self.__updateTreeWidget()
+                self.__update_tree_widget()
 
         if self.treeDocuments.hasFocus():
             self.btn_removeFromtree.setEnabled(True)
@@ -120,7 +132,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             self.btn_removeFromtree.setEnabled(False)
 
 
-    def __pushNewItems(self):
+    def __push_new_items(self):
         """ Добавляет новый объект в {listDocuments}.. """
         text = r"Выберите файлы, необходимые для дайнной категории"
         dirs = QFileDialog.getOpenFileNames\
@@ -141,9 +153,9 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             if not self.listDocuments.count(item):
                 self.listDocuments.append(item)
 
-        self.__updateTreeWidget()
+        self.__update_tree_widget()
 
-    def __removeSelectedItem(self):
+    def __remove_selected_item(self):
         """ Удаляет выбраный в дереве элемент из {listDocuments}. """
         try:
             name = self.treeDocuments.selectedIndexes()[0].data()
@@ -158,14 +170,16 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             except UnboundLocalError:
                 pass
         
-        self.__updateTreeWidget()
+        self.__update_tree_widget()
 
-    def __clearAll(self):
+    def __clear_all(self):
         """ Удаляет все элементы дерева. """
-        print("clear")
+        self.choseAllCheckBox.setCheckState(Qt.Unchecked)
+        len_items = self.treeDocuments.topLevelItemCount()
+        for i in range(len_items):
+            self.__remove_selected_item()
 
-
-    def __updateTreeWidget(self):
+    def __update_tree_widget(self):
         """ Заполняет threeWidget из {listDocuments}. """
         _translate = QCoreApplication.translate
         self.treeDocuments.clear()
@@ -191,8 +205,10 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         # активирует btn_clear() в зависимости от наличия элементов в дереве
         if index:
             self.btn_clear.setEnabled(True)
+            self.choseAllCheckBox.setEnabled(True)
         else:
             self.btn_clear.setEnabled(False)
+            self.choseAllCheckBox.setEnabled(False)
 
         self.__resize()
 

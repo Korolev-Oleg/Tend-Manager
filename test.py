@@ -1,7 +1,6 @@
-import os
+import time
 
-path = r'C:\Users\Huston\Documents\Заявки\Аукцион\Маи, ФГБУ\Овощи\Торг №0373100065619000154'
-payment = r'C:\Users\Huston\Documents\Заявки\Аукцион\Маи, ФГБУ\Овощи\Торг №0373100065619000154\Расчет Маи, ФГБУ(Овощи).xlsx'
+to = time.time() + .2
 
-
-os.system('explorer "%s"' % path)
+while time.time() < to:
+    print(time.time())

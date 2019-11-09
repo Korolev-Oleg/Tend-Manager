@@ -3,6 +3,8 @@ import os, sys, re, pickle
 from PyQt5.QtCore           import pyqtSignal
 from PyQt5.QtCore           import QCoreApplication
 from PyQt5.QtCore           import Qt    
+from PyQt5                  import QtWidgets    
+
 from PyQt5.QtWidgets        import QMainWindow 
 from PyQt5.QtWidgets        import QFileDialog 
 from PyQt5.QtWidgets        import QListWidgetItem 
@@ -10,6 +12,7 @@ from PyQt5.QtWidgets        import QInputDialog
 from PyQt5.QtWidgets        import QCompleter
 from PyQt5.QtWidgets        import QAction
 from PyQt5.QtWidgets        import QLineEdit
+
 from win32api               import MessageBox as msg
 from win32con               import MB_OKCANCEL
 
@@ -27,48 +30,50 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         super().__init__()
         self.setupUi(self)
         self.restoredData = restoredData
-        self.__upgateTendMethod()
-        self.__updateCategories()
-        self.clean_completed_apps()
-        self.__set_popup_actions()
+        self.__update_tend_method()
+        self.__update_categories()
+        self.__clean_completed_apps()
+        self.__set_lastform_triggers()
         self.save = False
+        self.law = False
 
-        self._radio44.clicked.connect(self.__eventHandling)
-        self._radio223.clicked.connect(self.__eventHandling)
-        self._btnGenerate.clicked.connect(self.__generateDict)
+        self._radio44.clicked.connect(self.__event_handling)
+        self._radio223.clicked.connect(self.__event_handling)
+        self._btnGenerate.clicked.connect(self.__generate_dict)
         self._btnView.clicked.connect(self.__opet_list_editor)
-        self.openSettings.triggered.connect(self.__openSettings)
-        self._checkBoxPayment.clicked.connect(self.__tougglePayment)
-        self._comboMethod.currentIndexChanged.connect(self.__updateList)
+        self.openSettings.triggered.connect(self.__open_settings)
+        self._checkBoxPayment.clicked.connect(self.__touggle_payment)
+        self._comboMethod.currentIndexChanged.connect(self.__update_list)
     
-    def clean_completed_apps(self):
+    def __clean_completed_apps(self):
         items = self.restoredData['completedApps']
         for item in items:
             if not os.path.exists(item['path']):
                 items.remove(item)
-        print(items)
 
-    def checkInitPaths(self):
+    def __check_init_paths(self):
         """ Проверяет наличие путей к файлу расчета и к папке с заявками. """
         general = self.restoredData['general']
         path = os.path.exists(general['mainPath'])
         if not path:
-            text = 'выберите директорию в которой будут хранится и создаваться новые заявки'
-            self.__setGeneralPath(general, text)
+            text = 'Выберите директорию в которой будут хранится и создаваться новые заявки'
+            self.__set_general_path(general, text)
         if self._checkBoxPayment.isChecked():
             path = os.path.exists(general['paymentPath'])
             if not path:
                 text = 'Выберите файл расчета в формате Excel'
-                self.__setGeneralPath(general, text, 1)
+                self.__set_general_path(general, text, 1)
 
-    def __setGeneralPath(self, obj, text, flag=0):
+    def __set_general_path(self, obj, text, flag=0):
         """ Обновляет ссылку на дирректорию или файл расчета в restoredData.
                 obj -> {obj} link to file or path
                 text -> str message
                 flag -> str xlsx filter
         """
         path = ''
+        self.setDisabled(True)
         msg(0, text, 'Внимание!')
+        self.setDisabled(False)
         if flag:
             while not path:
                 path = QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx; *.xls)")
@@ -78,7 +83,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 path = QFileDialog.getExistingDirectory(self, text)
             obj['mainPath'] = path
 
-    def __tougglePayment(self):
+    def __touggle_payment(self):
         """ Переключает активность полей расчета. """
         if self._checkBoxPayment.isChecked():
             enabled = True
@@ -98,7 +103,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         self._lineContractSecurity.setEnabled( enabled )
         self.label_contractSecurity.setEnabled( enabled )
     
-    def __updateCategories(self):
+    def __update_categories(self):
         catrgories = self.restoredData['categories']
         catrgories.sort()
 
@@ -114,82 +119,98 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
 
     def __opet_list_editor(self):
         """ Открывает страницу настроек для текущей заявки. """
-        self.__openSettings( [self.law, self._comboMethod.currentText()] )
+        self.__open_settings( [self.law, self._comboMethod.currentText()] )
 
     def __list_handler(self, signal):
         """ сигналы из ListWiew. """
         pass
 
-    def __upgateTendMethod(self):
+    def __update_tend_method(self):
         """ Подгружает способы закупок. """
         self._comboMethod.clear()
         items = self.restoredData['tenderMethodNames']
         self._comboMethod.addItems(items)
         self._comboMethod.setCurrentIndex(-1)
 
-    def __eventHandling(self):
+    def __event_handling(self):
         """ Обработчик радиобоксов. """
         law44 = self._radio44.isChecked()
         law223 = self._radio223.isChecked()
         self.law = "44" if law44 else "223"
 
         if law44 or law223:
-            self._btnView.setEnabled(True)
+            print(self._comboMethod.currentText())
+            if self._comboMethod.currentText():
+                self._btnView.setEnabled(True)
             self._btnGenerate.setEnabled(True)
-            self.__updateList()
+            self.__update_list()
 
-    def __updateList(self):
-        """ Обновляет список имен. """
-        _translate = QCoreApplication.translate
-        self.methodName = self._comboMethod.currentText()
-        self._listDocuments.clear()
-        Qcore = Qt
-        self.checkboxes = []
-        index = 0
-        for doc in self.restoredData['documentList']:
-            if self.__checkPath(doc["dir"]):
-                try:
-                    if doc['law'] == self.law and doc['method'] == self.methodName:
-                        if not doc['checked']:
-                            check = Qcore.Checked if doc['often'] >= 2 else                                    Qcore.Unchecked
-                            _item = QListWidgetItem()
-                            _item.setCheckState(check)
-                            _item.setText(doc['name'])
-                            self._listDocuments.addItem(_item)
-
-                            index += 1
-                            self.checkboxes.append(_item)
-
-                except AttributeError:
-                    print("'MainUi' object has no attribute 'law'")
-
-            else:
-                text = "Файл: {}\nперемещен или удален. Указать новый файл?".format(doc['name'])
-
-                chose = msg(0, text, "Файл ненайден", 4)
-
-                if chose == 6:
-                    # edit Path
-                    text = r"Выберите файлы, необходимые для дайнной категории"
-                    path = QFileDialog.getOpenFileName\
-                           (self, text, "", r"Документы (*.*)")
-
-                    name = os.path.basename(path[0])
-                    doc['dir'] = path[0]
-                    doc['name'] = name
-                    self.__updateList()
-                else:
-                    # remove link
-                    self.restoredData['documentList'].remove(doc)
-
-    def __checkPath(self, path):
+    def __check_path(self, path):
         """ Проверяет наличие прикрепляемых файлов. """
         if os.path.exists(path):
             return(True)
         else:
             return(False)
 
-    def __checkNewComboItem(self, combo, data):
+    def __update_list(self):
+        """ Обновляет список имен. """
+        _translate = QCoreApplication.translate
+        self.methodName = self._comboMethod.currentText()
+        self._listDocuments.clear()
+        self.checkboxes = []
+
+        for doc in self.restoredData['documentList']:
+            if self.__check_path(doc["dir"]): # проверка наличия файла
+                try:
+                    if doc['law'] == self.law and doc['method'] ==                                           self.methodName:
+
+                        if not doc['checked']:
+                            check = Qt.Checked if doc['often'] >= 2 else                                    Qt.Unchecked
+                            _item = QListWidgetItem()
+                            _item.setCheckState(check)
+                            _item.setText(doc['name'])
+                            self._listDocuments.addItem(_item)
+
+                            self.checkboxes.append(_item)
+
+                except AttributeError:
+                    print("'MainUi' object has no attribute 'law'")
+            else:
+                self.__update_old_path(doc)
+
+        if self._comboMethod.currentText():
+            self._btnView.setEnabled(True)
+        else:
+            self._btnView.setEnabled(False)
+    def __update_old_path(self, doc):
+        """ Обновляет путь к файлу. """
+
+        text = "Файл: {}\nперемещен или удален. Указать новый файл?"\
+                                                .format(doc['name'])
+        self.setDisabled(True)
+        chose = msg(0, text, "Файл ненайден", 4)
+        self.setDisabled(False)
+        if chose == 6:
+            # edit Path
+            old_path = doc['dir']
+            text = r"Выберите новый файл вместо {}".format(doc['name'])
+
+            openFile = QFileDialog.getOpenFileName
+            path = openFile(self, text, "", r"Документы (*.*)")
+
+            # проверка всего макета данных
+            name = os.path.basename(path[0])
+            for ex_doc in self.restoredData['documentList']:
+                if ex_doc['dir'] == old_path:
+                    ex_doc['dir'] = path[0]
+                    ex_doc['name'] = name
+
+            self.__update_list()
+        else:
+            # remove link
+            self.restoredData['documentList'].remove(doc)
+
+    def __check_new_combo_item(self, combo, data):
         """ Проверяент наличие элемента combobox в списке. """
         line = combo.currentText().strip()
         if line:
@@ -197,14 +218,16 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
             if search == -1:
                 data.append(line)
 
-    def chech_excel_fields(self):
+    def __chech_excel_fields(self):
         """ Проверяет заполненость полей для расчета. """
         def check_row(row):
             ru = re.search(r'[А-я]', row)
             en = re.search(r'[A-z]', row)
             ex = re.search(r'\W', row)
             if ru or en or ex:
+                self.setDisabled(True)
                 msg(0, 'Укажите числовой номер!')
+                self.setDisabled(False)
                 return True
 
         general = self.restoredData['general']
@@ -231,13 +254,12 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                     
                 general['cellBotDn'] = rowBot
 
-    def __generateDict(self):
+    def __generate_dict(self):
         """ Создает объект с данными формы. """
         
-        self.__checkNewComboItem(\
-                    self._comboCat, self.restoredData['categories'])
-        self.__checkNewComboItem(\
-                    self._comboMethod, self.restoredData['tenderMethodNames'])
+        checkNewItem = self.__check_new_combo_item
+        checkNewItem(self._comboCat, self.restoredData['categories'])
+        checkNewItem(self._comboMethod, self.restoredData['tenderMethodNames'])
 
         links = []
         _list = self._listDocuments
@@ -266,25 +288,29 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 'method': self._comboMethod.currentText().strip(),
                 'object': self._lineObject.text().strip(),
                 'calculation': self._checkBoxPayment.isChecked(),
-                'appSecurity': get_cash(self._lineAppSecurity),
-                'contractSecurity': get_cash(self._lineContractSecurity),
-                'currentPrice': get_cash(self._lineCurrentPrice),
+                'appSecurity': get_cash( self._lineAppSecurity ),
+                'contractSecurity': get_cash( self._lineContractSecurity ),
+                'currentPrice': get_cash( self._lineCurrentPrice ),
+                'positionCount': self._linePositionCount.text().strip(),
                 'place': self._linePlace.text().strip(),
                 'peiod': self._linePeriod.text().strip(),
-                'positionCount': self._linePositionCount.text().strip(),
                 'links': links
             }
-            self.checkInitPaths() # проверка основных путей 
-            self.chech_excel_fields() # проверка полей для расчета
+            self.__check_init_paths() # проверка основных путей 
+            self.__chech_excel_fields() # проверка полей для расчета
             if self.__check_form_data(form):
+                self.setDisabled(True)
                 msg(0, 'Пожалуйста заполните все данные формы!')
+                self.setDisabled(True)
             else:
                 self.form = form
                 self.save = True
                 self.hide()
                 self.close()
         except AttributeError:
+            self.setDisabled(True)
             msg(0, 'Пожалуйста выберите федеральный закон!')
+            self.setDisabled(False)
 
     def __check_form_data(self, form):
         for key in form:
@@ -294,15 +320,17 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 if form[key] == False:
                     break
 
-    def __openSettings(self, data=False):
+    def __open_settings(self, data=False):
         """ Открывает окно редактирования настроек """
+        self.setDisabled(True)
         self.settingsform = GeneralTab(self.restoredData)
-        self.settingsform.params.connect(self.__signalHandler)
+        self.settingsform.params.connect(self.__settings_callback)
         self.settingsform.show()
         if data:
             self.settingsform.displayDesired(data)
 
-    def __set_popup_actions(self):
+    def __set_lastform_triggers(self):
+        """ Последние заполненные заявки. """
         apps = self.restoredData['completedApps']
         if len(apps) > 0:
             i = -1
@@ -310,47 +338,42 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
             self.action0 = QAction(self)
             self.action0.setText( name )
             self.chose_lasts.addAction(self.action0)
-            self.action0.triggered.connect(lambda: getData(apps[-1]['path']))
-            print(apps[i]['path'])
+            self.action0.triggered.connect(lambda: __get_old_form(apps[-1]['path']))
         if len(apps) > 1:
             i = -2
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
             self.action1 = QAction(self)
             self.action1.setText( name )
             self.chose_lasts.addAction(self.action1)
-            self.action1.triggered.connect(lambda: getData(apps[-2]['path']))
-            print(apps[i]['path'])
+            self.action1.triggered.connect(lambda: __get_old_form(apps[-2]['path']))
         if len(apps) > 2:
             i = -3
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
             self.action2 = QAction(self)
             self.action2.setText( name )
             self.chose_lasts.addAction(self.action2)
-            self.action2.triggered.connect(lambda: getData(apps[-3]['path']))
-            print(apps[i]['path'])
+            self.action2.triggered.connect(lambda: __get_old_form(apps[-3]['path']))
         if len(apps) > 3:
             i = -4
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
             self.action2 = QAction(self)
             self.action2.setText( name )
             self.chose_lasts.addAction(self.action2)
-            self.action2.triggered.connect(lambda: getData(apps[-4]['path']))
-            print(apps[i]['path'])
+            self.action2.triggered.connect(lambda: __get_old_form(apps[-4]['path']))
         if len(apps) > 4:
             i = -5
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
             self.action2 = QAction(self)
             self.action2.setText( name )
             self.chose_lasts.addAction(self.action2)
-            self.action2.triggered.connect(lambda: getData(apps[-5]['path']))
-            print(apps[i]['path'])
+            self.action2.triggered.connect(lambda: __get_old_form(apps[-5]['path']))
 
         def setform(form):
             if form['law'] == '44':
                 self._radio44.setChecked(True)
             else:
                 self._radio223.setChecked(True)
-            self.__eventHandling()
+            self.__event_handling()
 
             self._lineName.setText(form['name'])
             self._lineRegNumber.setText(form['regnumber'])
@@ -361,30 +384,40 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
             if form['calculation']:
                 print(form)
                 self._checkBoxPayment.setChecked(True)
-                self.__tougglePayment()
+                self.__touggle_payment()
                 self._lineAppSecurity.setText(form['appSecurity'])
                 self._lineContractSecurity.setText(form['contractSecurity'])
                 self._lineCurrentPrice.setText(form['currentPrice'])
                 self._linePlace.setText(form['place'])
                 self._linePeriod.setText(form['peiod'])
                 self._linePositionCount.setText(form['positionCount'])
-                self.__updateList()
+                self.__update_list()
 
-        def getData(path):
+        def __get_old_form(path):
             path = r'%s\data' % path
             with open(path, "rb") as file:
                 form = pickle.load(file)
             setform(form)
 
-    def __signalHandler(self, signal):
+    def __settings_callback(self, signal):
         """ Получает сигнал из настроек. """
         if signal:
-            self.__updateList()
-            self.__updateCategories()
-            self.__upgateTendMethod()
+            self.__update_list()
+            self.__update_categories()
+            self.__update_tend_method()
+            self.setDisabled(False)
 
-    def getLinks(self):
+    def get_links(self):
         """ Возвращает список ссылок выбранных документов. """
         if self.save:
             return self.form
         return False
+
+
+def start(restored):
+    app = QtWidgets.QApplication(sys.argv) 
+    window = MainUi(restored)
+    window.show()
+    app.exec_()
+    form = window.get_links()
+    return form

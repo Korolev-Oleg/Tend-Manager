@@ -11,9 +11,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_editForm(object):
-    def setupUi(self, editForm):
+    def setupUi(self, editForm, title='Новый элемент'):
+        #######################################################################
+        self._title = title  ## WRITED
         editForm.setObjectName("editForm")
-        editForm.resize(307, 340)
+        width = 307
+        height = 430
+        editForm.resize(width, height)
+        #######################################################################
+        editForm.setMinimumSize(QtCore.QSize(width, height)) ## WRITED
+        editForm.setMaximumSize(QtCore.QSize(width, height)) ## WRITED
         self.centralwidget = QtWidgets.QWidget(editForm)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -73,6 +80,7 @@ class Ui_editForm(object):
 
     def retranslateUi(self, editForm):
         _translate = QtCore.QCoreApplication.translate
-        editForm.setWindowTitle(_translate("editForm", "Новый элемент"))
+        #######################################################################
+        editForm.setWindowTitle(_translate("editForm", self._title))  ## WRITED
         self.label.setText(_translate("editForm", "Наименование"))
         self.pushButton.setText(_translate("editForm", "Сохранить"))

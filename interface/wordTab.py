@@ -16,35 +16,26 @@ class WordTab(DocumentsTab):
     def __init__(self, restoredData, setView=False):
         super().__init__(restoredData, setView)
         self.variables = restoredData["variables"]
-        self.updateComboBox(self.word_combo_default)
+        # self.updateComboBox(self.word_combo_default)
         self.__updateTreeWidget()
 
         self.line = self.word_editline
         self.field = self.word_value
-        self.checkbox = self.word_chbx_default
-
         self.word_btn_del.clicked.connect(self.__removeItem)
-
-
-
-        self.eventTuple = (self.word_btn_add, self.line, self.field,                              self.checkbox)
-
-        self.triggerTuple = (self.word_value, self.checkbox, self.word_btn_add,                     self.word_combo_default, self.line)
-
-        self.checkbox.clicked.connect(lambda: 
-                                     self.triggeredCheckbox(self.triggerTuple))
+        self.word_editline.textChanged.connect(self.toggle_btn_enabled)
+        self.word_value.textChanged.connect(self.__toggle_btn_enabled)
 
         self.word_tree.clicked.connect(lambda:                                                                self.treeHasFocus(self.word_tree,                                      self.word_btn_del))
-
-        editlineConnect = self.word_editline.textChanged.connect
-        editlineConnect(lambda: self.textChangedEvent(self.eventTuple))
-
-        valueConnect = self.word_value.textChanged.connect
-        valueConnect(lambda: self.textChangedEvent(self.eventTuple))
         
         btnAddConnect = self.word_btn_add.clicked.connect
         btnAddConnect(lambda: self.addItem(self.variables["word"]))
-        # self.
+
+    def __toggle_btn_enabled(self):
+        if self.word_editline.text() and self.word_value.toPlainText():
+            self.word_btn_add.setEnabled(True)
+        else:
+            self.word_btn_add.setEnabled(False)
+
 
     def treeHasFocus(self, tree, btn):
         if tree.hasFocus():
@@ -121,22 +112,14 @@ class WordTab(DocumentsTab):
 
     def addItem(self, lets):
         """ Добавляет новый итем в variables["word"]. """
-        checkbox = self.checkbox
-        combo = self.word_combo_default
-        
+      
 
-        if checkbox.isChecked():
-            default = combo.currentText()
-            value = None
-        else:
-            default = None
-            value = self.word_value.toPlainText().strip()
+        value = self.word_value.toPlainText().strip()
 
         var = self.word_editline.text().strip()
 
         item = {
             "var": var,
-            "default": default,
             'value': value
         }
 
@@ -188,5 +171,5 @@ class WordTab(DocumentsTab):
 
             tree(index).setText(0, _translate("settings", item["var"]) )
             tree(index).setText(1, _translate("settings", item['value']) )
-            tree(index).setText(2, _translate("settings", item["default"]) )
+            # tree(index).setText(2, _translate("settings", item["default"]) )
             self.word_tree.resizeColumnToContents(0)

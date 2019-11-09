@@ -1,4 +1,4 @@
-import re
+import re, pythoncom
 import win32com.client
 import openpyxl
 
@@ -6,7 +6,16 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     """ Deletes cells from xlsx with OLE COM.
             file -> str url; count -> int; top_cell -> str 'A2'; end_cell -> str 'P301'; sheet -> str
     """
+    pythoncom.CoInitialize()
+
     Excel = win32com.client.Dispatch("Excel.Application")
+
+    xl_id = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, Excel)
+    
+    Excel = win32com.client.Dispatch(
+            pythoncom.CoGetInterfaceAndReleaseStream(xl_id, pythoncom.IID_IDispatch)
+    )
+ 
 
     top_indx = int(re.search(r'[0-9]+', top_cell)[0])
     end_indx = int(re.search(r'[0-9]+', end_cell)[0])
@@ -57,6 +66,7 @@ def init(links, payment_path, variables, general, form):
         top_cell = 'A%s' % general['cellTopLeft'] # добавляется буква А
         end_cell = 'A%s' % general['cellBotDn'] # добавляется буква А
         sheet = general['sheetName']
+        print("\n", payment_path, "\n")
         rangeDelete(payment_path, count, top_cell, end_cell, sheet)
 
     ex_variables = []
