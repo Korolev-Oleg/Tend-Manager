@@ -22,20 +22,29 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.restoredData = restoredData
         self.__update_tend_method()
         self.__update_categories()
-        self.__clean_completed_apps()
+        self.__clean_deleted_apps()
         self.__set_lastform_triggers()
         self.save = False
         self.law = False
+        self.attachs = []
 
+        self.pushButton.clicked.connect(self.add_to_attach)
         self._radio44.clicked.connect(self.__event_handling)
         self._radio223.clicked.connect(self.__event_handling)
-        self._btnGenerate.clicked.connect(self.__generate_dict)
-        self._btnView.clicked.connect(self.__opet_list_editor)
+        self._btnGenerate.clicked.connect(self.__generate_form)
+        self._btnView.clicked.connect(self.__open_documentstab)
         self.openSettings.triggered.connect(self.__open_settings)
         self._checkBoxPayment.clicked.connect(self.__touggle_payment)
         self._comboMethod.currentIndexChanged.connect(self.__update_list)
-    
-    def __clean_completed_apps(self):
+
+    def add_to_attach(self):
+        openFile = QtWidgets.QFileDialog.getOpenFileName
+        path, _ = openFile(self, 'Добавить временный файл', '')
+        self.attachs.append(path)
+        self.__update_list()
+
+    def __clean_deleted_apps(self):
+        """ Отчистка удаленных заявок из списка выполненых. """
         items = self.restoredData['completedApps']
         for item in items:
             if not os.path.exists(item['path']):
@@ -107,8 +116,9 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self._comboCat.addItems(catrgories)
         self._comboCat.setCurrentIndex(-1)
 
-    def __opet_list_editor(self):
-        """ Открывает страницу настроек для текущей заявки. """
+    def __open_documentstab(self):
+        """ Открывает страницу настроек списка документов для текущей заявки. """
+
         self.__open_settings( [self.law, self._comboMethod.currentText()] )
 
     def __list_handler(self, signal):
@@ -132,6 +142,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             print(self._comboMethod.currentText())
             if self._comboMethod.currentText():
                 self._btnView.setEnabled(True)
+                self.pushButton.setEnabled(True)
             self._btnGenerate.setEnabled(True)
             self.__update_list()
 
@@ -143,7 +154,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             return(False)
 
     def __update_list(self):
-        """ Обновляет список имен. """
+        """ Обновляет список прикрепляемых документов. """
         _translate = QtCore.QCoreApplication.translate
         self.methodName = self._comboMethod.currentText()
         self._listDocuments.clear()
@@ -155,7 +166,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                     if doc['law'] == self.law and doc['method'] ==                                           self.methodName:
 
                         if not doc['checked']:
-                            check = QtCore.Qt.Checked if doc['often'] >= 2 else                                    QtCore.Qt.Unchecked
+                            check = QtCore.Qt.Checked if doc['often'] >= 2                               else  QtCore.Qt.Unchecked
+
                             _item = QtWidgets.QListWidgetItem()
                             _item.setCheckState(check)
                             _item.setText(doc['name'])
@@ -167,11 +179,17 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                     print("'MainUi' object has no attribute 'law'")
             else:
                 self.__update_old_path(doc)
+        
+        for _path in self.attachs:
+            name = os.path.basename(_path)
+            self._listDocuments.addItem(name)
 
         if self._comboMethod.currentText():
             self._btnView.setEnabled(True)
+            self.pushButton.setEnabled(True)
         else:
             self._btnView.setEnabled(False)
+            self.pushButton.setEnabled(False)
     def __update_old_path(self, doc):
         """ Обновляет путь к файлу. """
 
@@ -244,14 +262,17 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                     
                 general['cellBotDn'] = rowBot
 
-    def __generate_dict(self):
+    def __generate_form(self):
         """ Создает объект с данными формы. """
         
-        checkNewItem = self.__check_new_combo_item
-        checkNewItem(self._comboCat, self.restoredData['categories'])
-        checkNewItem(self._comboMethod, self.restoredData['tenderMethodNames'])
+        dataCategorys = self.restoredData['categories']
+        dataMethods = self.restoredData['tenderMethodNames']
 
-        links = []
+        check_new_item = self.__check_new_combo_item
+        check_new_item( self._comboCat, dataCategorys )
+        check_new_item( self._comboMethod, dataMethods )
+
+        links = self.attachs
         _list = self._listDocuments
         for i in range(_list.count()):
             filename = _list.item(i)
