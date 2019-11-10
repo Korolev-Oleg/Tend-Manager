@@ -1,25 +1,15 @@
 import os, sys, re, pickle
 
-from PyQt5.QtCore           import pyqtSignal
-from PyQt5.QtCore           import QCoreApplication
-from PyQt5.QtCore           import Qt    
-from PyQt5                  import QtWidgets    
-
-from PyQt5.QtWidgets        import QMainWindow 
-from PyQt5.QtWidgets        import QFileDialog 
-from PyQt5.QtWidgets        import QListWidgetItem 
-from PyQt5.QtWidgets        import QInputDialog
-from PyQt5.QtWidgets        import QCompleter
-from PyQt5.QtWidgets        import QAction
-from PyQt5.QtWidgets        import QLineEdit
-
+from PyQt5                  import QtCore
+from PyQt5                  import QtWidgets
 from win32api               import MessageBox as msg
 from win32con               import MB_OKCANCEL
 
 from interface.ui           import mainUi
 from interface.generalTab   import GeneralTab
+from processing             import dbase
 
-class MainUi(QMainWindow, mainUi.Ui_Ui):
+class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     """ Главное окно.
         
         Возвращает заполненую форму с выбранными ссылками на документы
@@ -76,11 +66,11 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         self.setDisabled(False)
         if flag:
             while not path:
-                path = QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx; *.xls)")
+                path = QtWidgets.QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx; *.xls)")
             obj['paymentPath'] = path[0]
         else:
             while not path:
-                path = QFileDialog.getExistingDirectory(self, text)
+                path = QtWidgets.QFileDialog.getExistingDirectory(self, text)
             obj['mainPath'] = path
 
     def __touggle_payment(self):
@@ -108,7 +98,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         catrgories.sort()
 
         # авто комплит
-        completer = QCompleter( self )
+        completer = QtWidgets.QCompleter( self )
         completer.setModel( self._comboCat.model() )
         completer.setCaseSensitivity( 0 )
         self._comboCat.setCompleter(completer)
@@ -154,7 +144,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
 
     def __update_list(self):
         """ Обновляет список имен. """
-        _translate = QCoreApplication.translate
+        _translate = QtCore.QCoreApplication.translate
         self.methodName = self._comboMethod.currentText()
         self._listDocuments.clear()
         self.checkboxes = []
@@ -165,8 +155,8 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                     if doc['law'] == self.law and doc['method'] ==                                           self.methodName:
 
                         if not doc['checked']:
-                            check = Qt.Checked if doc['often'] >= 2 else                                    Qt.Unchecked
-                            _item = QListWidgetItem()
+                            check = QtCore.Qt.Checked if doc['often'] >= 2 else                                    QtCore.Qt.Unchecked
+                            _item = QtWidgets.QListWidgetItem()
                             _item.setCheckState(check)
                             _item.setText(doc['name'])
                             self._listDocuments.addItem(_item)
@@ -195,7 +185,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
             old_path = doc['dir']
             text = r"Выберите новый файл вместо {}".format(doc['name'])
 
-            openFile = QFileDialog.getOpenFileName
+            openFile = QtWidgets.QFileDialog.getOpenFileName
             path = openFile(self, text, "", r"Документы (*.*)")
 
             # проверка всего макета данных
@@ -237,7 +227,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 rowTop = ''
                 while not rowTop:
                     title = ''
-                    rowTop, ok = QInputDialog.getText(self, title, text)
+                    rowTop, ok = QtWidgets.QInputDialog.getText(self, title, text)
                     ok
                     if check_row(rowTop):
                         rowTop = ''
@@ -248,7 +238,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
                 rowBot = ''
                 while not rowBot:
                     title = ''
-                    rowBot, ok = QInputDialog.getText(self, title, text)
+                    rowBot, ok = QtWidgets.QInputDialog.getText(self, title, text)
                     if check_row(rowBot):
                         rowBot = ''
                     
@@ -335,35 +325,35 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
         if len(apps) > 0:
             i = -1
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action0 = QAction(self)
+            self.action0 = QtWidgets.QAction(self)
             self.action0.setText( name )
             self.chose_lasts.addAction(self.action0)
             self.action0.triggered.connect(lambda: __get_old_form(apps[-1]['path']))
         if len(apps) > 1:
             i = -2
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action1 = QAction(self)
+            self.action1 = QtWidgets.QAction(self)
             self.action1.setText( name )
             self.chose_lasts.addAction(self.action1)
             self.action1.triggered.connect(lambda: __get_old_form(apps[-2]['path']))
         if len(apps) > 2:
             i = -3
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action2 = QAction(self)
+            self.action2 = QtWidgets.QAction(self)
             self.action2.setText( name )
             self.chose_lasts.addAction(self.action2)
             self.action2.triggered.connect(lambda: __get_old_form(apps[-3]['path']))
         if len(apps) > 3:
             i = -4
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action2 = QAction(self)
+            self.action2 = QtWidgets.QAction(self)
             self.action2.setText( name )
             self.chose_lasts.addAction(self.action2)
             self.action2.triggered.connect(lambda: __get_old_form(apps[-4]['path']))
         if len(apps) > 4:
             i = -5
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action2 = QAction(self)
+            self.action2 = QtWidgets.QAction(self)
             self.action2.setText( name )
             self.chose_lasts.addAction(self.action2)
             self.action2.triggered.connect(lambda: __get_old_form(apps[-5]['path']))
@@ -395,8 +385,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
 
         def __get_old_form(path):
             path = r'%s\data' % path
-            with open(path, "rb") as file:
-                form = pickle.load(file)
+            form = dbase.read(path)
             setform(form)
 
     def __settings_callback(self, signal):
@@ -417,6 +406,7 @@ class MainUi(QMainWindow, mainUi.Ui_Ui):
 def start(restored):
     app = QtWidgets.QApplication(sys.argv) 
     window = MainUi(restored)
+    # window = GeneralTab(restored)
     window.show()
     app.exec_()
     form = window.get_links()

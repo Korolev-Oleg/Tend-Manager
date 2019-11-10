@@ -1,10 +1,11 @@
-import re, sys, datetime
+import re, sys, os, datetime
 
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore   import pyqtSignal, Qt
+from PyQt5.QtWidgets    import QFileDialog
+from PyQt5.QtCore       import pyqtSignal, Qt
 
 from interface.variablesTab import VariablesTab
-from interface.edit import EditForm
+from interface.edit         import EditForm
+from processing             import dbase
 
 class GeneralTab(VariablesTab):
     params = pyqtSignal(object)
@@ -14,9 +15,44 @@ class GeneralTab(VariablesTab):
         self.lets = restoredData["variables"]['default']
         self.btn_save.clicked.connect(self._save)
         self.generalInit() # __________вкладка основные__________
+        self._update()
 
         self.checkBox_openfolder.clicked.connect(self.set_openfolder)
         self.checkBox_openpayment.clicked.connect(self.set_openpayment)
+        self.sharedCheckBox.clicked.connect(self.trigger_shared_checkbox)
+        self.SharedButton.clicked.connect(self.set_shared_path)
+
+    def set_shared_path(self):
+        path = QFileDialog.getExistingDirectory(self, "text")
+        if path:
+            storage = '%s/storage' % path
+            if os.path.exists(storage):
+                self.restoredData['general']['shared'] = storage
+                self.restoredData = dbase.read(storage)
+                self.restoredData['general']['shared'] = storage
+            else:
+                self.restoredData['general']['shared'] = storage
+                dbase.save(self.restoredData, storage)
+
+            self._update()
+            self.trigger_shared_checkbox()
+
+    def trigger_shared_checkbox(self):
+        if self.sharedCheckBox.checkState():
+           self.sharedPathLine.setEnabled(True)
+           self.SharedButton.setEnabled(True)
+        else:
+           self.sharedPathLine.setEnabled(False)
+           self.SharedButton.setEnabled(False)
+           self.restoredData['general']['shared'] = ''
+        
+    def _update(self):
+        shared = self.restoredData['general']['shared']
+        if shared:
+            self.sharedCheckBox.setCheckState(2)
+            self.sharedPathLine.setText(shared)
+            self.sharedPathLine.setEnabled(True)
+            self.SharedButton.setEnabled(True)
 
     def set_openpayment(self):
         checkbox = self.checkBox_openpayment.checkState()
@@ -76,6 +112,7 @@ class GeneralTab(VariablesTab):
 
     def generalInit(self):
         """ Вкладка основные."""
+
         def update():
             general = self.restoredData['general']
             self.projectspath.setText(general['mainPath'])

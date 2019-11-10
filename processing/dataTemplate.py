@@ -126,7 +126,8 @@ def get(full=1, variables=False):
             'cellTopLeft': '',
             'cellBotDn': '',
             'openfolder': True,
-            'openpayment': True
+            'openpayment': True,
+            'shared': False
         },
         'completedApps': []
     }

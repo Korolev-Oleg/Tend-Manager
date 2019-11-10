@@ -94,7 +94,6 @@ def push_files(dist, static_files, dynamic_files, payment):
 
     if payment_dist:
         copyfile(payment, payment_dist)
-        if not path in links:
-            links.append(payment_dist)
+        links.append(payment_dist)
 
     return links

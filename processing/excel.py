@@ -45,8 +45,12 @@ def find_replace(link, variables):
                 for rows in sheet:
                     for cell in rows:
                         for var in variables:
-                            if var['var'] == cell.value:
-                                cell.value = var['value']
+                            if isinstance(cell.value, str):
+                                if cell.value.count(var['var']):
+                                    replace = cell.value.replace(var['var'], 
+                                                                var['value'])
+
+                                    cell.value = replace
         except TypeError:
             pass
         doc.save(link)
