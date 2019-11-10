@@ -892,10 +892,37 @@
         <item>
          <widget class="QGroupBox" name="groupBox_5">
           <property name="title">
-           <string>Общий доступ к настройкам</string>
+           <string>Прочие</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="1" column="1">
+           <item row="1" column="0" colspan="2">
+            <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,0">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="sharedCheckBox">
+               <property name="text">
+                <string>Общий доступ к настройкам</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="onTopCheckBox">
+               <property name="text">
+                <string>Поверх всех окон</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="5" column="1">
             <widget class="QToolButton" name="SharedButton">
              <property name="enabled">
               <bool>false</bool>
@@ -905,20 +932,13 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="5" column="0">
             <widget class="QLineEdit" name="sharedPathLine">
              <property name="enabled">
               <bool>false</bool>
              </property>
              <property name="readOnly">
               <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="sharedCheckBox">
-             <property name="text">
-              <string>Включить</string>
              </property>
             </widget>
            </item>

@@ -16,7 +16,6 @@ class WordTab(DocumentsTab):
     def __init__(self, restoredData, setView=False):
         super().__init__(restoredData, setView)
         self.variables = restoredData["variables"]
-        # self.updateComboBox(self.word_combo_default)
         self.__updateTreeWidget()
 
         self.line = self.word_editline
@@ -24,11 +23,23 @@ class WordTab(DocumentsTab):
         self.word_btn_del.clicked.connect(self.__removeItem)
         self.word_editline.textChanged.connect(self.toggle_btn_enabled)
         self.word_value.textChanged.connect(self.__toggle_btn_enabled)
+        self.word_tree.doubleClicked.connect(self.change_variable)
 
-        self.word_tree.clicked.connect(lambda:                                                                self.treeHasFocus(self.word_tree,                                      self.word_btn_del))
+        self.word_tree.clicked.connect(lambda:                                                                self.tree_has_focus(self.word_tree,                                      self.word_btn_del))
         
-        btnAddConnect = self.word_btn_add.clicked.connect
-        btnAddConnect(lambda: self.addItem(self.variables["word"]))
+        lets = self.variables["word"]
+        tree = self.__updateTreeWidget
+        value = self.word_value
+        var = self.word_editline
+        remove = self.__removeItem
+        args = lets, tree, value, var, remove
+        self.word_btn_add.clicked.connect(lambda: self.addItem(args))
+
+    def change_variable(self):
+        variableName = self.word_tree.currentItem().text(0)
+        variableValue = self.word_tree.currentItem().text(1) 
+        self.word_editline.setText(str(variableName))
+        self.word_value.setText(str(variableValue))
 
     def __toggle_btn_enabled(self):
         if self.word_editline.text() and self.word_value.toPlainText():
@@ -37,86 +48,23 @@ class WordTab(DocumentsTab):
             self.word_btn_add.setEnabled(False)
 
 
-    def treeHasFocus(self, tree, btn):
+    def tree_has_focus(self, tree, btn):
         if tree.hasFocus():
             btn.setEnabled(True)
         else:
             btn.setEnabled(False)
 
-    def updateComboBox(self, combo):
+    def addItem(self, args):
+  
+        """ Добавляет новый элемент в дерево.
 
-        for item in self.variables["default"]:
-            combo.addItem(item["name"])
-
-    def textChangedEvent(self, *args):
-        """ Отслеживает изменения полей.
-            
-            Keyword arguments:
-                @param *args -> (
-                    valueEdit
-                    checkbox,
-                    button,
-                    combo,
-                    line,
-                    ________
-                    radio_cell,
-                    radio_var
-                )
+            *args:
+                lets, update_tree, value, var
         """
-        """ Отслеживает изменения полей. """
-        btn = args[0][0]
-        line = args[0][1].text()
-        field = args[0][2].toPlainText()
-        checkbox = args[0][3]
+        lets, update_tree, value, var, remove_item = args
 
-        if not line.strip() == "" and not field.strip() == ""                                            or checkbox.isChecked():
-            btn.setEnabled(True)
-            return(True)
-        else:
-            btn.setEnabled(False)
-            return(False)
-
-    def triggeredCheckbox(self, *args):
-        """ Переключает видимость полей.
-            
-            Keyword arguments:
-                *args -> (
-                    valueEdit
-                    checkbox,
-                    button,
-                    combo,
-                    line,
-                    ________
-                    radio_cell,
-                    radio_var
-                )
-            
-        """
-        valueEdit = args[0][0]
-        checkbox = args[0][1]
-        button = args[0][2]
-        combo = args[0][3]
-        line = args[0][4].text()
-
-
-        if checkbox.isChecked():
-            combo.setEnabled(True)
-            valueEdit.setEnabled(False)
-            if not line.strip() == "":
-                button.setEnabled(True)
-        else:
-            self.textChangedEvent(self.eventTuple)
-            valueEdit.setEnabled(True)
-            combo.setEnabled(False)
-
-
-    def addItem(self, lets):
-        """ Добавляет новый итем в variables["word"]. """
-      
-
-        value = self.word_value.toPlainText().strip()
-
-        var = self.word_editline.text().strip()
+        var = var.text().strip()
+        value = value.toPlainText().strip()
 
         item = {
             "var": var,
@@ -124,34 +72,45 @@ class WordTab(DocumentsTab):
         }
 
         if len(lets) > 0:
-
             find = False
             for let in lets:
                 if let["var"] == var:
                     find = True
                 else:
                     continue
-            
             if not find:
                 lets.append(item)
+            else:
+                yes = 6
+                text_0 = 'Переменная с именем'
+                text_1 = 'уже существует. Внести изменения?'
+                text = '%s %s %s' % (text_0, item['var'], text_1)
 
+                self.beep()
+                self.setDisabled(True)
+                chose = self.msg(0, text, 'Внимание', 4)
+                self.setDisabled(False)
+                if chose == yes:
+                    remove_item(item['var'])
+                    lets.append(item)
         else:
             lets.append(item)
         
-        self.__updateTreeWidget()
+        update_tree()
 
-    def __removeItem(self):
-        """ Удаляет итем из variables["word"]. """
-        wordVars = self.variables["word"]
-        try:
+    def __removeItem(self, name=False, lets=False):
+        """ Удаляет указаный элемент из tree. """
+
+        if not lets:
+            lets = self.variables["word"]
+
+        if not name:
             name = self.word_tree.selectedIndexes()[0].data()
-        except IndexError:
-            pass
         
-        for item in wordVars:
+        for item in lets:
             try:
                 if item["var"] == name:
-                    wordVars.remove(item)
+                    lets.remove(item)
             except UnboundLocalError:
                 pass
         

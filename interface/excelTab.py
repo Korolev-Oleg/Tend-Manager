@@ -21,12 +21,27 @@ class ExcelTab(WordTab):
         self._line = self.excel_editline
         self._field = self.excel_value
 
-        self.btn_del_5.clicked.connect(self.__removeItm)
-        self.btn_add_5.clicked.connect(self.__addItem)
+        # self.btn_add_5.clicked.connect(self.__add_item)
+        self.btn_del_5.clicked.connect(self.__removeItem)
         self.excel_editline.textChanged.connect(self.toggle_btn_enabled)
         self.excel_value.textChanged.connect(self.toggle_btn_enabled)
+        self.excel_tree.doubleClicked.connect(self.change_variable)
 
-        self.excel_tree.clicked.connect(lambda: self.treeHasFocus                                             (self.excel_tree, self.btn_del_5))
+        self.excel_tree.clicked.connect(lambda: self.tree_has_focus                                             (self.excel_tree, self.btn_del_5))
+
+        lets = self.variables['excel']
+        tree = self.__updateTree
+        value = self.excel_value
+        var = self.excel_editline
+        remove = self.__removeItem
+        args = lets, tree, value, var, remove
+        self.btn_add_5.clicked.connect(lambda: self.addItem(args))
+
+    def change_variable(self):
+        variableName = self.excel_tree.currentItem().text(0)
+        variableValue = self.excel_tree.currentItem().text(1) 
+        self.excel_editline.setText(str(variableName))
+        self.excel_value.setText(str(variableValue))
 
     def toggle_btn_enabled(self):
         if self.excel_editline.text() and self.excel_value.toPlainText():
@@ -34,7 +49,7 @@ class ExcelTab(WordTab):
         else:
             self.btn_add_5.setEnabled(False)
 
-    def __addItem(self):
+    def __add_item(self):
         lets = self.variables['excel']
         var = self._line.text()
         value = self._field.toPlainText().strip()
@@ -58,24 +73,25 @@ class ExcelTab(WordTab):
 
         self.__updateTree()
 
-    def __removeItm(self):
-        """ Удаляет итем из variables["excel"]. """
-        lets = self.variables["excel"]
-        try:
-            name = self.excel_tree.selectedIndexes()[0].data()
-            cell = self.excel_tree.selectedIndexes()[1].data()
-        except IndexError:
-            pass
-        
+    def __removeItem(self, name=False, lets=False):
+        """ Удаляет указаный элемент из tree. """
+
+        if not lets:
+            lets = self.variables["excel"]
+
+        if not name:
+            try:
+                name = self.excel_tree.selectedIndexes()[0].data()
+            except IndexError:
+                pass
+            
         for item in lets:
             try:
-                if name == "-" and item["cell"] == cell:
-                    lets.remove(item)
-
                 if item["var"] == name:
                     lets.remove(item)
             except UnboundLocalError:
                 pass
+
         self.__updateTree()
 
     def __updateTree(self):

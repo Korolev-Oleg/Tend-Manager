@@ -36,11 +36,12 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.openSettings.triggered.connect(self.__open_settings)
         self._checkBoxPayment.clicked.connect(self.__touggle_payment)
         self._comboMethod.currentIndexChanged.connect(self.__update_list)
-
+            
     def add_to_attach(self):
-        openFile = QtWidgets.QFileDialog.getOpenFileName
-        path, _ = openFile(self, 'Добавить временный файл', '')
-        self.attachs.append(path)
+        openFile = QtWidgets.QFileDialog.getOpenFileNames
+        paths, _ = openFile(self, 'Добавить временный файл', '')
+
+        self.attachs = paths
         self.__update_list()
 
     def __clean_deleted_apps(self):
@@ -70,6 +71,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 flag -> str xlsx filter
         """
         path = ''
+        self.beep()
         self.setDisabled(True)
         msg(0, text, 'Внимание!')
         self.setDisabled(False)
@@ -190,11 +192,16 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         else:
             self._btnView.setEnabled(False)
             self.pushButton.setEnabled(False)
+        
+
+
     def __update_old_path(self, doc):
         """ Обновляет путь к файлу. """
 
         text = "Файл: {}\nперемещен или удален. Указать новый файл?"\
                                                 .format(doc['name'])
+
+        self.beep()
         self.setDisabled(True)
         chose = msg(0, text, "Файл ненайден", 4)
         self.setDisabled(False)
@@ -233,6 +240,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             en = re.search(r'[A-z]', row)
             ex = re.search(r'\W', row)
             if ru or en or ex:
+                self.beep()
                 self.setDisabled(True)
                 msg(0, 'Укажите числовой номер!')
                 self.setDisabled(False)
@@ -310,6 +318,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.__check_init_paths() # проверка основных путей 
             self.__chech_excel_fields() # проверка полей для расчета
             if self.__check_form_data(form):
+                self.beep()
                 self.setDisabled(True)
                 msg(0, 'Пожалуйста заполните все данные формы!')
                 self.setDisabled(True)
@@ -319,6 +328,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 self.hide()
                 self.close()
         except AttributeError:
+            self.beep()
             self.setDisabled(True)
             msg(0, 'Пожалуйста выберите федеральный закон!')
             self.setDisabled(False)
@@ -416,6 +426,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.__update_categories()
             self.__update_tend_method()
             self.setDisabled(False)
+
 
     def get_links(self):
         """ Возвращает список ссылок выбранных документов. """

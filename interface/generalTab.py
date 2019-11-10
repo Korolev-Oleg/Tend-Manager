@@ -21,6 +21,14 @@ class GeneralTab(VariablesTab):
         self.checkBox_openpayment.clicked.connect(self.set_openpayment)
         self.sharedCheckBox.clicked.connect(self.trigger_shared_checkbox)
         self.SharedButton.clicked.connect(self.set_shared_path)
+        self.onTopCheckBox.clicked.connect(self.set_windows_ontop)
+
+    def set_windows_ontop(self):
+        if self.onTopCheckBox.isChecked():
+            self.restoredData['general']['windowsOnTop'] = True
+        else:
+            self.restoredData['general']['windowsOnTop'] = False
+
 
     def set_shared_path(self):
         path = QFileDialog.getExistingDirectory(self, "text")
@@ -53,6 +61,10 @@ class GeneralTab(VariablesTab):
             self.sharedPathLine.setText(shared)
             self.sharedPathLine.setEnabled(True)
             self.SharedButton.setEnabled(True)
+        
+        winOnTop = self.restoredData['general']['windowsOnTop']
+        if winOnTop:
+            self.onTopCheckBox.setCheckState(2)
 
     def set_openpayment(self):
         checkbox = self.checkBox_openpayment.checkState()

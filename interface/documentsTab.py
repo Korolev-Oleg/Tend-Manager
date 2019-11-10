@@ -10,6 +10,7 @@ from PyQt5.QtWidgets    import QFileDialog
 from PyQt5.QtWidgets    import QTreeWidgetItem
 from PyQt5.QtWidgets    import QApplication
 from win32api           import MessageBox as msg
+from win32api           import MessageBeep
 
 from interface.ui       import settingsForm
 from interface.edit     import EditForm
@@ -29,6 +30,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.restoredData = restoredData
         self.__update_combo_tend()   # востановление параметров формы
         self.msg = msg
+        self.beep = MessageBeep
 
         self.treeDocuments.clicked.connect(self.__toggle_check)
         self.radio_Law44.clicked.connect(self.__event_handling)
