@@ -4,6 +4,7 @@ from PyQt5                  import QtCore
 from PyQt5                  import QtWidgets
 from win32api               import MessageBox as msg
 from win32con               import MB_OKCANCEL
+from win32api               import MessageBeep
 
 from interface.ui           import mainUi
 from interface.generalTab   import GeneralTab
@@ -71,7 +72,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 flag -> str xlsx filter
         """
         path = ''
-        self.beep()
+        MessageBeep()
         self.setDisabled(True)
         msg(0, text, 'Внимание!')
         self.setDisabled(False)
@@ -201,7 +202,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         text = "Файл: {}\nперемещен или удален. Указать новый файл?"\
                                                 .format(doc['name'])
 
-        self.beep()
+        MessageBeep()
         self.setDisabled(True)
         chose = msg(0, text, "Файл ненайден", 4)
         self.setDisabled(False)
@@ -240,7 +241,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             en = re.search(r'[A-z]', row)
             ex = re.search(r'\W', row)
             if ru or en or ex:
-                self.beep()
+                MessageBeep()
                 self.setDisabled(True)
                 msg(0, 'Укажите числовой номер!')
                 self.setDisabled(False)
@@ -318,7 +319,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.__check_init_paths() # проверка основных путей 
             self.__chech_excel_fields() # проверка полей для расчета
             if self.__check_form_data(form):
-                self.beep()
+                MessageBeep()
                 self.setDisabled(True)
                 msg(0, 'Пожалуйста заполните все данные формы!')
                 self.setDisabled(True)
@@ -328,7 +329,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 self.hide()
                 self.close()
         except AttributeError:
-            self.beep()
+            MessageBeep()
             self.setDisabled(True)
             msg(0, 'Пожалуйста выберите федеральный закон!')
             self.setDisabled(False)
