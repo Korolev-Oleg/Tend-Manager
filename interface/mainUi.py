@@ -28,6 +28,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.save = False
         self.law = False
         self.attachs = []
+        self.beep = MessageBeep
 
         self.pushButton.clicked.connect(self.add_to_attach)
         self._radio44.clicked.connect(self.__event_handling)
