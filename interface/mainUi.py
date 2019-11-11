@@ -4,6 +4,7 @@ from PyQt5                  import QtCore
 from PyQt5                  import QtWidgets
 from win32api               import MessageBox as msg
 from win32con               import MB_OKCANCEL
+from win32api               import MessageBeep
 
 from interface.ui           import mainUi
 from interface.generalTab   import GeneralTab
@@ -27,6 +28,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.save = False
         self.law = False
         self.attachs = []
+        self.beep = MessageBeep
 
         self.pushButton.clicked.connect(self.add_to_attach)
         self._radio44.clicked.connect(self.__event_handling)
