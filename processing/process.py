@@ -42,10 +42,10 @@ class Processing(QtCore.QThread):
 
         print("Заполнение переменных")
         word.init(links, variables)
-
+        
+        print('пути')
         project_path = dist[-2]
         dbase.save(form, '%s/data' % project_path)
-        self.progress.emit(('Готово!', 100))
         project_path = project_path.replace('/', '\\')
         if general['openfolder']:
             os.system('explorer "%s"' % project_path)
@@ -62,6 +62,7 @@ class Processing(QtCore.QThread):
         }
 
         restored['completedApps'].append(complete_app)
+        self.progress.emit(('Готово!', 100))
         
 
 def start(form, restored):
