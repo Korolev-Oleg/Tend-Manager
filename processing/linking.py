@@ -1,5 +1,6 @@
 import os
 from shutil import copyfile
+from win32api import (MessageBeep, MessageBox)
 
 # временно 
 from interface.mainUi import MainUi
@@ -93,6 +94,7 @@ def push_files(dist, static_files, dynamic_files, payment):
             links.append(path)
 
     if payment_dist:
+        print(payment)
         copyfile(payment, payment_dist)
         links.append(payment_dist)
 

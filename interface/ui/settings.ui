@@ -186,6 +186,20 @@
            </spacer>
           </item>
           <item>
+           <widget class="QPushButton" name="pushAllButton">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+            </property>
+            <property name="text">
+             <string>Общие</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>interface/icons/docs.ico</normaloff>interface/icons/docs.ico</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="btn_pushTotree">
             <property name="enabled">
              <bool>false</bool>

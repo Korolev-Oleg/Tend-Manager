@@ -16,7 +16,7 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
             pythoncom.CoGetInterfaceAndReleaseStream(xl_id, pythoncom.IID_IDispatch)
     )
  
-
+    print(top_cell)
     top_indx = int(re.search(r'[0-9]+', top_cell)[0])
     end_indx = int(re.search(r'[0-9]+', end_cell)[0])
     top_char = re.search(r'[A-z]+', top_cell)[0]

@@ -9,11 +9,12 @@ from processing             import dbase
 
 class GeneralTab(VariablesTab):
     params = pyqtSignal(object)
-    def __init__(self, restoredData, setView=False):
+    def __init__(self, restoredData, localGeneral, setView=False):
         VariablesTab.__init__(self, restoredData, setView)
         self.setWindowModality(Qt.ApplicationModal)
         self.lets = restoredData["variables"]['default']
         self.btn_save.clicked.connect(self._save)
+        self.localGeneral = localGeneral
         self.generalInit() # __________вкладка основные__________
         self._update()
 
@@ -127,7 +128,7 @@ class GeneralTab(VariablesTab):
 
         def update():
             general = self.restoredData['general']
-            self.projectspath.setText(general['mainPath'])
+            self.projectspath.setText(self.localGeneral['mainPath'])
             self.paymentpath.setText(general['paymentPath'])
             self.sheetName.setText(general['sheetName'])
             self.cellTopLeft.setText(general['cellTopLeft'])
@@ -169,7 +170,7 @@ class GeneralTab(VariablesTab):
             text = r"Выберите основную папку проектов"
             path = QFileDialog.getExistingDirectory(self, text)
             if path:
-                self.restoredData['general']['mainPath'] = path
+                self.localGeneral['mainPath'] = path
             update()
 
         def chosePaymentpath():

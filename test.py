@@ -1,6 +1,4 @@
-import time
+c = 218 - (20 + 20 + 89)
+c -= 34
 
-to = time.time() + .2
-
-while time.time() < to:
-    print(time.time())
+print(c)

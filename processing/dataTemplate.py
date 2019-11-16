@@ -11,6 +11,17 @@
                 "default": -> name, var, val
                 'general'-> mainPath, paymentPath, sheetName, cellTopLeft, cellBotDn
             }
+            general {
+                'mainPath': '', 
+                'paymentPath': '',
+                'sheetName': '', 
+                'cellTopLeft': '',
+                'cellBotDn': '',
+                'openfolder': True,
+                'openpayment': True,
+                'shared': False,
+                'windowsOnTop': False
+            },
 """
 
 

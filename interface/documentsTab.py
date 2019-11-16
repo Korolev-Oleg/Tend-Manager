@@ -32,6 +32,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.msg = msg
         self.beep = MessageBeep
 
+        self.pushAllButton.clicked.connect(self.__push_general_items)
         self.treeDocuments.clicked.connect(self.__toggle_check)
         self.radio_Law44.clicked.connect(self.__event_handling)
         self.radio_Law223.clicked.connect(self.__event_handling)
@@ -66,6 +67,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             self.__update_combo_tend()
 
     def __chose_all(self):
+        """ Добавляет общий список документов. """
         checkBox = self.choseAllCheckBox
         print(checkBox.checkState())
         check = Qt.Checked if checkBox.checkState() else Qt.Unchecked
@@ -133,6 +135,33 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         else:
             self.btn_removeFromtree.setEnabled(False)
 
+    def __push_general_items(self):
+        text = r"Выберите общие файлы для всех способов закопок"
+        dirs = QFileDialog.getOpenFileNames\
+               (self, text, "", r"Документы (*.*)")
+
+        laws = ["44", "223"]
+        for law in laws:
+            for method in self.restoredData['tenderMethodNames']:
+                for url in dirs[0]:
+    
+                    name = os.path.basename(url)
+
+                    item = {
+                        "checked": False,
+                        "name": name,
+                        "dir": url,
+                        "method": method,
+                        "law": law,
+                        'often': 0
+                    }
+
+                    if not self.listDocuments.count(item):
+                        self.listDocuments.append(item)
+
+        self.__update_tree_widget()
+            
+        
 
     def __push_new_items(self):
         """ Добавляет новый объект в {listDocuments}.. """

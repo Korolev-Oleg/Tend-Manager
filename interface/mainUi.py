@@ -1,4 +1,4 @@
-import os, sys, re, pickle
+import os, sys, re, pickle, string
 
 from PyQt5                  import QtCore
 from PyQt5                  import QtWidgets
@@ -17,14 +17,16 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         return:
             form -> {} law, name, regnumber, category, method, object,calculation, appSecurity, contractSecurity, currentPrice, place, peiod, positionCount, links -> []
     """
-    def __init__(self, restoredData):
+    def __init__(self, restoredData, localGeneral):
         super().__init__()
         self.setupUi(self)
         self.restoredData = restoredData
+        self.localGeneral = localGeneral
         self.__update_tend_method()
         self.__update_categories()
         self.__clean_deleted_apps()
         self.__set_lastform_triggers()
+        self.__set_max_field_lenght()
         self.save = False
         self.law = False
         self.attachs = []
@@ -38,7 +40,51 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.openSettings.triggered.connect(self.__open_settings)
         self._checkBoxPayment.clicked.connect(self.__touggle_payment)
         self._comboMethod.currentIndexChanged.connect(self.__update_list)
-            
+        self._comboMethod.currentTextChanged.connect(self.__update_max_lenght)
+        self._comboCat.currentTextChanged.connect(self.__update_max_lenght)
+
+    def __update_max_lenght(self):
+        cur_cat = self._comboCat.currentText()
+        cur_meth = self._comboMethod.currentText()
+        self.__set_max_field_lenght(cur_cat=cur_cat, cur_meth=cur_meth)
+
+    def __set_max_field_lenght(self, cur_cat=False, cur_meth=False):
+        pathToApps = self.localGeneral['mainPath']
+
+        if not cur_cat:
+            categories = self.restoredData['categories']
+        else:
+            categories = cur_cat
+
+        if not cur_meth:
+            methods = self.restoredData['tenderMethodNames']
+        else:
+            methods = cur_meth
+
+        def get_bigger_len(array):
+            big = array[0]
+            for item in array:
+                if len(item) > len(big):
+                    big = item
+        
+            return big
+
+        if not categories:
+            categories = '-' * 20
+
+        if not methods:
+            methods = '-' * 20
+
+        if not cur_cat and not cur_meth:
+            categories = get_bigger_len(categories)
+            methods = get_bigger_len(methods)
+
+        maxLenght = 218 - ( len(pathToApps) + len(categories) + len(methods) )
+        maxLenght -= 34
+
+        print(maxLenght)
+        self._lineName.setMaxLength(maxLenght)
+
     def add_to_attach(self):
         openFile = QtWidgets.QFileDialog.getOpenFileNames
         paths, _ = openFile(self, 'Добавить временный файл', '')
@@ -301,11 +347,14 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             else:
                 return line
         try:
+            _name = self.clear_filename( self._lineName.text().strip() )
+            _regnum = self.clear_filename( self._lineRegNumber.text().strip() )
+            _cat = self.clear_filename( self._comboCat.currentText().strip() )
             form = {
                 'law': self.law,
-                'name': self._lineName.text().strip(),
-                'regnumber': self._lineRegNumber.text().strip(),
-                'category': self._comboCat.currentText().strip(),
+                'name': _name,
+                'regnumber': _regnum,
+                'category': _cat,
                 'method': self._comboMethod.currentText().strip(),
                 'object': self._lineObject.text().strip(),
                 'calculation': self._checkBoxPayment.isChecked(),
@@ -317,23 +366,34 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 'peiod': self._linePeriod.text().strip(),
                 'links': links
             }
+
             self.__check_init_paths() # проверка основных путей 
             self.__chech_excel_fields() # проверка полей для расчета
             if self.__check_form_data(form):
                 MessageBeep()
                 self.setDisabled(True)
                 msg(0, 'Пожалуйста заполните все данные формы!')
-                self.setDisabled(True)
+                self.setDisabled(False)
             else:
                 self.form = form
                 self.save = True
                 self.hide()
                 self.close()
+                
         except AttributeError:
             MessageBeep()
             self.setDisabled(True)
             msg(0, 'Пожалуйста выберите федеральный закон!')
             self.setDisabled(False)
+
+    def clear_filename(self, fileName):
+        forbidden = '\\|/*<>?:"'
+        for i in forbidden:
+            if i in fileName:
+                fileName = fileName.replace(i, '')
+                
+        return fileName
+
 
     def __check_form_data(self, form):
         for key in form:
@@ -346,7 +406,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     def __open_settings(self, data=False):
         """ Открывает окно редактирования настроек """
         self.setDisabled(True)
-        self.settingsform = GeneralTab(self.restoredData)
+        self.settingsform = GeneralTab(self.restoredData, self.localGeneral)
         self.settingsform.params.connect(self.__settings_callback)
         self.settingsform.show()
         if data:
@@ -430,18 +490,19 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.setDisabled(False)
 
 
-    def get_links(self):
-        """ Возвращает список ссылок выбранных документов. """
+    def get_form(self):
+        """ Возвращает заполненую форму. """
         if self.save:
             return self.form
         return False
 
 
-def start(restored):
+def start(restored, localGeneral):
+    """ Возвращает заполненую форму. """
     app = QtWidgets.QApplication(sys.argv) 
-    window = MainUi(restored)
+    window = MainUi(restored, localGeneral)
     # window = GeneralTab(restored)
     window.show()
     app.exec_()
-    form = window.get_links()
+    form = window.get_form()
     return form
