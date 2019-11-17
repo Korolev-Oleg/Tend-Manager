@@ -8,7 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from interface.ui.RESOURSE import resource_path
 
 class Ui_editForm(object):
     def setupUi(self, editForm, title='Новый элемент'):
@@ -40,7 +40,8 @@ class Ui_editForm(object):
         self.btn_pushTotree.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.btn_pushTotree.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("./interface/icons/add.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        icon.addPixmap(QtGui.QPixmap(resource_path('add.ico')), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_pushTotree.setIcon(icon)
         self.btn_pushTotree.setObjectName("btn_pushTotree")
         self.horizontalLayout.addWidget(self.btn_pushTotree)
@@ -50,7 +51,8 @@ class Ui_editForm(object):
         self.btn_removeFromtree.setStyleSheet("background-color: rgba(255, 255, 255, 5);")
         self.btn_removeFromtree.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("./interface/icons/remove.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        icon1.addPixmap(QtGui.QPixmap(resource_path('remove.ico')), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_removeFromtree.setIcon(icon1)
         self.btn_removeFromtree.setObjectName("btn_removeFromtree")
         self.horizontalLayout.addWidget(self.btn_removeFromtree)

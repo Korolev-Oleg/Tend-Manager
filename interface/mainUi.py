@@ -1,7 +1,6 @@
 import os, sys, re, pickle, string
 
-from PyQt5                  import QtCore
-from PyQt5                  import QtWidgets
+from PyQt5                  import (QtWidgets, QtCore, QtGui, Qt)
 from win32api               import MessageBox as msg
 from win32con               import MB_OKCANCEL
 from win32api               import MessageBeep
@@ -9,6 +8,7 @@ from win32api               import MessageBeep
 from interface.ui           import mainUi
 from interface.generalTab   import GeneralTab
 from processing             import dbase
+from interface.ui.RESOURSE  import resource_path
 
 class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     """ Главное окно.
@@ -27,6 +27,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.__clean_deleted_apps()
         self.__set_lastform_triggers()
         self.__set_max_field_lenght()
+        self._set_icons()
         self.save = False
         self.law = False
         self.attachs = []
@@ -42,6 +43,15 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.currentIndexChanged.connect(self.__update_list)
         self._comboMethod.currentTextChanged.connect(self.__update_max_lenght)
         self._comboCat.currentTextChanged.connect(self.__update_max_lenght)
+
+        if localGeneral['windowsOnTop']:
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            
+    def _set_icons(self):
+        path = resource_path('add.ico')
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(path), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton.setIcon(icon)
 
     def __update_max_lenght(self):
         cur_cat = self._comboCat.currentText()
@@ -406,6 +416,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     def __open_settings(self, data=False):
         """ Открывает окно редактирования настроек """
         self.setDisabled(True)
+        
         self.settingsform = GeneralTab(self.restoredData, self.localGeneral)
         self.settingsform.params.connect(self.__settings_callback)
         self.settingsform.show()

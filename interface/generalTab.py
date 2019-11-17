@@ -24,6 +24,8 @@ class GeneralTab(VariablesTab):
         self.SharedButton.clicked.connect(self.set_shared_path)
         self.onTopCheckBox.clicked.connect(self.set_windows_ontop)
 
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+
     def set_windows_ontop(self):
         if self.onTopCheckBox.isChecked():
             self.restoredData['general']['windowsOnTop'] = True

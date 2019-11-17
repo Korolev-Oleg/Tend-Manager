@@ -1,9 +1,12 @@
-import sys  
-import os
+import sys, os
+
 
 from PyQt5.QtCore       import pyqtSignal
 from PyQt5.QtCore       import QCoreApplication
 from PyQt5.QtCore       import Qt
+from PyQt5              import QtGui
+
+
 
 from PyQt5.QtWidgets    import QMainWindow
 from PyQt5.QtWidgets    import QFileDialog
@@ -12,8 +15,9 @@ from PyQt5.QtWidgets    import QApplication
 from win32api           import MessageBox as msg
 from win32api           import MessageBeep
 
-from interface.ui       import settingsForm
-from interface.edit     import EditForm
+from interface.ui           import settingsForm
+from interface.edit         import EditForm
+from interface.ui.RESOURSE  import resource_path
 
 class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
     """ Открывает окно настроек.
@@ -29,6 +33,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.setupUi(self)  # инициализация формы
         self.restoredData = restoredData
         self.__update_combo_tend()   # востановление параметров формы
+        self._set_icons()
         self.msg = msg
         self.beep = MessageBeep
 
@@ -42,6 +47,19 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.btn_tendMethod.clicked.connect(self.__open_edit_form)
         self.btn_clear.clicked.connect(self.__clear_all)
         self.combo_tendMethod.currentIndexChanged.connect                                                 (self.__event_handling)
+
+    def _set_icons(self):
+        def setup(icon, item):
+            path = resource_path(icon)
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            item.setIcon(icon)
+
+        setup('add.ico', self.btn_pushTotree)
+        setup('clear.ico', self.btn_clear)
+        setup('docs.ico', self.pushAllButton)
+        setup('remove.ico', self.btn_removeFromtree)
+    
 
     def innerUpdate(self, combodata):
         # self.__toggle_check()
