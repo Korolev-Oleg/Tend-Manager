@@ -1,7 +1,9 @@
 from PyQt5          import QtWidgets as Qtw
 from PyQt5.QtCore   import pyqtSignal, Qt
 from PyQt5          import QtCore
+from PyQt5          import QtGui
 
+from interface.ui.RESOURSE  import resource_path
 from interface.ui   import editForm
 
 class EditForm(Qtw.QMainWindow, editForm.Ui_editForm):
@@ -20,6 +22,7 @@ class EditForm(Qtw.QMainWindow, editForm.Ui_editForm):
         else:
             self.methodNames = data['tenderMethodNames']
         self.setupUi(self, title)
+        self._set_icons()
 
         self.btn_pushTotree.clicked.connect(self.addItem)
         self.lineEdit.textChanged.connect(self.lineEvent)
@@ -29,6 +32,21 @@ class EditForm(Qtw.QMainWindow, editForm.Ui_editForm):
 
         self.updateItems()
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+
+    def _set_icons(self):
+        def setup(icon, item, window=False):
+            path = resource_path(icon)
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            if window:
+                item.setWindowIcon(icon)
+            else:
+                item.setIcon(icon)
+
+        setup('add.ico', self.btn_pushTotree)
+        setup('remove.ico', self.btn_removeFromtree)
+        setup('new-item.ico', self, 1)
+        
 
     def __save(self):
         """ отправляет сигнаал в DocumentsTab о сохранении. """

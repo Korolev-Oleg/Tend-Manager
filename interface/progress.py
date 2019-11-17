@@ -4,11 +4,11 @@ from PyQt5                  import QtWidgets
 import time
 
 class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
-    def __init__(self, form, restored, Processing, parent=None):
+    def __init__(self, form, restored, Processing, localGeneral, parent=None):
         super().__init__()
         self.setupUi(self)
         self.status = 0
-        self.processing = Processing(form, restored)
+        self.processing = Processing(form, restored, localGeneral)
         self.processing.progress.connect(self.change_status)
         self.processing.start()
 
@@ -19,5 +19,6 @@ class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
             self.label.setText(str(label))
             time.sleep(0.01)
         self.status = value
+        
         if value == 100:
             self.close()

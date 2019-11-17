@@ -49,16 +49,20 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.combo_tendMethod.currentIndexChanged.connect                                                 (self.__event_handling)
 
     def _set_icons(self):
-        def setup(icon, item):
+        def setup(icon, item, window=False):
             path = resource_path(icon)
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            item.setIcon(icon)
+            if window:
+                item.setWindowIcon(icon)
+            else:
+                item.setIcon(icon)
 
         setup('add.ico', self.btn_pushTotree)
         setup('clear.ico', self.btn_clear)
         setup('docs.ico', self.pushAllButton)
         setup('remove.ico', self.btn_removeFromtree)
+        setup('settings.ico', self, 1)
     
 
     def innerUpdate(self, combodata):

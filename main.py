@@ -14,7 +14,7 @@ else:
     form = mainUi.start(restored, localGeneral)
         
 if form:
-    process.start(form, restored)
+    process.start(form, restored, localGeneral)
 
 shared = localGeneral['shared']
 if shared:

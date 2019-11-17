@@ -48,10 +48,17 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             
     def _set_icons(self):
-        path = resource_path('add.ico')
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(path), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton.setIcon(icon)
+        def setup(icon, item, window=False):
+            path = resource_path(icon)
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            if window:
+                item.setWindowIcon(icon)
+            else:
+                item.setIcon(icon)
+
+        setup('add.ico', self.pushButton)
+        setup('logo.ico', self, window=1)
 
     def __update_max_lenght(self):
         cur_cat = self._comboCat.currentText()

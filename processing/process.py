@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, pyperclip, win32api, win32con
 
 from PyQt5                  import QtCore
 from PyQt5                  import QtWidgets
@@ -9,9 +9,10 @@ from processing             import dbase, linking, excel, preVars, word
 
 class Processing(QtCore.QThread):
     progress = QtCore.pyqtSignal(object)
-    def __init__(self, form, restored, parent=None):
+    def __init__(self, form, restored, localGeneral, parent=None):
         super(Processing, self).__init__(parent)
         self.form = form
+        self.localGeneral = localGeneral
         self.restored = restored
         
     def run(self):
@@ -45,7 +46,10 @@ class Processing(QtCore.QThread):
         
         print('пути')
         project_path = dist[-2]
-        dbase.save(form, '%s/data' % project_path)
+        data_path = os.path.join(project_path, 'data')
+        dbase.save(form, data_path)
+        win32api.SetFileAttributes(data_path, win32con.FILE_ATTRIBUTE_HIDDEN)
+        
         project_path = project_path.replace('/', '\\')
         if general['openfolder']:
             os.system('explorer "%s"' % project_path)
@@ -62,11 +66,16 @@ class Processing(QtCore.QThread):
         }
 
         restored['completedApps'].append(complete_app)
-        self.progress.emit(('Готово!', 100))
-        
 
-def start(form, restored):
+        if self.localGeneral['windowsOnTop']:
+            path = os.path.join(project_path, 'Заказчик')
+            pyperclip.copy(path)
+            pyperclip.paste()
+
+        self.progress.emit(('Готово!', 100))
+
+def start(form, restored, localGeneral):
     app = QtWidgets.QApplication(sys.argv)
-    window = Progress_Ui(form, restored, Processing)
+    window = Progress_Ui(form, restored, Processing, localGeneral)
     window.show()
     app.exec_()

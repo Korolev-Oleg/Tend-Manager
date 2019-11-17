@@ -22,6 +22,7 @@ a.datas += [
           ('docs.ico','.\\interface\\icons\\docs.ico','DATA'),
           ('info.ico','.\\interface\\icons\\info.ico','DATA'),
           ('remove.ico','.\\interface\\icons\\remove.ico','DATA'),
+          ('logo.ico','.\\interface\\icons\\logo.ico','DATA'),
           ]          
 
 
@@ -40,4 +41,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False, icon='.\\interface\\icons\\logo.ico' )
