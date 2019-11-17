@@ -1,4 +1,3 @@
-c = 218 - (20 + 20 + 89)
-c -= 34
+import re
 
-print(c)
+print(re.search(r'\W', '0-'))

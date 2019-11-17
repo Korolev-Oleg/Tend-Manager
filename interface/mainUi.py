@@ -1,7 +1,7 @@
 import os, sys, re, pickle, string
 
 from PyQt5                  import (QtWidgets, QtCore, QtGui, Qt)
-from win32api               import MessageBox as msg
+from PyQt5.QtWidgets        import QMessageBox
 from win32con               import MB_OKCANCEL
 from win32api               import MessageBeep
 
@@ -32,6 +32,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.law = False
         self.attachs = []
         self.beep = MessageBeep
+        self.coords = 0, 0
 
         self.pushButton.clicked.connect(self.add_to_attach)
         self._radio44.clicked.connect(self.__event_handling)
@@ -46,6 +47,9 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
         if localGeneral['windowsOnTop']:
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+    
+    def __win_move(self):
+        pass
             
     def _set_icons(self):
         def setup(icon, item, window=False):
@@ -99,7 +103,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         maxLenght = 218 - ( len(pathToApps) + len(categories) + len(methods) )
         maxLenght -= 34
 
-        print(maxLenght)
         self._lineName.setMaxLength(maxLenght)
 
     def add_to_attach(self):
@@ -138,7 +141,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         path = ''
         MessageBeep()
         self.setDisabled(True)
-        msg(0, text, 'Внимание!')
+        QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
         self.setDisabled(False)
         if flag:
             while not path:
@@ -206,7 +209,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.law = "44" if law44 else "223"
 
         if law44 or law223:
-            print(self._comboMethod.currentText())
             if self._comboMethod.currentText():
                 self._btnView.setEnabled(True)
                 self.pushButton.setEnabled(True)
@@ -268,9 +270,10 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
         MessageBeep()
         self.setDisabled(True)
-        chose = msg(0, text, "Файл ненайден", 4)
+        buttons = QMessageBox.Ok|QMessageBox.No
+        chose = QMessageBox.warning(self, "Файл ненайден", text, buttons)
         self.setDisabled(False)
-        if chose == 6:
+        if chose == QMessageBox.Ok:
             # edit Path
             old_path = doc['dir']
             text = r"Выберите новый файл вместо {}".format(doc['name'])
@@ -307,7 +310,9 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             if ru or en or ex:
                 MessageBeep()
                 self.setDisabled(True)
-                msg(0, 'Укажите числовой номер!')
+
+                text = 'Укажите числовой номер!'
+                QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
                 self.setDisabled(False)
                 return True
 
@@ -389,7 +394,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             if self.__check_form_data(form):
                 MessageBeep()
                 self.setDisabled(True)
-                msg(0, 'Пожалуйста заполните все данные формы!')
+                text = 'Пожалуйста заполните все данные формы!'
+                QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
                 self.setDisabled(False)
             else:
                 self.form = form
@@ -400,7 +406,9 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         except AttributeError:
             MessageBeep()
             self.setDisabled(True)
-            msg(0, 'Пожалуйста выберите федеральный закон!')
+            text = 'Пожалуйста выберите федеральный закон!'
+            QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
+            
             self.setDisabled(False)
 
     def clear_filename(self, fileName):

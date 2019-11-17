@@ -18,7 +18,10 @@ if form:
 
 shared = localGeneral['shared']
 if shared:
-    dbase.save(sharedRestored, shared)
+    try:
+        dbase.save(sharedRestored, shared)
+    except NameError:
+        pass
 
 restored['general']['mainPath'] = localGeneral['mainPath']
 dbase.save(restored)

@@ -1,8 +1,8 @@
 import sys
 
-from PyQt5.QtWidgets    import QTreeWidgetItem
-from PyQt5              import QtCore
-
+from PyQt5.QtWidgets        import QTreeWidgetItem
+from PyQt5.QtWidgets        import QMessageBox
+from PyQt5                  import QtCore
 
 from interface.documentsTab import DocumentsTab
 
@@ -23,7 +23,7 @@ class WordTab(DocumentsTab):
         self.word_btn_del.clicked.connect(self.__removeItem)
         self.word_editline.textChanged.connect(self.toggle_btn_enabled)
         self.word_value.textChanged.connect(self.__toggle_btn_enabled)
-        self.word_tree.doubleClicked.connect(self.change_variable)
+        self.word_tree.doubleClicked.connect(self._change_variable)
 
         self.word_tree.clicked.connect(lambda:                                                                self.tree_has_focus(self.word_tree,                                      self.word_btn_del))
         
@@ -35,7 +35,7 @@ class WordTab(DocumentsTab):
         args = lets, tree, value, var, remove
         self.word_btn_add.clicked.connect(lambda: self.addItem(args))
 
-    def change_variable(self):
+    def _change_variable(self):
         variableName = self.word_tree.currentItem().text(0)
         variableValue = self.word_tree.currentItem().text(1) 
         self.word_editline.setText(str(variableName))
@@ -83,14 +83,15 @@ class WordTab(DocumentsTab):
             else:
                 yes = 6
                 text_0 = 'Переменная с именем'
-                text_1 = 'уже существует. Внести изменения?'
+                text_1 = 'уже существует.\nВнести изменения?'
                 text = '%s %s %s' % (text_0, item['var'], text_1)
 
                 self.beep()
                 self.setDisabled(True)
-                chose = self.msg(0, text, 'Внимание', 4)
+                buttons = QMessageBox.Yes|QMessageBox.No
+                chose = QMessageBox.warning(self, "Внимание", text, buttons)
                 self.setDisabled(False)
-                if chose == yes:
+                if chose == QMessageBox.Yes:
                     remove_item(item['var'])
                     lets.append(item)
         else:

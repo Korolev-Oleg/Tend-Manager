@@ -6,13 +6,10 @@ from PyQt5.QtCore       import QCoreApplication
 from PyQt5.QtCore       import Qt
 from PyQt5              import QtGui
 
-
-
 from PyQt5.QtWidgets    import QMainWindow
 from PyQt5.QtWidgets    import QFileDialog
 from PyQt5.QtWidgets    import QTreeWidgetItem
 from PyQt5.QtWidgets    import QApplication
-from win32api           import MessageBox as msg
 from win32api           import MessageBeep
 
 from interface.ui           import settingsForm
@@ -34,7 +31,6 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.restoredData = restoredData
         self.__update_combo_tend()   # востановление параметров формы
         self._set_icons()
-        self.msg = msg
         self.beep = MessageBeep
 
         self.pushAllButton.clicked.connect(self.__push_general_items)
@@ -47,6 +43,9 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.btn_tendMethod.clicked.connect(self.__open_edit_form)
         self.btn_clear.clicked.connect(self.__clear_all)
         self.combo_tendMethod.currentIndexChanged.connect                                                 (self.__event_handling)
+
+
+    
 
     def _set_icons(self):
         def setup(icon, item, window=False):
@@ -110,14 +109,20 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             for i in range(count):
                 obj = self.treeDocuments.topLevelItem(i)
                 for item in self.listDocuments:
-                    if item['name'] == obj.text(0) and item['law'] == self.law:
-                        if item["method"] == self.methodName:
+                    if item['common']:
+                        if item['name'] == obj.text(0) and item['law'] ==                                               self.law:
                             if obj.checkState(2):
-                                item['checked'] = True
-                                print('set True')
+                                    item['checked'] = True
                             else:
                                 item['checked'] = False
-                                print('set False')
+                    else:
+                        if item['name'] == obj.text(0) and item['law'] ==                                               self.law:
+
+                            if item["method"] == self.methodName:
+                                if obj.checkState(2):
+                                    item['checked'] = True
+                                else:
+                                    item['checked'] = False
                 
         except AttributeError:
             print("atrr error")
@@ -150,6 +155,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         if law44 or law223:
             if self.combo_tendMethod.currentText():
                 self.btn_pushTotree.setEnabled(True)
+                self.pushAllButton.setEnabled(True)
                 self.__update_tree_widget()
 
         if self.treeDocuments.hasFocus():
@@ -158,28 +164,27 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             self.btn_removeFromtree.setEnabled(False)
 
     def __push_general_items(self):
-        text = r"Выберите общие файлы для всех способов закопок"
+        text = r"Выберите общие файлы для всех способов закупок"
         dirs = QFileDialog.getOpenFileNames\
                (self, text, "", r"Документы (*.*)")
 
-        laws = ["44", "223"]
-        for law in laws:
-            for method in self.restoredData['tenderMethodNames']:
-                for url in dirs[0]:
-    
-                    name = os.path.basename(url)
+        for method in self.restoredData['tenderMethodNames']:
+            for url in dirs[0]:
 
-                    item = {
-                        "checked": False,
-                        "name": name,
-                        "dir": url,
-                        "method": method,
-                        "law": law,
-                        'often': 0
-                    }
+                name = os.path.basename(url)
 
-                    if not self.listDocuments.count(item):
-                        self.listDocuments.append(item)
+                item = {
+                    "checked": False,
+                    "name": name,
+                    "dir": url,
+                    "method": method,
+                    "law": self.law,
+                    'common': True,
+                    'often': 0
+                }
+
+                if not self.listDocuments.count(item):
+                    self.listDocuments.append(item)
 
         self.__update_tree_widget()
             
@@ -200,6 +205,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
                 "dir": url,
                 "method": self.methodName,
                 "law": self.law,
+                'common': False,
                 'often': 0
             }
             
@@ -207,7 +213,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
                 self.listDocuments.append(item)
 
         self.__update_tree_widget()
-
+  
     def __remove_selected_item(self):
         """ Удаляет выбраный в дереве элемент из {listDocuments}. """
         try:
@@ -217,9 +223,13 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         
         for item in self.listDocuments:
             try:
-                if item["name"] == name and item["law"] == self.law:
-                    if item["method"] == self.methodName:
+                if item['common']:
+                    if item["name"] == name and item["law"] == self.law:
                         self.listDocuments.remove(item)
+                else:       
+                    if item["name"] == name and item["law"] == self.law:
+                        if item["method"] == self.methodName:
+                            self.listDocuments.remove(item)
             except UnboundLocalError:
                 pass
         
@@ -246,7 +256,10 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
                     
                     item_0 = QTreeWidgetItem(self.treeDocuments)
                     item_0.setCheckState(2, check)
-                    # item_0.setFlags(Qcore.ItemIsSelectable|                                    Qcore.ItemIsDragEnabled|                                   Qcore.ItemIsEnabled)
+
+                    if item['common']:
+                        item_0.setForeground(0, QtGui.QBrush(QtGui.QColor                          ('#08f')))
+                        item_0.setForeground(1, QtGui.QBrush(QtGui.QColor                          ('#08f')))
 
                     self.treeDocuments.resizeColumnToContents(0)
                     self.treeDocuments.topLevelItem(index).setText(0,                   _translate ( "settings", item["name"] ))

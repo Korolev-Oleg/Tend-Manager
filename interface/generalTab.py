@@ -1,8 +1,8 @@
 import re, sys, os, datetime
 
-from PyQt5.QtWidgets    import QFileDialog
-from PyQt5.QtCore       import pyqtSignal, Qt
-
+from PyQt5.QtWidgets        import QFileDialog
+from PyQt5.QtWidgets        import QMessageBox
+from PyQt5.QtCore           import pyqtSignal, Qt
 from interface.variablesTab import VariablesTab
 from interface.edit         import EditForm
 from processing             import dbase
@@ -98,9 +98,12 @@ class GeneralTab(VariablesTab):
         sheetName = self.sheetName.text().strip()
         self.restoredData['general']['sheetName'] = sheetName
         if self.validateCells():
-            self.msg(0, "Введите числовой номер ячейки!")
+            text = "Введите числовой номер ячейки!"
+            QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
+            print("1111")
             self.tabWidget.setCurrentIndex(2)
         else:
+            print("2")
             cellTopLeft = self.cellTopLeft.text().strip()
             self.restoredData['general']['cellTopLeft'] = cellTopLeft
             cellBotDn = self.cellBotDn.text().strip()
@@ -109,15 +112,19 @@ class GeneralTab(VariablesTab):
             self.hide()
 
     def validateCells(self):
-        cell = self.cellTopLeft.text()
-        ru_symbols = re.search(r'[А-я]', cell)
-        en_symbols = re.search(r'[A-z]', cell)
-        other = re.search(r'\W', cell)
-        if ru_symbols or en_symbols:
-            return True
+        def reserch(cell):
+            ru_symbols = re.search(r'[А-я]', cell)
+            en_symbols = re.search(r'[A-z]', cell)
+            other = re.search(r'\W', cell)
+            if ru_symbols or en_symbols:
+                return True
+            if other:
+                return True
+            
+        a = reserch( self.cellTopLeft.text() )
+        b = reserch( self.cellBotDn.text() )
 
-        cell = self.cellBotDn.text()
-        if ru_symbols or en_symbols:
+        if a or b:
             return True
 
     def closeEvent(self, event):

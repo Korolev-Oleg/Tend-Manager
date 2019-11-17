@@ -74,6 +74,7 @@ class Ui_settings(object):
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
         self.pushAllButton = QtWidgets.QPushButton(self.tab)
+        self.pushAllButton.setEnabled(False)
         self.pushAllButton.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("interface/icons/docs.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
