@@ -603,10 +603,11 @@ color: rgb(41, 134, 255);</string>
     <addaction name="openSettings"/>
     <addaction name="chose_lasts"/>
     <addaction name="separator"/>
-    <addaction name="action_3"/>
+    <addaction name="actionValidator"/>
+    <addaction name="actionLicense"/>
     <addaction name="separator"/>
-    <addaction name="openAbout"/>
-    <addaction name="action"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionClose"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -618,7 +619,7 @@ color: rgb(41, 134, 255);</string>
     <font/>
    </property>
   </action>
-  <action name="openAbout">
+  <action name="actionAbout">
    <property name="text">
     <string>О программе</string>
    </property>
@@ -628,14 +629,19 @@ color: rgb(41, 134, 255);</string>
     <string>0</string>
    </property>
   </action>
-  <action name="action">
+  <action name="actionClose">
    <property name="text">
     <string>Закрыть</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="actionLicense">
    <property name="text">
     <string>Лицензия</string>
+   </property>
+  </action>
+  <action name="actionValidator">
+   <property name="text">
+    <string>Валидатор</string>
    </property>
   </action>
  </widget>

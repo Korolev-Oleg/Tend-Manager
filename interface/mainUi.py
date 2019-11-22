@@ -52,9 +52,25 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.currentTextChanged.connect(self.__update_max_lenght)
         self._comboCat.currentTextChanged.connect(self.__update_max_lenght)
         self.btn_open_documents.clicked.connect(self.popup_show_full)
+        self.actionAbout.triggered.connect(self.about)
+        self.actionLicense.triggered.connect(self.license)
+
+        self.actionClose.triggered.connect(self.closeEvent)
 
         if self.localGeneral['windowsOnTop']:
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint)
+
+    def about(self):
+        text = '<b>Tend Manager</b><br><br>'
+        text += 'Версия: 1.0.0<br>'
+        text += '2019 - 2020©'
+        msg = QMessageBox.about
+
+        print(dir(msg))
+        QMessageBox.about(self, 'О программе', text)
+
+    def license(self):
+        QMessageBox.aboutQt(self, 'Лицензия')
 
     def eventFilter(self, obj, event):
         if event.type() == 76:
@@ -648,6 +664,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         mainPath = self.localGeneral['mainPath']
         self.restoredData['general']['mainPath'] = mainPath
         dbase.save(self.restoredData)
+
+        self.close()
 
     def get_form(self):
         """ Возвращает заполненую форму. """

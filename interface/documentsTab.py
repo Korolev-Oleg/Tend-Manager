@@ -44,6 +44,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.btn_tendMethod.clicked.connect(self.__open_edit_form)
         self.btn_clear.clicked.connect(self.__clear_all)
         self.combo_tendMethod.currentIndexChanged.connect                                                 (self.__event_handling)
+
         
 
     def _set_icons(self):
@@ -235,7 +236,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
                 pass
         
         self.index = self.treeDocuments.indexOfTopLevelItem                                     (self.treeDocuments.currentItem())
-        
+
         self.__update_tree_widget()
 
     def __clear_all(self):
