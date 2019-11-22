@@ -32,6 +32,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self._up_combo_tnd_method()   # востановление параметров формы
         self._set_icons()
         self.beep = MessageBeep
+        self.index = 0
 
         self.pushAllButton.clicked.connect(self.__push_general_items)
         self.treeDocuments.clicked.connect(self.__toggle_check)
@@ -43,9 +44,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.btn_tendMethod.clicked.connect(self.__open_edit_form)
         self.btn_clear.clicked.connect(self.__clear_all)
         self.combo_tendMethod.currentIndexChanged.connect                                                 (self.__event_handling)
-
-
-    
+        
 
     def _set_icons(self):
         def setup(icon, item, window=False):
@@ -145,6 +144,8 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
 
     def __event_handling(self, delete=False):
         """ обрабатывает события radioBox и ComboBox. """
+        self.index = self.treeDocuments.indexOfTopLevelItem(self.treeDocuments.currentItem())
+
         self.choseAllCheckBox.setCheckState(Qt.Unchecked)
         law44 = self.radio_Law44.isChecked()
         law223 = self.radio_Law223.isChecked()
@@ -233,6 +234,8 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             except UnboundLocalError:
                 pass
         
+        self.index = self.treeDocuments.indexOfTopLevelItem                                     (self.treeDocuments.currentItem())
+        
         self.__update_tree_widget()
 
     def __clear_all(self):
@@ -268,8 +271,11 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
 
                     index += 1
 
-        item = self.treeDocuments.topLevelItem(0)
+        index = self.index if self.index > 0 else 0
+        print(index)
+        item = self.treeDocuments.topLevelItem(index)
         self.treeDocuments.setCurrentItem(item)
+
         # активирует btn_clear() в зависимости от наличия элементов в дереве
         if index:
             self.btn_clear.setEnabled(True)

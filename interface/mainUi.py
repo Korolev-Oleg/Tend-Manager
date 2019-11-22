@@ -24,7 +24,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     """
     def __init__(self, restoredData, localRestored):
         super().__init__()
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint)
         self.setupUi(self)
         self.restoredData = restoredData
         self.localGeneral = localRestored['general']
