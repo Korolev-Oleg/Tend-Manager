@@ -1,16 +1,18 @@
 from interface.ui.progress  import Ui_Progress_Form
 from PyQt5                  import QtWidgets
 from PyQt5                  import QtGui
+from PyQt5                  import QtCore
 from interface.ui.RESOURSE  import resource_path
 
 import time
 
 class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
-    def __init__(self, form, restored, Processing, localGeneral, parent=None):
+    signal = QtCore.pyqtSignal(object)
+    def __init__(self, form, restored, localRestored, Processing, parent=None):
         super().__init__()
         self.setupUi(self)
         self.status = 0
-        self.processing = Processing(form, restored, localGeneral)
+        self.processing = Processing(form, restored, localRestored)
         self.processing.progress.connect(self.change_status)
         self.processing.start()
         self._set_icons()
@@ -29,11 +31,12 @@ class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
 
     def change_status(self, signal):
         label, value,  = signal
-        for i in range(self.status, value):
-            self.progressBar.setValue(i)
-            self.label.setText(str(label))
-            time.sleep(0.01)
-        self.status = value
-        
-        if value == 100:
+        if isinstance(value, int):
+            for i in range(self.status, value):
+                self.progressBar.setValue(i)
+                self.label.setText(str(label))
+                time.sleep(0.01)
+            self.status = value
+        else:
+            self.signal.emit(value)
             self.close()

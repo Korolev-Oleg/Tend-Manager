@@ -12,6 +12,7 @@ class GeneralTab(VariablesTab):
     def __init__(self, restoredData, localGeneral, setView=False):
         VariablesTab.__init__(self, restoredData, setView)
         self.setWindowModality(Qt.ApplicationModal)
+        self.restoredData = restoredData
         self.lets = restoredData["variables"]['default']
         self.btn_save.clicked.connect(self._save)
         self.localGeneral = localGeneral
@@ -69,6 +70,13 @@ class GeneralTab(VariablesTab):
         if winOnTop:
             self.onTopCheckBox.setCheckState(2)
 
+        self.comboDataSet()
+        self._up_combo_tnd_method()
+
+    def comboDataSet(self):
+        self._catCombo.clear()
+        self._catCombo.addItems(self.restoredData['categories'])
+
     def set_openpayment(self):
         checkbox = self.checkBox_openpayment.checkState()
         if checkbox:
@@ -108,7 +116,8 @@ class GeneralTab(VariablesTab):
             self.restoredData['general']['cellTopLeft'] = cellTopLeft
             cellBotDn = self.cellBotDn.text().strip()
             self.restoredData['general']['cellBotDn'] = cellBotDn
-            self.params.emit(1)
+            data = self.restoredData, self.localGeneral
+            self.params.emit(data)
             self.hide()
 
     def validateCells(self):
@@ -128,7 +137,8 @@ class GeneralTab(VariablesTab):
             return True
 
     def closeEvent(self, event):
-        self.params.emit(1)
+        data = self.restoredData, self.localGeneral
+        self.params.emit(data)
         self.hide()
         event.accept()
 
@@ -142,7 +152,6 @@ class GeneralTab(VariablesTab):
             self.sheetName.setText(general['sheetName'])
             self.cellTopLeft.setText(general['cellTopLeft'])
             self.cellBotDn.setText(general['cellBotDn'])
-            comboDataSet()
             checkbox_data_set()
 
         def checkbox_data_set():

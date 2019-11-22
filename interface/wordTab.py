@@ -61,10 +61,10 @@ class WordTab(DocumentsTab):
             *args:
                 lets, update_tree, value, var
         """
-        lets, update_tree, value, var, remove_item = args
+        lets, update_tree, value_f, var_f, remove_item = args
 
-        var = var.text().strip()
-        value = value.toPlainText().strip()
+        var = var_f.text().strip()
+        value = value_f.toPlainText().strip()
 
         item = {
             "var": var,
@@ -97,6 +97,8 @@ class WordTab(DocumentsTab):
         else:
             lets.append(item)
         
+        value_f.setText('')
+        var_f.setText('')
         update_tree()
 
     def __removeItem(self, name=False, lets=False):

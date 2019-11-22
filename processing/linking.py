@@ -2,8 +2,6 @@ import os
 from shutil import copyfile
 from win32api import (MessageBeep, MessageBox)
 
-# временно 
-from interface.mainUi import MainUi
 
 def make_dist(restored, form):
     """ creates the main directory of the application.

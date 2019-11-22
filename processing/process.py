@@ -9,11 +9,22 @@ from processing             import dbase, linking, excel, preVars, word
 
 class Processing(QtCore.QThread):
     progress = QtCore.pyqtSignal(object)
-    def __init__(self, form, restored, localGeneral, parent=None):
+    def __init__(self, form, restored, localRestored, parent=None):
         super(Processing, self).__init__(parent)
         self.form = form
-        self.localGeneral = localGeneral
+        self.localGeneral = localRestored['general']
+        self.localRestored = localRestored
         self.restored = restored
+
+    def save(self):
+        if self.localRestored['general']['shared']:
+            shared = self.localGeneral['shared']
+            dbase.save(self.restored, shared)
+
+        mainPath = self.localGeneral['mainPath']
+        self.restored['general']['mainPath'] = mainPath
+        dbase.save(self.restored)
+        
         
     def run(self):
         form = self.form
@@ -65,17 +76,22 @@ class Processing(QtCore.QThread):
             'path': project_path,
         }
 
-        restored['completedApps'].append(complete_app)
+        print('add new completed')
+        self.localRestored['completedApps'].append(complete_app)
+        self.restored['completedApps'].append(complete_app)
 
+        # путь к заявке в буфер обмена
         if self.localGeneral['windowsOnTop']:
             path = os.path.join(project_path, 'Заказчик')
             pyperclip.copy(path)
             pyperclip.paste()
 
-        self.progress.emit(('Готово!', 100))
+        self.progress.emit(('Готово!', self.restored['completedApps']))
+        self.save()
 
-def start(form, restored, localGeneral):
-    app = QtWidgets.QApplication(sys.argv)
+def start(self, form, restored, localGeneral):
+    print('start progress')
+    app_process = QtWidgets.QApplication(sys.argv)
     window = Progress_Ui(form, restored, Processing, localGeneral)
     window.show()
-    app.exec_()
+    app_process.exec_()

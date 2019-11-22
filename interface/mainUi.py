@@ -1,4 +1,4 @@
-import os, sys, re, pickle, string
+import os, sys, re, pickle, string, time
 
 from PyQt5                  import (QtWidgets, QtCore, QtGui, Qt)
 from PyQt5.QtWidgets        import QMessageBox
@@ -10,6 +10,11 @@ from interface.generalTab   import GeneralTab
 from processing             import dbase
 from interface.ui.RESOURSE  import resource_path
 
+from main                   import form_init
+from processing.process     import Processing
+from interface.progress     import Progress_Ui
+
+
 class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     """ Главное окно.
         
@@ -17,22 +22,24 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         return:
             form -> {} law, name, regnumber, category, method, object,calculation, appSecurity, contractSecurity, currentPrice, place, peiod, positionCount, links -> []
     """
-    def __init__(self, restoredData, localGeneral):
+    def __init__(self, restoredData, localRestored):
         super().__init__()
+        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setupUi(self)
         self.restoredData = restoredData
-        self.localGeneral = localGeneral
+        self.localGeneral = localRestored['general']
+        self.localRestored = localRestored
+        self.set_attributes()
         self.__update_tend_method()
         self.__update_categories()
         self.__clean_deleted_apps()
         self.__set_lastform_triggers()
         self.__set_max_field_lenght()
         self._set_icons()
-        self.save = False
-        self.law = False
-        self.attachs = []
-        self.beep = MessageBeep
-        self.coords = 0, 0
+        self.init_tray()
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.installEventFilter(self)
+        self.popup_show()
 
         self.pushButton.clicked.connect(self.add_to_attach)
         self._radio44.clicked.connect(self.__event_handling)
@@ -44,24 +51,92 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.currentIndexChanged.connect(self.__update_list)
         self._comboMethod.currentTextChanged.connect(self.__update_max_lenght)
         self._comboCat.currentTextChanged.connect(self.__update_max_lenght)
+        self.btn_open_documents.clicked.connect(self.popup_show_full)
 
-        if localGeneral['windowsOnTop']:
-            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        if self.localGeneral['windowsOnTop']:
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint)
+
+    def eventFilter(self, obj, event):
+        if event.type() == 76:
+            self.popup_show()
+            return True
+
+        if event.type() == 99:
+            self.popup_hide()
+            return True
+        elif event.type() == 3:
+            if not self.popup_status == 2:
+                self.popup_show()
+                return True
+
+        return False
+
+    def set_attributes(self):
+        self.save = False
+        self.law = False
+        self.attachs = []
+        self.beep = MessageBeep
+        self.coords = 0, 0
+        self.screen = QtWidgets.QDesktopWidget().screenGeometry(-1)
+
+    def popup_show_full(self):
+        if self.popup_status == 2:
+            height = self.screen.height() / 2 - self.height() / 2
+            width = self.screen.width() - self.width() / 2
+            self.move(width, height)
+            self.popup_status = 1
+        else:
+            height = self.screen.height() / 2 - self.height() / 2
+            width = self.screen.width() - self.width()
+            self.move(width, height)
+            self.popup_status = 2
+
+    def popup_show(self):
+        height = self.screen.height() / 2 - self.height() / 2
+        width = self.screen.width() - self.width() / 2
+        self.move(width, height)
+        self.popup_status = 1
+
+    def popup_hide(self):
+        height = self.screen.height() / 2 - self.height() / 2
+        width = self.screen.width() - 10
+        self.move(width, height)
+        self.popup_status = 0
+        
+    def init_tray(self):
+        self.tray_icon = QtWidgets.QSystemTrayIcon(self)
+        path = resource_path('logo.ico')
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.tray_icon.setIcon(icon)
+        show_action = QtWidgets.QAction("Развернуть", self)
+        quit_action = QtWidgets.QAction("Закрыть", self)
+        hide_action = QtWidgets.QAction("Свернуть", self)
+        show_action.triggered.connect(self.show)
+        hide_action.triggered.connect(self.hide)
+        quit_action.triggered.connect(QtWidgets.qApp.quit)
+        tray_menu = QtWidgets.QMenu()
+        tray_menu.addAction(show_action)
+        tray_menu.addAction(hide_action)
+        tray_menu.addAction(quit_action)
+        self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.show()
     
-    def __win_move(self):
-        pass
+
             
     def _set_icons(self):
         def setup(icon, item, window=False):
             path = resource_path(icon)
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
             if window:
                 item.setWindowIcon(icon)
             else:
                 item.setIcon(icon)
 
         setup('add.ico', self.pushButton)
+        setup ('arrow-right.ico', self.btn_open_documents)
         setup('logo.ico', self, window=1)
 
     def __update_max_lenght(self):
@@ -70,8 +145,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.__set_max_field_lenght(cur_cat=cur_cat, cur_meth=cur_meth)
 
     def __set_max_field_lenght(self, cur_cat=False, cur_meth=False):
-        pathToApps = self.localGeneral['mainPath']
-
+        
         if not cur_cat:
             categories = self.restoredData['categories']
         else:
@@ -100,6 +174,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             categories = get_bigger_len(categories)
             methods = get_bigger_len(methods)
 
+        pathToApps = self.localGeneral['mainPath']
         maxLenght = 218 - ( len(pathToApps) + len(categories) + len(methods) )
         maxLenght -= 34
 
@@ -121,11 +196,14 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __check_init_paths(self):
         """ Проверяет наличие путей к файлу расчета и к папке с заявками. """
-        general = self.restoredData['general']
+
+        general = self.localGeneral
         path = os.path.exists(general['mainPath'])
         if not path:
-            text = 'Выберите директорию в которой будут хранится и создаваться новые заявки'
+            text = 'Выберите директорию в которой будут хранится'
+            text += ' и создаваться новые заявки'
             self.__set_general_path(general, text)
+
         if self._checkBoxPayment.isChecked():
             path = os.path.exists(general['paymentPath'])
             if not path:
@@ -138,22 +216,28 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 text -> str message
                 flag -> str xlsx filter
         """
+        
         path = ''
         MessageBeep()
         self.setDisabled(True)
         QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
         self.setDisabled(False)
+
+        fileOpen = QtWidgets.QFileDialog.getOpenFileName
+        getExistDir = QtWidgets.QFileDialog.getExistingDirectory
         if flag:
             while not path:
-                path = QtWidgets.QFileDialog.getOpenFileName(self, text, '', r"Документы (*.xlsx; *.xls)")
+                path = fileOpen(self, text, '', r"Документы (*.xlsx; *.xls)")
+
             obj['paymentPath'] = path[0]
         else:
             while not path:
-                path = QtWidgets.QFileDialog.getExistingDirectory(self, text)
+                path = getExistDir(self, text)
             obj['mainPath'] = path
 
     def __touggle_payment(self):
         """ Переключает активность полей расчета. """
+
         if self._checkBoxPayment.isChecked():
             enabled = True
         else:
@@ -197,6 +281,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __update_tend_method(self):
         """ Подгружает способы закупок. """
+
         self._comboMethod.clear()
         items = self.restoredData['tenderMethodNames']
         self._comboMethod.addItems(items)
@@ -204,6 +289,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __event_handling(self):
         """ Обработчик радиобоксов. """
+
         law44 = self._radio44.isChecked()
         law223 = self._radio223.isChecked()
         self.law = "44" if law44 else "223"
@@ -217,6 +303,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __check_path(self, path):
         """ Проверяет наличие прикрепляемых файлов. """
+
         if os.path.exists(path):
             return(True)
         else:
@@ -224,14 +311,15 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __update_list(self):
         """ Обновляет список прикрепляемых документов. """
+
         _translate = QtCore.QCoreApplication.translate
         self.methodName = self._comboMethod.currentText()
         self._listDocuments.clear()
         self.checkboxes = []
 
         for doc in self.restoredData['documentList']:
-            if self.__check_path(doc["dir"]): # проверка наличия файла
-                try:
+            if self.__check_path(doc["dir"]): # Check file exist
+
                     if doc['law'] == self.law and doc['method'] ==                                           self.methodName:
 
                         if not doc['checked']:
@@ -240,12 +328,10 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                             _item = QtWidgets.QListWidgetItem()
                             _item.setCheckState(check)
                             _item.setText(doc['name'])
-                            self._listDocuments.addItem(_item)
 
+                            self._listDocuments.addItem(_item)
                             self.checkboxes.append(_item)
 
-                except AttributeError:
-                    print("'MainUi' object has no attribute 'law'")
             else:
                 self.__update_old_path(doc)
         
@@ -391,6 +477,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
             self.__check_init_paths() # проверка основных путей 
             self.__chech_excel_fields() # проверка полей для расчета
+
             if self.__check_form_data(form):
                 MessageBeep()
                 self.setDisabled(True)
@@ -398,10 +485,9 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
                 self.setDisabled(False)
             else:
+                #Все проверки пройдены
                 self.form = form
-                self.save = True
-                self.hide()
-                self.close()
+                self.start_processing()
                 
         except AttributeError:
             MessageBeep()
@@ -440,42 +526,62 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __set_lastform_triggers(self):
         """ Последние заполненные заявки. """
-        apps = self.restoredData['completedApps']
+        apps = self.localRestored['completedApps']
         if len(apps) > 0:
             i = -1
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action0 = QtWidgets.QAction(self)
-            self.action0.setText( name )
-            self.chose_lasts.addAction(self.action0)
-            self.action0.triggered.connect(lambda: __get_old_form(apps[-1]['path']))
+            try:
+                self.action1.setText( name )
+                self.action1.triggered.connect(lambda: __get_old_form(apps[-1]['path']))
+            except AttributeError:
+                self.action1 = QtWidgets.QAction(self)
+                self.action1.setText( name )
+                self.chose_lasts.addAction(self.action1)
+                self.action1.triggered.connect(lambda: __get_old_form(apps[-1]['path']))
         if len(apps) > 1:
             i = -2
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action1 = QtWidgets.QAction(self)
-            self.action1.setText( name )
-            self.chose_lasts.addAction(self.action1)
-            self.action1.triggered.connect(lambda: __get_old_form(apps[-2]['path']))
+            try:
+                self.action2.setText( name )
+                self.action2.triggered.connect(lambda: __get_old_form(apps[-2]['path']))
+            except AttributeError:
+                self.action2 = QtWidgets.QAction(self)
+                self.action2.setText( name )
+                self.chose_lasts.addAction(self.action2)
+                self.action2.triggered.connect(lambda: __get_old_form(apps[-2]['path']))
         if len(apps) > 2:
             i = -3
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action2 = QtWidgets.QAction(self)
-            self.action2.setText( name )
-            self.chose_lasts.addAction(self.action2)
-            self.action2.triggered.connect(lambda: __get_old_form(apps[-3]['path']))
+            try:
+                self.action3.setText( name )
+                self.action3.triggered.connect(lambda: __get_old_form(apps[-3]['path']))
+            except AttributeError:
+                self.action3 = QtWidgets.QAction(self)
+                self.action3.setText( name )
+                self.chose_lasts.addAction(self.action3)
+                self.action3.triggered.connect(lambda: __get_old_form(apps[-3]['path']))
         if len(apps) > 3:
             i = -4
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action2 = QtWidgets.QAction(self)
-            self.action2.setText( name )
-            self.chose_lasts.addAction(self.action2)
-            self.action2.triggered.connect(lambda: __get_old_form(apps[-4]['path']))
+            try:
+                self.action4.setText( name )
+                self.action4.triggered.connect(lambda: __get_old_form(apps[-4]['path']))
+            except AttributeError:
+                self.action4 = QtWidgets.QAction(self)
+                self.action4.setText( name )
+                self.chose_lasts.addAction(self.action4)
+                self.action4.triggered.connect(lambda: __get_old_form(apps[-4]['path']))
         if len(apps) > 4:
             i = -5
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
-            self.action2 = QtWidgets.QAction(self)
-            self.action2.setText( name )
-            self.chose_lasts.addAction(self.action2)
-            self.action2.triggered.connect(lambda: __get_old_form(apps[-5]['path']))
+            try:
+                self.action5.setText( name )
+                self.action5.triggered.connect(lambda: __get_old_form(apps[-5]['path']))
+            except AttributeError:
+                self.action5 = QtWidgets.QAction(self)
+                self.action5.setText( name )
+                self.chose_lasts.addAction(self.action5)
+                self.action5.triggered.connect(lambda: __get_old_form(apps[-5]['path']))
 
         def setform(form):
             if form['law'] == '44':
@@ -491,7 +597,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self._lineObject.setText(form['object'])
 
             if form['calculation']:
-                print(form)
                 self._checkBoxPayment.setChecked(True)
                 self.__touggle_payment()
                 self._lineAppSecurity.setText(form['appSecurity'])
@@ -507,14 +612,42 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             form = dbase.read(path)
             setform(form)
 
-    def __settings_callback(self, signal):
+    def clear_form(self):
+        self._radio223.setChecked(False)
+        self._radio44.setChecked(False)
+        self._lineName.setText('')
+        self._lineRegNumber.setText('')
+        self.__update_categories()
+        self.__update_tend_method()
+        self._lineObject.setText('')
+        self._checkBoxPayment.setChecked(False)
+        self._lineAppSecurity.setText('')
+        self._lineContractSecurity.setText('')
+        self._lineCurrentPrice.setText('')
+        self._linePlace.setText('')
+        self._linePeriod.setText('')
+        self._linePositionCount.setText('')
+
+    def __settings_callback(self, data):
         """ Получает сигнал из настроек. """
-        if signal:
+        restored, localGeneral = data
+        if data:
+            self.localGeneral = localGeneral
+            self.restoredData = restored
             self.__update_list()
             self.__update_categories()
             self.__update_tend_method()
             self.setDisabled(False)
 
+    def closeEvent(self, event):
+
+        if self.localRestored['general']['shared']:
+            shared = self.localGeneral['shared']
+            dbase.save(self.restoredData, shared)
+
+        mainPath = self.localGeneral['mainPath']
+        self.restoredData['general']['mainPath'] = mainPath
+        dbase.save(self.restoredData)
 
     def get_form(self):
         """ Возвращает заполненую форму. """
@@ -522,8 +655,22 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             return self.form
         return False
 
+    def set_completted_apps(self, apps):
+        self.localRestored['completedApps'] = apps
+        self.__set_lastform_triggers()
 
-def start(restored, localGeneral):
+    def start_processing(self):
+        self.popup_hide()
+
+        self.progress = Progress_Ui(self.form, self.restoredData,self.localRestored, Processing)
+
+        self.progress.signal.connect(self.set_completted_apps)
+
+        self.progress.show()
+        self.clear_form()
+        
+
+def show(restored, localGeneral):
     """ Возвращает заполненую форму. """
     app = QtWidgets.QApplication(sys.argv) 
     window = MainUi(restored, localGeneral)

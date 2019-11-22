@@ -29,7 +29,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         super().__init__()
         self.setupUi(self)  # инициализация формы
         self.restoredData = restoredData
-        self.__update_combo_tend()   # востановление параметров формы
+        self._up_combo_tnd_method()   # востановление параметров формы
         self._set_icons()
         self.beep = MessageBeep
 
@@ -66,7 +66,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
 
     def innerUpdate(self, combodata):
         # self.__toggle_check()
-        self.__update_combo_tend()
+        self._up_combo_tnd_method()
         self.__update_tree_widget()
         self.combo_tendMethod.addItem(combodata)
         item = self.combo_tendMethod.findText(combodata)
@@ -85,7 +85,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         """ Получает сигнал из EditForm о сохранении. """
         self.setDisabled(False)
         if signal:
-            self.__update_combo_tend()
+            self._up_combo_tnd_method()
 
     def __chose_all(self):
         """ Добавляет общий список документов. """
@@ -112,7 +112,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
                     if item['common']:
                         if item['name'] == obj.text(0) and item['law'] ==                                               self.law:
                             if obj.checkState(2):
-                                    item['checked'] = True
+                                item['checked'] = True
                             else:
                                 item['checked'] = False
                     else:
@@ -129,7 +129,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             pass
 
 
-    def __update_combo_tend(self):
+    def _up_combo_tnd_method(self):
         """ Обновляет Combobox способов закупок. """
 
         self.combo_tendMethod.clear()
@@ -257,9 +257,11 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
                     item_0 = QTreeWidgetItem(self.treeDocuments)
                     item_0.setCheckState(2, check)
 
+
+                    Qbrush = QtGui.QBrush
                     if item['common']:
-                        item_0.setForeground(0, QtGui.QBrush(QtGui.QColor                          ('#08f')))
-                        item_0.setForeground(1, QtGui.QBrush(QtGui.QColor                          ('#08f')))
+                        item_0.setForeground(0, Qbrush(QtGui.QColor ('#08f')))
+                        item_0.setForeground(1, Qbrush(QtGui.QColor ('#08f')))
 
                     self.treeDocuments.resizeColumnToContents(0)
                     self.treeDocuments.topLevelItem(index).setText(0,                   _translate ( "settings", item["name"] ))

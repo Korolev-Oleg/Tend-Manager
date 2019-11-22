@@ -22,8 +22,16 @@
     <height>536</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <kerning>true</kerning>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Tend Менеджер</string>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -36,14 +44,52 @@
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
     <property name="topMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>6</number>
+     <number>0</number>
     </property>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <property name="spacing">
+       <number>14</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="Line" name="line">
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>500</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(44, 171, 255);
+color: rgb(41, 134, 255);</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QFrame" name="frame">
         <property name="styleSheet">
@@ -59,30 +105,19 @@
          <property name="spacing">
           <number>6</number>
          </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Федеральный закон</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QRadioButton" name="_radio44">
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0" colspan="3">
+            <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>№ 44</string>
+              <string>Федеральный закон</string>
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QRadioButton" name="_radio223">
-             <property name="text">
-              <string>№ 223</string>
-             </property>
-            </widget>
-           </item>
-           <item>
+           <item row="1" column="3">
             <spacer name="horizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -95,14 +130,62 @@
              </property>
             </spacer>
            </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Наименование заказчика</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4" rowspan="3">
+            <widget class="QPushButton" name="btn_open_documents">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>46</width>
+               <height>34</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../icons/arrow-right.ico</normaloff>
+               <disabledoff>../icons/display-none.ico</disabledoff>../icons/arrow-right.ico</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QRadioButton" name="_radio44">
+               <property name="text">
+                <string>№ 44</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="_radio223">
+               <property name="text">
+                <string>№ 223</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
           </layout>
-         </item>
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Наименование заказчика</string>
-           </property>
-          </widget>
          </item>
          <item>
           <widget class="QLineEdit" name="_lineName">
@@ -495,6 +578,9 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
    <widget class="QMenu" name="menu">
     <property name="font">
      <font>
@@ -507,7 +593,7 @@
      </font>
     </property>
     <property name="title">
-     <string>Опции</string>
+     <string>     Опции</string>
     </property>
     <widget class="QMenu" name="chose_lasts">
      <property name="title">
@@ -517,7 +603,10 @@
     <addaction name="openSettings"/>
     <addaction name="chose_lasts"/>
     <addaction name="separator"/>
+    <addaction name="action_3"/>
+    <addaction name="separator"/>
     <addaction name="openAbout"/>
+    <addaction name="action"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -537,6 +626,16 @@
   <action name="action0">
    <property name="text">
     <string>0</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Закрыть</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Лицензия</string>
    </property>
   </action>
  </widget>

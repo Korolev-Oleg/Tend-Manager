@@ -34,6 +34,7 @@ class ExcelTab(WordTab):
         value = self.excel_value
         var = self.excel_editline
         remove = self.__removeItem
+        
         args = lets, tree, value, var, remove
         self.btn_add_5.clicked.connect(lambda: self.addItem(args))
 
