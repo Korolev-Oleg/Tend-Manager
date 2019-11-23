@@ -604,12 +604,18 @@ color: rgb(41, 134, 255);</string>
     <addaction name="chose_lasts"/>
     <addaction name="separator"/>
     <addaction name="actionValidator"/>
-    <addaction name="actionLicense"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout"/>
     <addaction name="actionClose"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="actionAbout_2"/>
+    <addaction name="actionLicense_2"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <action name="openSettings">
    <property name="text">
@@ -642,6 +648,16 @@ color: rgb(41, 134, 255);</string>
   <action name="actionValidator">
    <property name="text">
     <string>Валидатор</string>
+   </property>
+  </action>
+  <action name="actionAbout_2">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+  </action>
+  <action name="actionLicense_2">
+   <property name="text">
+    <string>Лицензия</string>
    </property>
   </action>
  </widget>

@@ -1,4 +1,4 @@
-import os, sys, re, pickle, string, time
+import os, sys, re, pickle, string, time, math
 
 from PyQt5                  import (QtWidgets, QtCore, QtGui, Qt)
 from PyQt5.QtWidgets        import QMessageBox
@@ -13,6 +13,7 @@ from interface.ui.RESOURSE  import resource_path
 from main                   import form_init
 from processing.process     import Processing
 from interface.progress     import Progress_Ui
+from validator.validator    import Validator
 
 
 class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
@@ -54,19 +55,36 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.btn_open_documents.clicked.connect(self.popup_show_full)
         self.actionAbout.triggered.connect(self.about)
         self.actionLicense.triggered.connect(self.license)
+        self.actionValidator.triggered.connect(self.start_validator)
 
         self.actionClose.triggered.connect(self.closeEvent)
 
         if self.localGeneral['windowsOnTop']:
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint)
 
+    def start_validator(self):
+        apps = self.localRestored['completedApps']
+        if apps:
+            last_app_path = apps[-1]['path']
+        else:
+            last_app_path = os.path.abspath('.')
+
+        file_open = QtWidgets.QFileDialog.getOpenFileName
+
+        file, _ = file_open(self, "Проверить заявку", last_app_path, "Документ Word (*.docx)")
+
+        if file:
+            self.popup_hide()
+
+            data = file, Validator
+            self.progress = Progress_Ui(data, validator=True)
+
+            self.progress.show()
+
     def about(self):
         text = '<b>Tend Manager</b><br><br>'
         text += 'Версия: 1.0.0<br>'
         text += '2019 - 2020©'
-        msg = QMessageBox.about
-
-        print(dir(msg))
         QMessageBox.about(self, 'О программе', text)
 
     def license(self):
@@ -96,6 +114,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.screen = QtWidgets.QDesktopWidget().screenGeometry(-1)
 
     def popup_show_full(self):
+        print('popup_show_full')
         if self.popup_status == 2:
             height = self.screen.height() / 2 - self.height() / 2
             width = self.screen.width() - self.width() / 2
@@ -108,16 +127,38 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.popup_status = 2
 
     def popup_show(self):
+        print('popup_show')
         height = self.screen.height() / 2 - self.height() / 2
         width = self.screen.width() - self.width() / 2
         self.move(width, height)
         self.popup_status = 1
 
     def popup_hide(self):
-        height = self.screen.height() / 2 - self.height() / 2
-        width = self.screen.width() - 10
-        self.move(width, height)
+        print('popup_hide')
+        
+        if self.popup_status == 1:
+            pos_start = self.screen.width() - self.width() / 2
+            pos_end = self.screen.width() - 10
+        elif self.popup_status == 2:
+            pos_start = self.screen.width() - self.width()
+            pos_end = self.screen.width() - 10
+        else:
+            pos_start = self.screen.width() - 10
+            pos_end = self.screen.width() - self.width() / 2
+
+        self.win_move(pos_start, pos_end, 1000)
         self.popup_status = 0
+
+    def win_move(self, pos_start, pos_end, speed):
+        height = self.screen.height() / 2 - self.height() / 2
+        pos_start, pos_end = math.ceil(pos_start), math.ceil(pos_end)
+        if pos_start < pos_end:
+            i = 2
+        else:
+            i = -2
+        for coords in range(pos_start, pos_end, i):
+            f = math.fabs((math.sin(coords/ speed) - 1) / speed)
+            self.move(coords, height)
         
     def init_tray(self):
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
@@ -678,9 +719,10 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.__set_lastform_triggers()
 
     def start_processing(self):
-        self.popup_hide()
+        # self.popup_hide()
 
-        self.progress = Progress_Ui(self.form, self.restoredData,self.localRestored, Processing)
+        data = self.form, self.restoredData,self.localRestored, Processing
+        self.progress = Progress_Ui(data)
 
         self.progress.signal.connect(self.set_completted_apps)
 

@@ -8,13 +8,22 @@ import time
 
 class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
     signal = QtCore.pyqtSignal(object)
-    def __init__(self, form, restored, localRestored, Processing, parent=None):
+    def __init__(self, data, validator=False, parent=None):
         super().__init__()
         self.setupUi(self)
         self.status = 0
-        self.processing = Processing(form, restored, localRestored)
-        self.processing.progress.connect(self.change_status)
-        self.processing.start()
+
+        if not validator:
+            form, restored, localRestored, Processing = data
+            self.processing = Processing((form, restored, localRestored))
+            self.processing.progress.connect(self.change_status)
+            self.processing.start()
+        else:
+            file, Validator = data
+            self.validator_ex = Validator(file)
+            self.validator_ex.progress.connect(self.change_status)
+            self.validator_ex.start()
+
         self._set_icons()
 
     def _set_icons(self):
@@ -30,7 +39,7 @@ class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
         setup('logo.ico', self, window=1)
 
     def change_status(self, signal):
-        label, value,  = signal
+        label, value, = signal
         if isinstance(value, int):
             for i in range(self.status, value):
                 self.progressBar.setValue(i)

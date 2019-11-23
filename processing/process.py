@@ -9,8 +9,9 @@ from processing             import dbase, linking, excel, preVars, word
 
 class Processing(QtCore.QThread):
     progress = QtCore.pyqtSignal(object)
-    def __init__(self, form, restored, localRestored, parent=None):
+    def __init__(self, data, parent=None):
         super(Processing, self).__init__(parent)
+        form, restored, localRestored = data
         self.form = form
         self.localGeneral = localRestored['general']
         self.localRestored = localRestored
