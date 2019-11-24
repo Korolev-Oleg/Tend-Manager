@@ -25,7 +25,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     """
     def __init__(self, restoredData, localRestored):
         super().__init__()
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
         self.setupUi(self)
         self.restoredData = restoredData
         self.localGeneral = localRestored['general']
@@ -40,7 +40,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.init_tray()
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.installEventFilter(self)
-        self.popup_show()
 
         self.pushButton.clicked.connect(self.add_to_attach)
         self._radio44.clicked.connect(self.__event_handling)
@@ -53,14 +52,27 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.currentTextChanged.connect(self.__update_max_lenght)
         self._comboCat.currentTextChanged.connect(self.__update_max_lenght)
         self.btn_open_documents.clicked.connect(self.popup_show_full)
-        self.actionAbout.triggered.connect(self.about)
-        self.actionLicense.triggered.connect(self.license)
+        self.actionAbout_2.triggered.connect(self.about)
+        self.actionLicense_2.triggered.connect(self.license)
         self.actionValidator.triggered.connect(self.start_validator)
 
-        self.actionClose.triggered.connect(self.closeEvent)
+        self.actionClose.triggered.connect(self.close)
 
         if self.localGeneral['windowsOnTop']:
-            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint)
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
+
+    def set_attributes(self):
+        self.save = False
+        self.law = False
+        self.attachs = []
+        self.beep = MessageBeep
+        self.coords = 0, 0
+        self.screen = QtWidgets.QDesktopWidget().screenGeometry(-1)
+        self.corn_status = 0
+        x = self.screen.width() - self.width() / 2
+        y = self.screen.height() / 2 - self.height() / 2
+        self.move(x, y)
+        self.popup_status = -1
 
     def start_validator(self):
         apps = self.localRestored['completedApps']
@@ -91,27 +103,54 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         QMessageBox.aboutQt(self, 'Лицензия')
 
     def eventFilter(self, obj, event):
-        if event.type() == 76:
-            self.popup_show()
-            return True
+
+        
+        if not event.type() == 13:
+            if not event.type() == 129:
+                if not event.type() == 12:
+                    if not event.type() == 77:
+                        print(event.type())
 
         if event.type() == 99:
             self.popup_hide()
             return True
+
         elif event.type() == 3:
-            if not self.popup_status == 2:
+            if not self.popup_status:
                 self.popup_show()
+                return True
+            if self.popup_status == -1:
+                self.popup_status = 1
+                
+        elif event.type() == 10:
+            if not self.popup_status:
+                if not self.corn_status:
+                    self.popup_corner_show()
+                return True
+        elif event.type() == 11:
+            if not self.popup_status:
+                if self.corn_status:
+                    self.popup_corner_hide()
                 return True
 
         return False
 
-    def set_attributes(self):
-        self.save = False
-        self.law = False
-        self.attachs = []
-        self.beep = MessageBeep
-        self.coords = 0, 0
-        self.screen = QtWidgets.QDesktopWidget().screenGeometry(-1)
+    def popup_corner_show(self):
+        if not self.popup_status:
+            print('popup_corner_show')
+            pos_start = self.screen.width() - 10
+            pos_end = self.screen.width() - 26
+            self.win_move(pos_start, pos_end)
+            self.corn_status = 1
+
+    def popup_corner_hide(self):
+        if not self.popup_status:
+            if self.corn_status:
+                print('popup_corner_hide')
+                pos_start = pos_end = self.screen.width() - 26
+                pos_end = self.screen.width() - 10
+                self.win_move(pos_start, pos_end)
+                self.corn_status = 0
 
     def popup_show_full(self):
         print('popup_show_full')
@@ -128,36 +167,46 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def popup_show(self):
         print('popup_show')
-        height = self.screen.height() / 2 - self.height() / 2
-        width = self.screen.width() - self.width() / 2
-        self.move(width, height)
+        pos_start = pos_end = self.screen.width() - 26
+        pos_end = self.screen.width() - self.width() / 2
+        self.win_move(pos_start, pos_end, 1000)
         self.popup_status = 1
 
     def popup_hide(self):
         print('popup_hide')
         
+        # половина окна
         if self.popup_status == 1:
+            print(' --1/2')
             pos_start = self.screen.width() - self.width() / 2
             pos_end = self.screen.width() - 10
+        
+        # все окно
         elif self.popup_status == 2:
+            print(' --1')
             pos_start = self.screen.width() - self.width()
             pos_end = self.screen.width() - 10
+
+        # 
         else:
-            pos_start = self.screen.width() - 10
-            pos_end = self.screen.width() - self.width() / 2
+            print(' -- else', self.popup_status)
+            # pos_start = self.screen.width() - 10
+            # pos_end = self.screen.width() - self.width() / 2
+            return
 
-        self.win_move(pos_start, pos_end, 1000)
+        self.win_move(pos_start, pos_end, speed=1)
         self.popup_status = 0
+        self.corn_status = 0
 
-    def win_move(self, pos_start, pos_end, speed):
+    def win_move(self, pos_start, pos_end, speed=1):
         height = self.screen.height() / 2 - self.height() / 2
         pos_start, pos_end = math.ceil(pos_start), math.ceil(pos_end)
+
         if pos_start < pos_end:
-            i = 2
+            i = 2 if speed else 1
         else:
-            i = -2
+            i = -2 if speed else -1
         for coords in range(pos_start, pos_end, i):
-            f = math.fabs((math.sin(coords/ speed) - 1) / speed)
             self.move(coords, height)
         
     def init_tray(self):
@@ -573,6 +622,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __open_settings(self, data=False):
         """ Открывает окно редактирования настроек """
+        self.popup_hide()
         self.setDisabled(True)
         
         self.settingsform = GeneralTab(self.restoredData, self.localGeneral)
@@ -697,7 +747,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.setDisabled(False)
 
     def closeEvent(self, event):
-
+        
         if self.localRestored['general']['shared']:
             shared = self.localGeneral['shared']
             dbase.save(self.restoredData, shared)
@@ -705,8 +755,9 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         mainPath = self.localGeneral['mainPath']
         self.restoredData['general']['mainPath'] = mainPath
         dbase.save(self.restoredData)
+        
 
-        self.close()
+        sys.exit()
 
     def get_form(self):
         """ Возвращает заполненую форму. """
@@ -719,23 +770,21 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.__set_lastform_triggers()
 
     def start_processing(self):
-        # self.popup_hide()
+        self.popup_hide()
 
         data = self.form, self.restoredData,self.localRestored, Processing
         self.progress = Progress_Ui(data)
-
         self.progress.signal.connect(self.set_completted_apps)
-
         self.progress.show()
         self.clear_form()
+        self.attachs = []
         
 
 def show(restored, localGeneral):
     """ Возвращает заполненую форму. """
     app = QtWidgets.QApplication(sys.argv) 
     window = MainUi(restored, localGeneral)
-    # window = GeneralTab(restored)
     window.show()
-    app.exec_()
+    sys.exit(app.exec_())
     form = window.get_form()
     return form

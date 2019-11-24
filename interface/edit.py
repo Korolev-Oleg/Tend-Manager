@@ -31,7 +31,7 @@ class EditForm(Qtw.QMainWindow, editForm.Ui_editForm):
         self.pushButton.clicked.connect(self.__save)
 
         self.updateItems()
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.Tool)
 
     def _set_icons(self):
         def setup(icon, item, window=False):

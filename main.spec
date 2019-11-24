@@ -18,11 +18,15 @@ a = Analysis(['main.py'],
 
 a.datas += [
           ('add.ico','.\\interface\\icons\\add.ico','DATA'),
+          ('arrow-right.ico','.\\interface\\icons\\arrow-right.ico','DATA'),
           ('clear.ico','.\\interface\\icons\\clear.ico','DATA'),
+          ('display-none.ico','.\\interface\\icons\\display-none.ico','DATA'),
           ('docs.ico','.\\interface\\icons\\docs.ico','DATA'),
           ('info.ico','.\\interface\\icons\\info.ico','DATA'),
-          ('remove.ico','.\\interface\\icons\\remove.ico','DATA'),
           ('logo.ico','.\\interface\\icons\\logo.ico','DATA'),
+          ('new-item.ico','.\\interface\\icons\\new-item.ico','DATA'),
+          ('remove.ico','.\\interface\\icons\\remove.ico','DATA'),
+          ('settings.ico','.\\interface\\icons\\settings.ico','DATA'),
           ]          
 
 
