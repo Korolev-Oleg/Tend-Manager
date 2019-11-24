@@ -756,7 +756,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.restoredData['general']['mainPath'] = mainPath
         dbase.save(self.restoredData)
         
-
+        self.tray_icon.hide()
         sys.exit()
 
     def get_form(self):

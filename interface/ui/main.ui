@@ -611,8 +611,8 @@ color: rgb(41, 134, 255);</string>
     <property name="title">
      <string>Справка</string>
     </property>
-    <addaction name="actionAbout_2"/>
     <addaction name="actionLicense_2"/>
+    <addaction name="actionAbout_2"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>

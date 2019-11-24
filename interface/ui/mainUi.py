@@ -290,8 +290,8 @@ class Ui_Ui(object):
         self.menu.addAction(self.actionValidator)
         self.menu.addSeparator()
         self.menu.addAction(self.actionClose)
-        self.menu_2.addAction(self.actionAbout_2)
         self.menu_2.addAction(self.actionLicense_2)
+        self.menu_2.addAction(self.actionAbout_2)
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
 
