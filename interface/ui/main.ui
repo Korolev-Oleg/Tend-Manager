@@ -637,7 +637,7 @@ color: rgb(41, 134, 255);</string>
   </action>
   <action name="actionClose">
    <property name="text">
-    <string>Закрыть</string>
+    <string>Выход</string>
    </property>
   </action>
   <action name="actionLicense">

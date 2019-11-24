@@ -12,6 +12,7 @@ class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
         super().__init__()
         self.setupUi(self)
         self.status = 0
+        self.setWindowFlags(QtCore.Qt.Sheet)
 
         if not validator:
             form, restored, localRestored, Processing = data

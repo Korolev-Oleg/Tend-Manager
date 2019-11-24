@@ -325,7 +325,7 @@ class Ui_Ui(object):
         self.openSettings.setText(_translate("Ui", "Настройки"))
         self.actionAbout.setText(_translate("Ui", "О программе"))
         self.action0.setText(_translate("Ui", "0"))
-        self.actionClose.setText(_translate("Ui", "Закрыть"))
+        self.actionClose.setText(_translate("Ui", "Выход"))
         self.actionLicense.setText(_translate("Ui", "Лицензия"))
         self.actionValidator.setText(_translate("Ui", "Валидатор"))
         self.actionAbout_2.setText(_translate("Ui", "О программе"))

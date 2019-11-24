@@ -21,11 +21,12 @@ class GeneralTab(VariablesTab):
 
         self.checkBox_openfolder.clicked.connect(self.set_openfolder)
         self.checkBox_openpayment.clicked.connect(self.set_openpayment)
-        self.sharedCheckBox.clicked.connect(self.trigger_shared_checkbox)
+        self.sharedCheckBox.clicked.connect(self.trigger_shared_checkbox)       
         self.SharedButton.clicked.connect(self.set_shared_path)
         self.onTopCheckBox.clicked.connect(self.set_windows_ontop)
 
-        self.setWindowFlags(Qt.WindowStaysOnTopHint|Qt.Tool)
+        flags = Qt.WindowStaysOnTopHint|Qt.Sheet
+        self.setWindowFlags(flags)
 
     def set_windows_ontop(self):
         if self.onTopCheckBox.isChecked():

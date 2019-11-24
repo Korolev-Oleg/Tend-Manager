@@ -14,6 +14,7 @@ from main                   import form_init
 from processing.process     import Processing
 from interface.progress     import Progress_Ui
 from validator.validator    import Validator
+from interface              import animation
 
 
 class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
@@ -51,7 +52,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.currentIndexChanged.connect(self.__update_list)
         self._comboMethod.currentTextChanged.connect(self.__update_max_lenght)
         self._comboCat.currentTextChanged.connect(self.__update_max_lenght)
-        self.btn_open_documents.clicked.connect(self.popup_show_full)
+        self.btn_open_documents.clicked.connect(self.win_animate.popup_show_full)
         self.actionAbout_2.triggered.connect(self.about)
         self.actionLicense_2.triggered.connect(self.license)
         self.actionValidator.triggered.connect(self.start_validator)
@@ -68,11 +69,12 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.beep = MessageBeep
         self.coords = 0, 0
         self.screen = QtWidgets.QDesktopWidget().screenGeometry(-1)
-        self.corn_status = 0
+        
         x = self.screen.width() - self.width() / 2
         y = self.screen.height() / 2 - self.height() / 2
         self.move(x, y)
-        self.popup_status = -1
+
+        self.win_animate = animation.Window(self)
 
     def start_validator(self):
         apps = self.localRestored['completedApps']
@@ -86,7 +88,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         file, _ = file_open(self, "Проверить заявку", last_app_path, "Документ Word (*.docx)")
 
         if file:
-            self.popup_hide()
+            self.win_animate.popup_hide()
 
             data = file, Validator
             self.progress = Progress_Ui(data, validator=True)
@@ -112,102 +114,30 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                         print(event.type())
 
         if event.type() == 99:
-            self.popup_hide()
+            self.win_animate.popup_hide()
             return True
 
         elif event.type() == 3:
-            if not self.popup_status:
-                self.popup_show()
+            if not self.win_animate.popup_status:
+                self.win_animate.popup_show()
                 return True
-            if self.popup_status == -1:
-                self.popup_status = 1
+            if self.win_animate.popup_status == -1:
+                self.win_animate.popup_status = 1
                 
         elif event.type() == 10:
-            if not self.popup_status:
-                if not self.corn_status:
-                    self.popup_corner_show()
+            if not self.win_animate.popup_status:
+                if not self.win_animate.corn_status:
+                    self.win_animate.popup_corner_show()
                 return True
         elif event.type() == 11:
-            if not self.popup_status:
-                if self.corn_status:
-                    self.popup_corner_hide()
+            if not self.win_animate.popup_status:
+                if self.win_animate.corn_status:
+                    self.win_animate.popup_corner_hide()
                 return True
 
         return False
 
-    def popup_corner_show(self):
-        if not self.popup_status:
-            print('popup_corner_show')
-            pos_start = self.screen.width() - 10
-            pos_end = self.screen.width() - 26
-            self.win_move(pos_start, pos_end)
-            self.corn_status = 1
 
-    def popup_corner_hide(self):
-        if not self.popup_status:
-            if self.corn_status:
-                print('popup_corner_hide')
-                pos_start = pos_end = self.screen.width() - 26
-                pos_end = self.screen.width() - 10
-                self.win_move(pos_start, pos_end)
-                self.corn_status = 0
-
-    def popup_show_full(self):
-        print('popup_show_full')
-        if self.popup_status == 2:
-            height = self.screen.height() / 2 - self.height() / 2
-            width = self.screen.width() - self.width() / 2
-            self.move(width, height)
-            self.popup_status = 1
-        else:
-            height = self.screen.height() / 2 - self.height() / 2
-            width = self.screen.width() - self.width()
-            self.move(width, height)
-            self.popup_status = 2
-
-    def popup_show(self):
-        print('popup_show')
-        pos_start = pos_end = self.screen.width() - 26
-        pos_end = self.screen.width() - self.width() / 2
-        self.win_move(pos_start, pos_end, 1000)
-        self.popup_status = 1
-
-    def popup_hide(self):
-        print('popup_hide')
-        
-        # половина окна
-        if self.popup_status == 1:
-            print(' --1/2')
-            pos_start = self.screen.width() - self.width() / 2
-            pos_end = self.screen.width() - 10
-        
-        # все окно
-        elif self.popup_status == 2:
-            print(' --1')
-            pos_start = self.screen.width() - self.width()
-            pos_end = self.screen.width() - 10
-
-        # 
-        else:
-            print(' -- else', self.popup_status)
-            # pos_start = self.screen.width() - 10
-            # pos_end = self.screen.width() - self.width() / 2
-            return
-
-        self.win_move(pos_start, pos_end, speed=1)
-        self.popup_status = 0
-        self.corn_status = 0
-
-    def win_move(self, pos_start, pos_end, speed=1):
-        height = self.screen.height() / 2 - self.height() / 2
-        pos_start, pos_end = math.ceil(pos_start), math.ceil(pos_end)
-
-        if pos_start < pos_end:
-            i = 2 if speed else 1
-        else:
-            i = -2 if speed else -1
-        for coords in range(pos_start, pos_end, i):
-            self.move(coords, height)
         
     def init_tray(self):
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
@@ -215,9 +145,9 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tray_icon.setIcon(icon)
-        show_action = QtWidgets.QAction("Развернуть", self)
-        quit_action = QtWidgets.QAction("Закрыть", self)
-        hide_action = QtWidgets.QAction("Свернуть", self)
+        show_action = QtWidgets.QAction("Показать", self)
+        quit_action = QtWidgets.QAction("Выход", self)
+        hide_action = QtWidgets.QAction("Скрыть", self)
         show_action.triggered.connect(self.show)
         hide_action.triggered.connect(self.hide)
         quit_action.triggered.connect(QtWidgets.qApp.quit)
@@ -622,7 +552,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __open_settings(self, data=False):
         """ Открывает окно редактирования настроек """
-        self.popup_hide()
+        self.win_animate.popup_hide()
         self.setDisabled(True)
         
         self.settingsform = GeneralTab(self.restoredData, self.localGeneral)
@@ -747,6 +677,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.setDisabled(False)
 
     def closeEvent(self, event):
+        print('close event')
         
         if self.localRestored['general']['shared']:
             shared = self.localGeneral['shared']
@@ -770,7 +701,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.__set_lastform_triggers()
 
     def start_processing(self):
-        self.popup_hide()
+        self.win_animate.popup_hide()
 
         data = self.form, self.restoredData,self.localRestored, Processing
         self.progress = Progress_Ui(data)
@@ -778,7 +709,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.progress.show()
         self.clear_form()
         self.attachs = []
-        
+        print('done')
 
 def show(restored, localGeneral):
     """ Возвращает заполненую форму. """

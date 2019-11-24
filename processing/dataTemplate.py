@@ -141,7 +141,12 @@ def get(full=1, variables=False):
             'shared': False,
             'windowsOnTop': False
         },
-        'completedApps': []
+        'completedApps': [],
+        'validator': {
+            'symbols': [],
+            'forbidden': [],
+            'replaces': []
+        }
     }
     if variables:
         return template['variables']
