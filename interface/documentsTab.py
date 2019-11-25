@@ -5,7 +5,6 @@ from PyQt5.QtCore       import pyqtSignal
 from PyQt5.QtCore       import QCoreApplication
 from PyQt5.QtCore       import Qt
 from PyQt5              import QtGui
-
 from PyQt5.QtWidgets    import QMainWindow
 from PyQt5.QtWidgets    import QFileDialog
 from PyQt5.QtWidgets    import QTreeWidgetItem
@@ -43,9 +42,14 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self.btn_removeFromtree.clicked.connect(self.__remove_selected_item)
         self.btn_tendMethod.clicked.connect(self.__open_edit_form)
         self.btn_clear.clicked.connect(self.__clear_all)
+        self.treeDocuments.currentItemChanged.connect(self.test)
         self.combo_tendMethod.currentIndexChanged.connect                                                 (self.__event_handling)
 
         
+    def test(self):
+        self.index = self.treeDocuments.indexOfTopLevelItem                                     (self.treeDocuments.currentItem())
+        
+        print(self.index)
 
     def _set_icons(self):
         def setup(icon, item, window=False):
@@ -145,7 +149,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
 
     def __event_handling(self, delete=False):
         """ обрабатывает события radioBox и ComboBox. """
-        self.index = self.treeDocuments.indexOfTopLevelItem(self.treeDocuments.currentItem())
+        (self.treeDocuments.currentItem())
 
         self.choseAllCheckBox.setCheckState(Qt.Unchecked)
         law44 = self.radio_Law44.isChecked()
@@ -273,12 +277,12 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
                     index += 1
 
         index = self.index if self.index > 0 else 0
-        print(index)
+        print(self.index)
         item = self.treeDocuments.topLevelItem(index)
         self.treeDocuments.setCurrentItem(item)
 
         # активирует btn_clear() в зависимости от наличия элементов в дереве
-        if index:
+        if not self.index == -1:
             self.btn_clear.setEnabled(True)
             self.choseAllCheckBox.setEnabled(True)
         else:

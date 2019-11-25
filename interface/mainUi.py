@@ -5,16 +5,15 @@ from PyQt5.QtWidgets        import QMessageBox
 from win32con               import MB_OKCANCEL
 from win32api               import MessageBeep
 
-from interface.ui           import mainUi
-from interface.generalTab   import GeneralTab
-from processing             import dbase
 from interface.ui.RESOURSE  import resource_path
-
-from main                   import form_init
-from processing.process     import Processing
 from interface.progress     import Progress_Ui
-from validator.validator    import Validator
+from interface.generalTab   import GeneralTab
 from interface              import animation
+from interface.ui           import mainUi
+from processing.process     import Processing
+from processing             import dbase
+from validator.validator    import Validator
+from main                   import form_init
 
 
 class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
