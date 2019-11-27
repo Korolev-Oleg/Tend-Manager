@@ -42,7 +42,7 @@ class Processing(QtCore.QThread):
         ### make paths and pushing files
         dynamic_files = form['links']
         static_files = linking.make_static_srcs(documents, form)
-        dist = linking.make_dist(restored, form) # files dist
+        dist = linking.make_dist(self.localRestored, form) # files dist
 
         self.progress.emit(('Копирование документов', 30))
         links = linking.push_files(dist, static_files, dynamic_files, payment_path)
