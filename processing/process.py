@@ -36,7 +36,7 @@ class Processing(QtCore.QThread):
 
         ### Set data
         self.progress.emit(('Подготовка путей', 20))
-        general = restored['general']
+        general = self.localGeneral
         documents = restored['documentList']
         payment_path = general['paymentPath']
         ### make paths and pushing files
