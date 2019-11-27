@@ -31,7 +31,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
         self._up_combo_tnd_method()   # востановление параметров формы
         self._set_icons()
         self.beep = MessageBeep
-        self.index = 0
+        self.current_index = 0
 
         self.pushAllButton.clicked.connect(self.__push_general_items)
         self.treeDocuments.clicked.connect(self.__toggle_check)
@@ -47,10 +47,9 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
 
         
     def test(self):
-        self.index = self.treeDocuments.indexOfTopLevelItem                                     (self.treeDocuments.currentItem())
+        self.current_index = self.treeDocuments.indexOfTopLevelItem(
+            self.treeDocuments.currentItem())
         
-        print(self.index)
-
     def _set_icons(self):
         def setup(icon, item, window=False):
             path = resource_path(icon)
@@ -94,7 +93,6 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
     def __chose_all(self):
         """ Добавляет общий список документов. """
         checkBox = self.choseAllCheckBox
-        print(checkBox.checkState())
         check = Qt.Checked if checkBox.checkState() else Qt.Unchecked
 
         len_items = self.treeDocuments.topLevelItemCount()
@@ -239,7 +237,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
             except UnboundLocalError:
                 pass
         
-        self.index = self.treeDocuments.indexOfTopLevelItem                                     (self.treeDocuments.currentItem())
+        self.current_index = self.treeDocuments.indexOfTopLevelItem                                     (self.treeDocuments.currentItem())
 
         self.__update_tree_widget()
 
@@ -252,6 +250,7 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
 
     def __update_tree_widget(self):
         """ Заполняет threeWidget из {listDocuments}. """
+        last_index = self.current_index
         _translate = QCoreApplication.translate
         self.treeDocuments.clear()
         Qcore = Qt
@@ -276,13 +275,12 @@ class DocumentsTab(QMainWindow, settingsForm.Ui_settings):
 
                     index += 1
 
-        index = self.index if self.index > 0 else 0
-        print(self.index)
+        index = last_index if last_index > 0 else 0
         item = self.treeDocuments.topLevelItem(index)
         self.treeDocuments.setCurrentItem(item)
 
         # активирует btn_clear() в зависимости от наличия элементов в дереве
-        if not self.index == -1:
+        if not self.current_index == -1:
             self.btn_clear.setEnabled(True)
             self.choseAllCheckBox.setEnabled(True)
         else:
