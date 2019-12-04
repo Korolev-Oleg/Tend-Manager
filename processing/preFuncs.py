@@ -8,7 +8,8 @@ from processing.num2t4ru import num2text, decimal2text
 # from num2t4ru import num2text, decimal2text
 
 def getStrCash(cash):
-    if isinstance(cash, int):
+    cash = cash.replace(' ', '')
+    if isinstance(cash, str):
         declensions = [' рубль', ' рубля', ' рублей']
         if ',' in cash:
             prime_cash = int(cash.split(',')[0])
@@ -45,6 +46,8 @@ def getStrCash(cash):
         return result
     else:
         return cash
+
+print(getStrCash('274 644,48'))
 
 def getDate(full=0, day=0, mounth=0, year=0, monstr=0):
     date = time.gmtime()
