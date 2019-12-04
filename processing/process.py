@@ -79,7 +79,6 @@ class Processing(QtCore.QThread):
 
         print('add new completed')
         self.localRestored['completedApps'].append(complete_app)
-        self.restored['completedApps'].append(complete_app)
 
         # путь к заявке в буфер обмена
         if self.localGeneral['windowsOnTop']:
