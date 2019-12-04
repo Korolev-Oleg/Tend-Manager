@@ -110,7 +110,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             if not event.type() == 129:
                 if not event.type() == 12:
                     if not event.type() == 77:
-                        print(event.type())
+                        # print(event.type())
+                        pass
 
         if event.type() == 99:
             self.win_animate.popup_hide()
@@ -563,6 +564,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     def __set_lastform_triggers(self):
         """ Последние заполненные заявки. """
         apps = self.localRestored['completedApps']
+        print(len(apps))
         if len(apps) > 0:
             i = -1
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
@@ -644,9 +646,14 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 self.__update_list()
 
         def __get_old_form(path):
-            path = r'%s\data' % path
-            form = dbase.read(path)
-            setform(form)
+            try:
+                path = r'%s\data' % path
+                form = dbase.read(path)
+                setform(form)
+            except FileNotFoundError:
+                QtWidgets.QMessageBox.warning(
+                    self, 'Внимание', 'Заявка не существует'
+                )
 
     def clear_form(self):
         self._radio223.setChecked(False)
