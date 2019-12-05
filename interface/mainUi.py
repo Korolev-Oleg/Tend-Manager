@@ -714,6 +714,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.progress.signal.connect(self.set_completted_apps)
         self.progress.show()
         self.clear_form()
+        self._listDocuments.clear()
         self.attachs = []
         print('done')
 
