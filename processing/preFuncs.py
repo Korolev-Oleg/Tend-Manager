@@ -9,42 +9,45 @@ from processing.num2t4ru import num2text, decimal2text
 
 def getStrCash(cash):
     cash = cash.replace(' ', '')
-    if isinstance(cash, str):
-        declensions = [' рубль', ' рубля', ' рублей']
-        if ',' in cash:
-            prime_cash = int(cash.split(',')[0])
-            decim_cash = int(cash.split(',')[1])
+    try:
+        if isinstance(cash, str):
+            declensions = [' рубль', ' рубля', ' рублей']
+            if ',' in cash:
+                prime_cash = int(cash.split(',')[0])
+                decim_cash = int(cash.split(',')[1])
 
-            text_prime = num2text(
-                            prime_cash,
-                            main_units=((u'рубль', u'рубля', u'рублей'), 'm'))
-
-            for declen in declensions:
-                if declen in text_prime:
-                    text_prime = text_prime.replace(declen, '')
-                    ending = declen
-                    
-            text_decim = num2text(
-                            decim_cash,
-                            main_units=((u'копейка', u'копейки', u'копеек'), 'm'))
-
-            formated_prime = '{0:,}'.format(prime_cash).replace(',', ' ')
-
-            result = '%s (%s)%s %s %s' % (
-                                formated_prime, text_prime, ending, decim_cash, text_decim) 
-        else:
-            text_cash = num2text(
-                                int(cash),
+                text_prime = num2text(
+                                prime_cash,
                                 main_units=((u'рубль', u'рубля', u'рублей'), 'm'))
-            for declen in declensions:
-                if declen in text_cash:
-                    text_cash = text_cash.replace(declen, '')
-                    ending = declen
 
-            formated_cash = '{0:,}'.format(int(cash)).replace(',', ' ')
-            result = '%s (%s)%s' % (formated_cash, text_cash, ending)
-        return result
-    else:
+                for declen in declensions:
+                    if declen in text_prime:
+                        text_prime = text_prime.replace(declen, '')
+                        ending = declen
+                        
+                text_decim = num2text(
+                                decim_cash,
+                                main_units=((u'копейка', u'копейки', u'копеек'), 'm'))
+
+                formated_prime = '{0:,}'.format(prime_cash).replace(',', ' ')
+
+                result = '%s (%s)%s %s %s' % (
+                                    formated_prime, text_prime, ending, decim_cash, text_decim) 
+            else:
+                text_cash = num2text(
+                                    int(cash),
+                                    main_units=((u'рубль', u'рубля', u'рублей'), 'm'))
+                for declen in declensions:
+                    if declen in text_cash:
+                        text_cash = text_cash.replace(declen, '')
+                        ending = declen
+
+                formated_cash = '{0:,}'.format(int(cash)).replace(',', ' ')
+                result = '%s (%s)%s' % (formated_cash, text_cash, ending)
+            return result
+        else:
+            return cash
+    except ValueError:
         return cash
 
 print(getStrCash('274 644,48'))
