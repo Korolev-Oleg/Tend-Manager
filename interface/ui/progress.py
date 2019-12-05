@@ -34,5 +34,5 @@ class Ui_Progress_Form(object):
 
     def retranslateUi(self, Progress_Form):
         _translate = QtCore.QCoreApplication.translate
-        Progress_Form.setWindowTitle(_translate("Progress_Form", "MainWindow"))
+        Progress_Form.setWindowTitle(_translate("Progress_Form", "Загрузка"))
         self.label.setText(_translate("Progress_Form", "TextLabel"))
