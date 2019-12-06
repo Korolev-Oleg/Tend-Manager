@@ -1,20 +1,26 @@
-import os, sys, re, pickle, string, time, math
+import os
+import sys
+import re
+import pickle
+import string
+import time
+import math
+import shutil
 
-from PyQt5                  import (QtWidgets, QtCore, QtGui, Qt)
-from PyQt5.QtWidgets        import QMessageBox
-from win32con               import MB_OKCANCEL
-from win32api               import MessageBeep
+from PyQt5 import (QtWidgets, QtCore, QtGui, Qt)
+from PyQt5.QtWidgets import QMessageBox
+from win32con import MB_OKCANCEL
+from win32api import MessageBeep
 
 from interface.ui.RESOURSE  import resource_path
-from interface.progress     import Progress_Ui
-from interface.generalTab   import GeneralTab
-from interface              import animation
-from interface.ui           import mainUi
-from processing.process     import Processing
-from processing             import dbase
-from validator.validator    import Validator
-from main                   import form_init
-
+from interface.progress import Progress_Ui
+from interface.generalTab import GeneralTab
+from interface import animation
+from interface.ui import mainUi
+from processing.process import Processing
+from processing import dbase
+from validator.validator import Validator
+from main import form_init
 
 class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     """ Главное окно.
@@ -25,11 +31,19 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     """
     def __init__(self, restoredData, localRestored):
         super().__init__()
+
+        # window opts
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.installEventFilter(self)
         self.setupUi(self)
+
+        # restored
         self.restoredData = restoredData
         self.localGeneral = localRestored['general']
         self.localRestored = localRestored
+
+        # wtf
         self.set_attributes()
         self.__update_tend_method()
         self.__update_categories()
@@ -38,9 +52,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.__set_max_field_lenght()
         self._set_icons()
         self.init_tray()
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.installEventFilter(self)
 
+        # connects
         self.pushButton.clicked.connect(self.add_to_attach)
         self._radio44.clicked.connect(self.__event_handling)
         self._radio223.clicked.connect(self.__event_handling)
@@ -51,11 +64,13 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self._comboMethod.currentIndexChanged.connect(self.__update_list)
         self._comboMethod.currentTextChanged.connect(self.__update_max_lenght)
         self._comboCat.currentTextChanged.connect(self.__update_max_lenght)
-        self.btn_open_documents.clicked.connect(self.win_animate.popup_show_full)
+        self.btn_open_documents.clicked.connect(
+            self.win_animate.popup_show_full
+            )
+
         self.actionAbout_2.triggered.connect(self.about)
         self.actionLicense_2.triggered.connect(self.license)
         self.actionValidator.triggered.connect(self.start_validator)
-
         self.actionClose.triggered.connect(self.close)
 
         if self.localGeneral['windowsOnTop']:
@@ -71,8 +86,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         
         x = self.screen.width() - self.width() / 2
         y = self.screen.height() / 2 - self.height() / 2
-        self.move(x, y)
 
+        self.move(x, y)
         self.win_animate = animation.Window(self)
 
     def start_validator(self):
@@ -462,6 +477,29 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                     
                 general['cellBotDn'] = rowBot
 
+    def check_clone_app(self, form):
+        collected_path = os.path.join(
+            self.restoredData['general']['mainPath'],
+            form['method'], 
+            form['name'], 
+            form['category'], 
+            'Торг № %s' % form['regnumber']
+        )
+
+        isExist = os.path.exists(collected_path)
+        if isExist:
+            replace = QtWidgets.QMessageBox.question(
+                self,
+                'Внимание',
+                'Заявка\n%s\nУже существует\nЗаменить?' % form['name']
+            )
+            if replace == QtWidgets.QMessageBox.Yes:
+                shutil.rmtree(collected_path)
+                self.__clean_deleted_apps()
+                isExist = False
+
+        return isExist
+  
     def __generate_form(self):
         """ Создает объект с данными формы. """
         
@@ -523,7 +561,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             else:
                 #Все проверки пройдены
                 self.form = form
-                self.start_processing()
+                if not self.check_clone_app(form):
+                    self.start_processing()
                 
         except AttributeError:
             MessageBeep()
