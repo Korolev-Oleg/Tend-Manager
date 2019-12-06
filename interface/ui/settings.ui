@@ -51,7 +51,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -961,6 +961,63 @@
            </item>
           </layout>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_6">
+       <attribute name="title">
+        <string>Прочие</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <item>
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="title">
+           <string>Окно</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <item>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="checkBox">
+               <property name="text">
+                <string>Свободное перемещение</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QRadioButton" name="radioButton">
+               <property name="text">
+                <string>Закрепить справа</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="radioButton_2">
+               <property name="text">
+                <string>Закрепить слева</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
