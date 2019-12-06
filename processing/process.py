@@ -1,4 +1,4 @@
-import os, sys, pyperclip, win32api, win32con
+import os, sys, pyperclip, win32api, win32con, time
 
 from PyQt5                  import QtCore
 from PyQt5                  import QtWidgets
@@ -59,7 +59,11 @@ class Processing(QtCore.QThread):
         print('пути')
         project_path = dist[-2]
         data_path = os.path.join(project_path, 'data')
+        if os.path.exists(data_path):
+            os.remove(data_path)
+
         dbase.save(form, data_path)
+
         win32api.SetFileAttributes(data_path, win32con.FILE_ATTRIBUTE_HIDDEN)
         
         project_path = project_path.replace('/', '\\')
