@@ -15,10 +15,14 @@ def make_dist(restored, form):
     """
 
     general = restored['general']
-    collected_path = '/%s/%s/%s/Торг №%s'%\
-        (form['method'], form['name'], form['category'], form['regnumber'])
 
-    full_path = '{}{}'.format(general['mainPath'], collected_path)
+    full_path = os.path.join(
+        general['mainPath'],
+        form['method'], 
+        form['name'], 
+        form['category'], 
+        'Торг № %s' % form['regnumber']
+    )
 
     path_model = restored['pathModel']
     static_path = '%s/%s' % (full_path, path_model['staticPath'])
