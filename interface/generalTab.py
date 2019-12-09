@@ -215,5 +215,5 @@ class GeneralTab(VariablesTab):
         def wnd_change():
             pass
 
-        self.wnd_free_move.clicked.connect(wnd_change)
+        # self.wnd_free_move.clicked.connect(wnd_change)
         
