@@ -32,10 +32,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     def __init__(self, restoredData, localRestored):
         super().__init__()
 
-        # window opts
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.installEventFilter(self)
         self.setupUi(self)
 
         # restored
@@ -73,8 +69,11 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.actionValidator.triggered.connect(self.start_validator)
         self.actionClose.triggered.connect(self.close)
 
+        # window opts
         if self.localGeneral['windowsOnTop']:
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
+            self.setFocusPolicy(QtCore.Qt.StrongFocus)
+            self.installEventFilter(self)
 
     def set_attributes(self):
         self.save = False
