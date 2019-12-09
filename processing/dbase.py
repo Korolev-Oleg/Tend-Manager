@@ -1,5 +1,6 @@
 import pickle, os
 from processing import dataTemplate
+# import dataTemplate
 
 def data_init():
     new = dataTemplate.get()
@@ -47,10 +48,13 @@ def save(data, path=False):
 
 
 if __name__ == "__main__":
-    # m = read()
-    # print(m['general']['mainPath'])
+    data = read()
+    # data['general']['other']  = {
+    #     'wndPosition': 2,
+    #     'wndOnTop': False
+    # }
+    # print(data['general'])
     # # m.append(variables)
     # # m.remove({})
     # print(m)
-    # save(new)
-    print(os.listdir())
+    save(data)

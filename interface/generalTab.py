@@ -212,8 +212,30 @@ class GeneralTab(VariablesTab):
         update()
 
     def other_init(self):
-        def wnd_change():
-            pass
+        def section_wnd_change():
+            if self.wnd_free_move.isChecked():
+                self.wnd_fix_left.setEnabled(False)
+                self.wnd_fix_right.setEnabled(False)
+                self.localGeneral['other']['window'] = 0
+            else:
+                self.wnd_fix_left.setEnabled(True)
+                self.wnd_fix_right.setEnabled(True)
+                if self.wnd_fix_left.isChecked():
+                    self.localGeneral['other']['window'] = 1
+                else:
+                    self.localGeneral['other']['window'] = 2
+                    
+        def section_wnd_setup():
+            MODE = self.localGeneral['other']['window']
+            if MODE == 0:
+                self.wnd_fix_left.setEnabled(False)
+                self.wnd_fix_right.setEnabled(False)
+                self.wnd_free_move.setChecked(2)
+            elif MODE == 1:
+                self.wnd_fix_left.setChecked(2)
+            else:
+                self.wnd_fix_right.setChecked(2)
 
-        # self.wnd_free_move.clicked.connect(wnd_change)
+
+        self.wnd_free_move.clicked.connect(section_wnd_change)
         

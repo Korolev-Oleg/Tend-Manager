@@ -493,9 +493,17 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
                 'Заявка\n%s\nУже существует\nЗаменить?' % form['name']
             )
             if replace == QtWidgets.QMessageBox.Yes:
-                shutil.rmtree(collected_path)
-                self.__clean_deleted_apps()
-                isExist = False
+                try:
+                    shutil.rmtree(collected_path)
+                    self.__clean_deleted_apps()
+                    isExist = False
+                except OSError:
+                    QtWidgets.QMessageBox.warning(
+                        self,
+                        'Ошибка',
+                        'Закройте папку и повторите попытку!'
+                    )
+                    
 
         return isExist
   
@@ -685,13 +693,16 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
         def __get_old_form(path):
             try:
-                path = r'%s\data' % path
-                form = dbase.read(path)
+                os.system('explorer "%s"' % path)
+                data_path = r'%s\data' % path
+                form = dbase.read(data_path)
                 setform(form)
+
             except FileNotFoundError:
                 QtWidgets.QMessageBox.warning(
                     self, 'Внимание', 'Заявка не существует'
                 )
+
 
     def clear_form(self):
         self._radio223.setChecked(False)
@@ -719,6 +730,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.__update_categories()
             self.__update_tend_method()
             self.setDisabled(False)
+            dbase.save(self.localGeneral)
 
     def closeEvent(self, event):
         print('close event')

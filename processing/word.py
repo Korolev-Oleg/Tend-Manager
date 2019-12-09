@@ -7,7 +7,7 @@ def init(links, variables):
 
     for var in variables['default']:
         ex_variables.append(var)
-    
+
     for link in links:
         """ Для документов word 2013+ """
         if link.count('docx'):

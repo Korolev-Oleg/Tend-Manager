@@ -23,18 +23,24 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
 
     calc_rows = end_indx - (end_indx - count) + top_indx
     vrange = '%s%s:%s' % (top_char, calc_rows, end_cell)
-    wbook = Excel.Workbooks.Open(file)
-    if sheet:
-        ws = wbook.Sheets(sheet)
-    else:
-        ws = wbook.ActiveSheet
+    try:
+        wbook = Excel.Workbooks.Open(file)
+        if sheet:
+            ws = wbook.Sheets(sheet)
+        else:
+            ws = wbook.ActiveSheet
 
-    vrange = ws.Range(vrange)
-    vrange.EntireRow.Delete()
+        vrange = ws.Range(vrange)
+        vrange.EntireRow.Delete()
 
-    wbook.Save()
-    wbook.Close()
-    Excel.Quit()
+        wbook.Save()
+        wbook.Close()
+        Excel.Quit()
+    except AttributeError:
+        print(
+            '\n',
+            'AttributeError: <unknown>.Workbooks in [excel.py line 26]',
+            '\n')
 
 def find_replace(link, variables):
 

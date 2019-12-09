@@ -139,7 +139,11 @@ def get(full=1, variables=False):
             'openfolder': True,
             'openpayment': True,
             'shared': False,
-            'windowsOnTop': False
+            'windowsOnTop': False,
+            
+            'other': {
+                'window': 2 # 0 - free 1 - fix-left 2 - fix-right
+            },
         },
         'completedApps': [],
         'validator': {
@@ -147,6 +151,7 @@ def get(full=1, variables=False):
             'forbidden': [],
             'replaces': []
         }
+        
     }
     if variables:
         return template['variables']

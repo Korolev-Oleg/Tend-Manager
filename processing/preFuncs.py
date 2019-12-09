@@ -8,6 +8,7 @@ from processing.num2t4ru import num2text, decimal2text
 # from num2t4ru import num2text, decimal2text
 
 def getStrCash(cash):
+    '''cash - (str)'''
     cash = cash.replace(' ', '')
     try:
         if isinstance(cash, str):
@@ -49,6 +50,8 @@ def getStrCash(cash):
             return cash
     except ValueError:
         return cash
+
+print(getStrCash('21432432543'))
 
 def getDate(full=0, day=0, mounth=0, year=0, monstr=0):
     date = time.gmtime()
