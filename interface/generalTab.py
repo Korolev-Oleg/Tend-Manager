@@ -10,13 +10,19 @@ from processing             import dbase
 class GeneralTab(VariablesTab):
     params = pyqtSignal(object)
     def __init__(self, restoredData, localGeneral, setView=False):
-        VariablesTab.__init__(self, restoredData, setView)
+        VariablesTab.__init__(
+            self,
+            restoredData, 
+            setView
+        )
+
         self.setWindowModality(Qt.ApplicationModal)
         self.restoredData = restoredData
         self.lets = restoredData["variables"]['default']
         self.btn_save.clicked.connect(self._save)
         self.localGeneral = localGeneral
         self.generalInit() # __________вкладка основные__________
+        self.other_init() # __________вкладка Прочие__________
         self._update()
 
         self.checkBox_openfolder.clicked.connect(self.set_openfolder)
@@ -204,3 +210,10 @@ class GeneralTab(VariablesTab):
         self.btnPaymentpath.clicked.connect(chosePaymentpath)
         self._catComboBtn.clicked.connect(__openEditForm)
         update()
+
+    def other_init(self):
+        def wnd_change():
+            pass
+
+        self.wnd_free_move.clicked.connect(wnd_change)
+        
