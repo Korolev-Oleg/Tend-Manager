@@ -1,6 +1,24 @@
-import pickle, os
+import pickle
+import os
+
 from processing import dataTemplate
 # import dataTemplate
+lock_path = os.path.expanduser(r'~\Documents\TendManager\.lock')
+
+def lock():
+    isexist = os.path.exists(lock_path)
+    if not isexist:
+        with open(lock_path, 'w') as file:
+            file.write('manger-locked')
+            return True
+    else:
+        print(False)
+        return False
+
+def unlock():
+    isexist = os.path.exists(lock_path)
+    if isexist:
+        os.remove(lock_path)
 
 def data_init():
     new = dataTemplate.get()
@@ -11,7 +29,6 @@ def set_storage():
     if not os.path.exists(storage_path):
         os.makedirs(storage_path)
     return storage_path
-
 
 def read(path=False):
     if path:
@@ -48,11 +65,12 @@ def save(data, path=False):
 
 
 if __name__ == "__main__":
-    data = read()
-    # data['general']['other']  = {
-    #     'wndPosition': 2,
-    #     'wndOnTop': False
-    # }
+    data = read(r'\\192.168.200.1\Shared\ Тендерная_документация\storage.old')
+    # data = read()
+    data['general']['other']  = {
+        'wndPosition': 2,
+        'wndOnTop': False
+    }
     # print(data['general'])
     # # m.append(variables)
     # # m.remove({})
