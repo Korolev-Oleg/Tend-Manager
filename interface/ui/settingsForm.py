@@ -413,7 +413,7 @@ class Ui_settings(object):
         settings.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(settings)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         self.tabWidget_2.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(settings)
 
