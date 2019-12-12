@@ -42,6 +42,8 @@ class GeneralTab(VariablesTab):
 
 
     def set_shared_path(self):
+        """Установка пути общего доступа"""
+        
         path = QFileDialog.getExistingDirectory(self, "text")
         if path:
             storage = '%s/storage' % path
@@ -213,20 +215,29 @@ class GeneralTab(VariablesTab):
 
     def other_init(self):
         def section_wnd_change():
+
+            # chose windows position
             if self.wnd_free_move.isChecked():
                 self.wnd_fix_left.setEnabled(False)
                 self.wnd_fix_right.setEnabled(False)
-                self.localGeneral['other']['window'] = 0
+                self.localGeneral['other']['wndPosition'] = 0
             else:
                 self.wnd_fix_left.setEnabled(True)
                 self.wnd_fix_right.setEnabled(True)
                 if self.wnd_fix_left.isChecked():
-                    self.localGeneral['other']['window'] = 1
+                    self.localGeneral['other']['wndPosition'] = 1
                 else:
-                    self.localGeneral['other']['window'] = 2
+                    self.localGeneral['other']['wndPosition'] = 2
+
+            # set sindows on top flags 
+            if self.wnd_on_top.isChecked():
+                self.localGeneral['other']['wndOnTop'] = True
+            else:
+                self.localGeneral['other']['wndOnTop'] = False
+
                     
         def section_wnd_setup():
-            MODE = self.localGeneral['other']['window']
+            MODE = self.localGeneral['other']['wndPosition']
             if MODE == 0:
                 self.wnd_fix_left.setEnabled(False)
                 self.wnd_fix_right.setEnabled(False)
@@ -236,6 +247,16 @@ class GeneralTab(VariablesTab):
             else:
                 self.wnd_fix_right.setChecked(2)
 
+            FIX = self.localGeneral['other']['wndOnTop']
+            if FIX:
+                self.wnd_on_top.setChecked(2)
+            else:
+                self.wnd_on_top.setChecked(0)
 
+
+        section_wnd_setup()
+        self.wnd_fix_right.clicked.connect(section_wnd_change)
+        self.wnd_fix_left.clicked.connect(section_wnd_change)
+        self.wnd_on_top.clicked.connect(section_wnd_change)
         self.wnd_free_move.clicked.connect(section_wnd_change)
         
