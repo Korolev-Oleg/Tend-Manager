@@ -14,11 +14,14 @@ class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
         self.status = 0
         self.setWindowFlags(QtCore.Qt.Sheet)
 
+        # linking
         if not validator:
             form, restored, localRestored, Processing = data
             self.processing = Processing((form, restored, localRestored))
             self.processing.progress.connect(self.change_status)
             self.processing.start()
+
+        # validator
         else:
             file, Validator = data
             self.validator_ex = Validator(file)
