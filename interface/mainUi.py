@@ -787,7 +787,6 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
         self.clear_form()
         self._listDocuments.clear()
         self.attachs = []
-        print('done')
 
 def show(restored, localRestored):
     """ Возвращает заполненую форму. """
