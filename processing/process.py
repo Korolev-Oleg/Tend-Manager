@@ -19,12 +19,12 @@ class Processing(QtCore.QThread):
 
     def save(self):
         if self.localRestored['general']['shared']:
-            shared = self.localGeneral['shared']
-            dbase.save(self.restored, shared)
+            shared_paht = self.localGeneral['shared']
+            dbase.save(self.restored, shared_paht)
 
-        mainPath = self.localGeneral['mainPath']
-        self.restored['general']['mainPath'] = mainPath
-        dbase.save(self.restored)
+        main_path = self.localGeneral['mainPath']
+        self.restored['general']['mainPath'] = main_path
+        dbase.save(self.localRestored)
         
         
     def run(self):
@@ -34,22 +34,34 @@ class Processing(QtCore.QThread):
         self.progress.emit(('Подготовка переменных', 10))
         variables = preVars.init(restored['variables'], form)
 
-        ### Set data
+        # Set data
         self.progress.emit(('Подготовка путей', 20))
         general = self.localGeneral
         documents = restored['documentList']
         payment_path = general['paymentPath']
-        ### make paths and pushing files
+
+        # make paths and pushing files
         dynamic_files = form['links']
         static_files = linking.make_static_srcs(documents, form)
         dist = linking.make_dist(self.localRestored, form) # files dist
 
         self.progress.emit(('Копирование документов', 30))
-        links = linking.push_files(dist, static_files, dynamic_files, payment_path)
+        links = linking.push_files(
+            dist, 
+            static_files, 
+            dynamic_files, 
+            payment_path
+            )
 
         self.progress.emit(('Подготовка расчета', 40))
         payment = dist[-1]
-        excel.init(links, payment, variables, general, form)
+        excel.init(
+            links, 
+            payment, 
+            variables, 
+            general, 
+            form
+            )
 
         self.progress.emit(('Заполнение переменных', 90))
 
@@ -58,7 +70,9 @@ class Processing(QtCore.QThread):
         
         print('пути')
         project_path = dist[-2]
+
         data_path = os.path.join(project_path, 'data')
+        
         if os.path.exists(data_path):
             os.remove(data_path)
 
@@ -96,6 +110,12 @@ class Processing(QtCore.QThread):
 def start(self, form, restored, localGeneral):
     print('start progress')
     app_process = QtWidgets.QApplication(sys.argv)
-    window = Progress_Ui(form, restored, Processing, localGeneral)
+    window = Progress_Ui(
+        form, 
+        restored, 
+        Processing, 
+        localGeneral
+        )
+        
     window.show()
     app_process.exec_()
