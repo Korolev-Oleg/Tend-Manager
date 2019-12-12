@@ -18,8 +18,8 @@ class Processing(QtCore.QThread):
         self.restored = restored
 
     def save(self):
-        if self.localRestored['general']['shared']:
-            shared_paht = self.localGeneral['shared']
+        shared_paht = self.localRestored['general']['shared']
+        if shared_paht:
             dbase.save(self.restored, shared_paht)
 
         main_path = self.localGeneral['mainPath']
@@ -95,7 +95,7 @@ class Processing(QtCore.QThread):
             'path': project_path,
         }
 
-        print('add new completed')
+        print('add new completed', complete_app)
         self.localRestored['completedApps'].append(complete_app)
 
         # путь к заявке в буфер обмена
@@ -104,18 +104,18 @@ class Processing(QtCore.QThread):
             pyperclip.copy(path)
             pyperclip.paste()
 
-        self.progress.emit(('Готово!', self.restored['completedApps']))
+        self.progress.emit(('Готово!', self.localRestored['completedApps']))
         self.save()
 
 def start(self, form, restored, localGeneral):
     print('start progress')
     app_process = QtWidgets.QApplication(sys.argv)
-    window = Progress_Ui(
-        form, 
-        restored, 
-        Processing, 
-        localGeneral
-        )
+    # window = Progress_Ui(
+    #     form, 
+    #     restored, 
+    #     Processing, 
+    #     localGeneral
+    #     )
         
     window.show()
     app_process.exec_()
