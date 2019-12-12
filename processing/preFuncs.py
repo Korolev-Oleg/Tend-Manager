@@ -51,8 +51,6 @@ def getStrCash(cash):
     except ValueError:
         return cash
 
-print(getStrCash('21432432543'))
-
 def getDate(full=0, day=0, mounth=0, year=0, monstr=0):
     date = time.gmtime()
     if full:
