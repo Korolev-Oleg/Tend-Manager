@@ -37,5 +37,8 @@ def findReplace(obj, variables):
     for paragraph in obj.paragraphs:
         for var in variables:
             if paragraph.text.count(var['var']):
+
+                # if not var['value']:
+                #     var['value'] = 
                 
                 paragraph.text = paragraph.text.replace(var['var'], str(var['value']))
