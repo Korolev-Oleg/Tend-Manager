@@ -142,7 +142,8 @@ def get(full=1, variables=False):
             'windowsOnTop': False,
             
             'other': {
-                'window': 2 # 0 - free 1 - fix-left 2 - fix-right
+                'wndPosition': 1, # 0 - free 1 - fix-left 2 - fix-right
+                'wndOnTop': False
             },
         },
         'completedApps': [],
