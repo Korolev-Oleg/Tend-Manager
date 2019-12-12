@@ -5,6 +5,7 @@ if __name__ == '__main__':
 
     # чтение локальной базы
     localRestored = dbase.read()
+
     localGeneral = localRestored['general']
 
     if localGeneral['shared']:
