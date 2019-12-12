@@ -16,13 +16,13 @@ from interface.ui.RESOURSE  import resource_path
 from interface.progress import Progress_Ui
 from interface.generalTab import GeneralTab
 from interface import animation
-from interface.ui import mainUi
+from interface.ui import mainUi as UiRight
+from interface.ui import mainUiLeft as UiLeft
 from processing.process import Processing
 from processing import dbase
 from validator.validator import Validator
-from main import form_init
 
-class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
+class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
     """ Главное окно.
         
         Возвращает заполненую форму с выбранными ссылками на документы
@@ -32,18 +32,22 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     def __init__(self, restoredData, localRestored):
         super().__init__()
 
-        self.setupUi(self)
-
+        print(localRestored['completedApps'])
+        # self.setlock()
         # restored
         self.restoredData = restoredData
-        self.localGeneral = localRestored['general']
         self.localRestored = localRestored
+        self.localGeneral = localRestored['general']
+        self.WND_MODE = localRestored['general']['other']['wndPosition']
+
+        # window opts
+        self.set_self_flags()
 
         # wtf
         self.set_attributes()
         self.__update_tend_method()
         self.__update_categories()
-        self.__clean_deleted_apps()
+        self.__clean_deleted_apps() # отчистка удаленных заявок
         self.__set_lastform_triggers()
         self.__set_max_field_lenght()
         self._set_icons()
@@ -69,11 +73,35 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.actionValidator.triggered.connect(self.start_validator)
         self.actionClose.triggered.connect(self.close)
 
-        # window opts
-        if self.localGeneral['windowsOnTop']:
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.installEventFilter(self)
+
+    def setlock(self):
+        if not dbase.lock():
+            QtWidgets.QMessageBox.warning(
+                self,
+                'Ошибка',
+                'Программа уже запущена!'
+            )
+            sys.exit(0)
+
+
+    def set_self_flags(self):
+        
+        if self.WND_MODE == 0:
+            self.setupUi(self)
+
+        if self.WND_MODE == 1:
+            UiLeft.Ui_UiLeft.setupUi(self, self)
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
-            self.setFocusPolicy(QtCore.Qt.StrongFocus)
-            self.installEventFilter(self)
+
+
+        if self.WND_MODE == 2:
+            UiRight.Ui_Ui.setupUi(self, self)
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
+
+        self._comboMethod.setEnabled(True)
+
 
     def set_attributes(self):
         self.save = False
@@ -82,12 +110,8 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.beep = MessageBeep
         self.coords = 0, 0
         self.screen = QtWidgets.QDesktopWidget().screenGeometry(-1)
-        
-        x = self.screen.width() - self.width() / 2
-        y = self.screen.height() / 2 - self.height() / 2
 
-        self.move(x, y)
-        self.win_animate = animation.Window(self)
+        self.win_animate = animation.Window(self, self.WND_MODE)
 
     def start_validator(self):
         apps = self.localRestored['completedApps']
@@ -119,7 +143,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def eventFilter(self, obj, event):
 
-        
         if not event.type() == 13:
             if not event.type() == 129:
                 if not event.type() == 12:
@@ -151,8 +174,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
         return False
 
-
-        
     def init_tray(self):
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
         path = resource_path('logo.ico')
@@ -239,7 +260,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
     def __clean_deleted_apps(self):
         """ Отчистка удаленных заявок из списка выполненых. """
-        items = self.restoredData['completedApps']
+        items = self.localRestored['completedApps']
         for item in items:
             if not os.path.exists(item['path']):
                 items.remove(item)
@@ -610,7 +631,6 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     def __set_lastform_triggers(self):
         """ Последние заполненные заявки. """
         apps = self.localRestored['completedApps']
-        print(len(apps))
         if len(apps) > 0:
             i = -1
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
@@ -730,7 +750,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
             self.__update_categories()
             self.__update_tend_method()
             self.setDisabled(False)
-            dbase.save(self.localGeneral)
+            dbase.save(self.localRestored)
 
     def closeEvent(self, event):
         print('close event')
@@ -741,9 +761,10 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
 
         mainPath = self.localGeneral['mainPath']
         self.restoredData['general']['mainPath'] = mainPath
-        dbase.save(self.restoredData)
+        dbase.save(self.localRestored)
         
         self.tray_icon.hide()
+        dbase.unlock()
         sys.exit()
 
     def get_form(self):
@@ -759,7 +780,7 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
     def start_processing(self):
         self.win_animate.popup_hide()
 
-        data = self.form, self.restoredData,self.localRestored, Processing
+        data = self.form, self.restoredData, self.localRestored, Processing
         self.progress = Progress_Ui(data)
         self.progress.signal.connect(self.set_completted_apps)
         self.progress.show()
@@ -768,10 +789,10 @@ class MainUi(QtWidgets.QMainWindow, mainUi.Ui_Ui):
         self.attachs = []
         print('done')
 
-def show(restored, localGeneral):
+def show(restored, localRestored):
     """ Возвращает заполненую форму. """
     app = QtWidgets.QApplication(sys.argv) 
-    window = MainUi(restored, localGeneral)
+    window = MainUi(restored, localRestored)
     window.show()
     sys.exit(app.exec_())
     form = window.get_form()
