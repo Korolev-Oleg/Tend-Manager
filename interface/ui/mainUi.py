@@ -319,7 +319,7 @@ class Ui_Ui(object):
         self._btnGenerate.setText(_translate("Ui", "Создать"))
         self.label_6.setText(_translate("Ui", "Документация"))
         self._btnView.setText(_translate("Ui", "Обзор..."))
-        self.menu.setTitle(_translate("Ui", "     Опции"))
+        self.menu.setTitle(_translate("Ui", "     Опцииsss"))
         self.chose_lasts.setTitle(_translate("Ui", "Последние"))
         self.menu_2.setTitle(_translate("Ui", "Справка"))
         self.openSettings.setText(_translate("Ui", "Настройки"))

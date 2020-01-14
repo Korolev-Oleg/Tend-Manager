@@ -22,7 +22,7 @@ from processing.process import Processing
 from processing import dbase
 from validator.validator import Validator
 
-class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
+class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
     """ Главное окно.
         
         Возвращает заполненую форму с выбранными ссылками на документы
@@ -32,7 +32,6 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
     def __init__(self, restoredData, localRestored):
         super().__init__()
 
-        print(localRestored['completedApps'])
         # self.setlock()
         # restored
         self.restoredData = restoredData
@@ -75,6 +74,13 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
 
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.installEventFilter(self)
+        
+
+    def about(self):
+        text = '<b>Tend Manager</b><br><br>'
+        text += 'Версия: 1.0.9<br>'
+        text += '2019 - 2020©'
+        QMessageBox.about(self, 'О программе', text)
 
     def setlock(self):
         if not dbase.lock():
@@ -92,8 +98,9 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
             self.setupUi(self)
 
         if self.WND_MODE == 1:
-            UiLeft.Ui_UiLeft.setupUi(self, self)
+            UiLeft.Ui_Ui.setupUi(self, self)
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint|QtCore.Qt.Tool)
+            self.menu.setTitle('Опции   ')
 
 
         if self.WND_MODE == 2:
@@ -132,17 +139,12 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
 
             self.progress.show()
 
-    def about(self):
-        text = '<b>Tend Manager</b><br><br>'
-        text += 'Версия: 1.0.0<br>'
-        text += '2019 - 2020©'
-        QMessageBox.about(self, 'О программе', text)
 
     def license(self):
         QMessageBox.aboutQt(self, 'Лицензия')
 
     def eventFilter(self, obj, event):
-
+        self.menubar.setGeometry(QtCore.QRect(630, 0, 755, 21))
         if not event.type() == 13:
             if not event.type() == 129:
                 if not event.type() == 12:
@@ -216,6 +218,7 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
         self.__set_max_field_lenght(cur_cat=cur_cat, cur_meth=cur_meth)
 
     def __set_max_field_lenght(self, cur_cat=False, cur_meth=False):
+        """Устанавливает максимальную длину имени заявки"""
         
         if not cur_cat:
             categories = self.restoredData['categories']
@@ -247,8 +250,9 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
 
         pathToApps = self.localGeneral['mainPath']
         maxLenght = 218 - ( len(pathToApps) + len(categories) + len(methods) )
-        maxLenght -= 34
-
+        maxLenght -= 35
+        maxLenght = maxLenght / 2
+    
         self._lineName.setMaxLength(maxLenght)
 
     def add_to_attach(self):
@@ -713,15 +717,17 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
 
         def __get_old_form(path):
             try:
-                os.system('explorer "%s"' % path)
                 data_path = r'%s\data' % path
                 form = dbase.read(data_path)
                 setform(form)
+                os.system('explorer "%s"' % path)
 
             except FileNotFoundError:
                 QtWidgets.QMessageBox.warning(
                     self, 'Внимание', 'Заявка не существует'
                 )
+                self.__clean_deleted_apps()
+                self.__set_lastform_triggers()
 
 
     def clear_form(self):
@@ -739,6 +745,7 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_UiLeft):
         self._linePlace.setText('')
         self._linePeriod.setText('')
         self._linePositionCount.setText('')
+        self.__touggle_payment()
 
     def __settings_callback(self, data):
         """ Получает сигнал из настроек. """

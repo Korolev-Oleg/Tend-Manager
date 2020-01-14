@@ -1,6 +1,9 @@
 import re, pythoncom
 import win32com.client
+from win32api import MessageBox
 import openpyxl
+
+
 
 def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     """ Deletes cells from xlsx with OLE COM.
@@ -36,11 +39,8 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
         wbook.Save()
         wbook.Close()
         Excel.Quit()
-    except AttributeError:
-        print(
-            '\n',
-            'AttributeError: <unknown>.Workbooks in [excel.py line 26]',
-            '\n')
+    except Exception as error:
+        MessageBox(0, str(error))
 
 def find_replace(link, variables):
 
