@@ -4,7 +4,6 @@ from win32api import MessageBox
 import openpyxl
 
 
-
 def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     """ Deletes cells from xlsx with OLE COM.
             file -> str url; count -> int; top_cell -> str 'A2'; end_cell -> str 'P301'; sheet -> str
@@ -13,12 +12,14 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
 
     Excel = win32com.client.Dispatch("Excel.Application")
 
-    xl_id = pythoncom.CoMarshalInterThreadInterfaceInStream(pythoncom.IID_IDispatch, Excel)
-    
+    xl_id = pythoncom.CoMarshalInterThreadInterfaceInStream(
+        pythoncom.IID_IDispatch, Excel)
+
     Excel = win32com.client.Dispatch(
-            pythoncom.CoGetInterfaceAndReleaseStream(xl_id, pythoncom.IID_IDispatch)
+        pythoncom.CoGetInterfaceAndReleaseStream(xl_id,
+                                                 pythoncom.IID_IDispatch)
     )
- 
+
     print(top_cell)
     top_indx = int(re.search(r'[0-9]+', top_cell)[0])
     end_indx = int(re.search(r'[0-9]+', end_cell)[0])
@@ -42,8 +43,8 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     except Exception as error:
         MessageBox(0, str(error))
 
-def find_replace(link, variables):
 
+def find_replace(link, variables):
     if link.count('xlsx'):
         doc = openpyxl.open(link)
         try:
@@ -53,8 +54,8 @@ def find_replace(link, variables):
                         for var in variables:
                             if isinstance(cell.value, str):
                                 if cell.value.count(var['var']):
-                                    replace = cell.value.replace(var['var'], 
-                                                                var['value'])
+                                    replace = cell.value.replace(var['var'],
+                                                                 var['value'])
 
                                     cell.value = replace
         except TypeError:
@@ -63,9 +64,9 @@ def find_replace(link, variables):
     else:
         pass
 
+
 def init(links, payment_path, variables, general, form):
-    
-    # range delete from payment 
+    # range delete from payment
     if payment_path:
         payment_path = payment_path.replace('/', '\\')
         count = int(form['positionCount'])
@@ -73,8 +74,8 @@ def init(links, payment_path, variables, general, form):
         if not general['cellTopLeft']:
             input_payment_settings()
 
-        top_cell = 'A%s' % general['cellTopLeft'] # добавляется буква А
-        end_cell = 'A%s' % general['cellBotDn'] # добавляется буква А
+        top_cell = 'A%s' % general['cellTopLeft']  # добавляется буква А
+        end_cell = 'A%s' % general['cellBotDn']  # добавляется буква А
         sheet = general['sheetName']
         print("\n", payment_path, "\n")
         rangeDelete(payment_path, count, top_cell, end_cell, sheet)
@@ -88,8 +89,9 @@ def init(links, payment_path, variables, general, form):
 
     # replace variables
     for link in links:
-        if link.count('xls'):
+        if link.endswith('xlsx'):
             find_replace(link, ex_variables)
+
 
 def input_payment_settings():
     pass

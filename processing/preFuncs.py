@@ -104,6 +104,8 @@ def getPublishDate(reg_num):
                 'http://zakupki.gov.ru/223/purchase/public/purchase/'
                 'info/common-info.html?regNumber=%s' % reg_num
         )
+        # TODO BEGIN DEBUG
+        # TODO END DEBUG
 
     html = requests.get(url, headers=headers, allow_redirects=True)
     regular = '%s%s' % (rgx_container, rgx_date)
@@ -114,12 +116,12 @@ def getPublishDate(reg_num):
         MessageBox(0, (
                 'Не удалось получить дату размещения закупки '
                 '\n№%s в ЕИС \nвнесите изменения вручную!' % reg_num
+            )
         )
-                   )
 
     else:
         # return date[0]
         return date
 
 
-print(getPublishDate("0348200078219000059"))
+print(getPublishDate("31908701919"))
