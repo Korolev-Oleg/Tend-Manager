@@ -35,7 +35,8 @@ def getStrCash(cash):
                 formatted_prime = '{0:,}'.format(prime_cash).replace(',', ' ')
 
                 result = '%s (%s)%s %s %s' % (
-                    formatted_prime, text_prime, ending, denim_cash, text_decim)
+                    formatted_prime, text_prime, ending, denim_cash,
+                    text_decim)
             else:
                 text_cash = num2text(
                     int(cash),
@@ -76,6 +77,7 @@ def getDate(full=0, day=0, mounth=0, year=0, monstr=0):
     return result
 
 
+# TODO Исправить ошибку получения реестрового номера
 def getPublishDate(reg_num):
     """
     Определяет дату регистрации закупки
@@ -90,22 +92,23 @@ def getPublishDate(reg_num):
         )
     }
 
-    rgx_container = r'\"cardMainInfo__content\">\s+'
-    rgx_date = r'\d\d\.\d\d.\d{4}'
-
     # set url
     if len(reg_num) > 18:
+        rgx_container = r'\"cardMainInfo__content\">\s+'
+        rgx_date = r'\d\d\.\d\d.\d{4}'
+
         url = (
                 'http://zakupki.gov.ru/epz/order/notice/ea44/view/'
                 'common-info.html?regNumber=%s' % reg_num
         )
     else:
+        rgx_container = r'Размещено '
+        rgx_date = r'\d\d\.\d\d.\d{4}'
+
         url = (
                 'http://zakupki.gov.ru/223/purchase/public/purchase/'
                 'info/common-info.html?regNumber=%s' % reg_num
         )
-        # TODO BEGIN DEBUG
-        # TODO END DEBUG
 
     html = requests.get(url, headers=headers, allow_redirects=True)
     regular = '%s%s' % (rgx_container, rgx_date)
@@ -116,12 +119,9 @@ def getPublishDate(reg_num):
         MessageBox(0, (
                 'Не удалось получить дату размещения закупки '
                 '\n№%s в ЕИС \nвнесите изменения вручную!' % reg_num
-            )
         )
+                   )
 
     else:
         # return date[0]
         return date
-
-
-print(getPublishDate("31908701919"))
