@@ -1,8 +1,7 @@
-from interface              import mainUi
-from processing             import dbase, process
+from interface import mainUi
+from processing import dbase
 
 if __name__ == '__main__':
-
     # чтение локальной базы
     localRestored = dbase.read()
 
