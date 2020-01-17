@@ -77,7 +77,6 @@ def getDate(full=0, day=0, mounth=0, year=0, monstr=0):
     return result
 
 
-# TODO Исправить ошибку получения реестрового номера
 def getPublishDate(reg_num):
     """
     Определяет дату регистрации закупки
