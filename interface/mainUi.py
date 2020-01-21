@@ -1,15 +1,10 @@
 import os
 import sys
 import re
-import pickle
-import string
-import time
-import math
 import shutil
 
 from PyQt5 import (QtWidgets, QtCore, QtGui, Qt)
 from PyQt5.QtWidgets import QMessageBox
-from win32con import MB_OKCANCEL
 from win32api import MessageBeep
 
 from interface.ui.RESOURSE import resource_path
@@ -24,12 +19,6 @@ from validator.validator import Validator
 
 
 class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
-    """ Главное окно.
-        
-        Возвращает заполненую форму с выбранными ссылками на документы
-        return:
-            form -> {} law, name, regnumber, category, method, object,calculation, appSecurity, contractSecurity, currentPrice, place, peiod, positionCount, links -> []
-    """
 
     def __init__(self, restoredData, localRestored):
         super().__init__()
@@ -99,12 +88,17 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
 
         if self.WND_MODE == 1:
             UiLeft.Ui_Ui.setupUi(self, self)
-            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.Tool)
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint |
+                                QtCore.Qt.FramelessWindowHint |
+                                QtCore.Qt.Tool)
+
             self.menu.setTitle('Опции   ')
 
         if self.WND_MODE == 2:
             UiRight.Ui_Ui.setupUi(self, self)
-            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.Tool)
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint |
+                                QtCore.Qt.FramelessWindowHint |
+                                QtCore.Qt.Tool)
 
         self._comboMethod.setEnabled(True)
 
@@ -127,7 +121,12 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
 
         file_open = QtWidgets.QFileDialog.getOpenFileName
 
-        file, _ = file_open(self, "Проверить заявку", last_app_path, "Документ Word (*.docx)")
+        file, _ = file_open(
+            self,
+            "Проверить заявку",
+            last_app_path,
+            "Документ Word (*.docx)"
+        )
 
         if file:
             self.win_animate.popup_hide()
@@ -177,7 +176,11 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
         path = resource_path('logo.ico')
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(path), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(path),
+                       QtGui.QIcon.Normal,
+                       QtGui.QIcon.Off
+                       )
+
         self.tray_icon.setIcon(icon)
         show_action = QtWidgets.QAction("Показать", self)
         quit_action = QtWidgets.QAction("Выход", self)
@@ -196,7 +199,8 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         def setup(icon, item, window=False):
             path = resource_path(icon)
             icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(path), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            icon.addPixmap(QtGui.QPixmap(path), QtGui.QIcon.Normal,
+                           QtGui.QIcon.Off)
 
             if window:
                 item.setWindowIcon(icon)
@@ -213,7 +217,12 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         self.__set_max_field_lenght(cur_cat=cur_cat, cur_meth=cur_meth)
 
     def __set_max_field_lenght(self, cur_cat=False, cur_meth=False):
-        """Устанавливает максимальную длину имени заявки"""
+        """
+        Устанавливает максимальную длину имени заявки
+        :param cur_cat: текст текущей категории
+        :param cur_meth: текст текущего способа закупки
+        :return:
+        """
 
         if not cur_cat:
             categories = self.restoredData['categories']
@@ -281,10 +290,12 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 self.__set_general_path(general, text, 1)
 
     def __set_general_path(self, obj, text, flag=0):
-        """ Обновляет ссылку на дирректорию или файл расчета в restoredData.
-                obj -> {obj} link to file or path
-                text -> str message
-                flag -> str xlsx filter
+        """
+        Обновляет ссылку на дирректорию или файл расчета в restoredData.
+        :param obj: {} link to file or path
+        :param text: str message
+        :param flag: str xlsx filter
+        :return:
         """
 
         path = ''
@@ -297,7 +308,11 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         getExistDir = QtWidgets.QFileDialog.getExistingDirectory
         if flag:
             while not path:
-                path = fileOpen(self, text, '', r"Документы (*.xlsx; *.xls)")
+                path = fileOpen(self,
+                                text,
+                                '',
+                                r"Документы (*.xlsx; *.xls)"
+                                )
 
             obj['paymentPath'] = path[0]
         else:
@@ -341,8 +356,10 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         self._comboCat.setCurrentIndex(-1)
 
     def __open_documentstab(self):
-        """ Открывает страницу настроек списка документов для текущей заявки. """
-
+        """
+        Открывает страницу настроек списка документов для текущей заявки.
+        :return:
+        """
         self.__open_settings([self.law, self._comboMethod.currentText()])
 
     def __list_handler(self, signal):
@@ -393,7 +410,8 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 if doc['law'] == self.law and doc['method'] == self.methodName:
 
                     if not doc['checked']:
-                        check = QtCore.Qt.Checked if doc['often'] >= 2 else QtCore.Qt.Unchecked
+                        check = QtCore.Qt.Checked if \
+                            doc['often'] >= 2 else QtCore.Qt.Unchecked
 
                         _item = QtWidgets.QListWidgetItem()
                         _item.setCheckState(check)
@@ -478,7 +496,8 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 rowTop = ''
                 while not rowTop:
                     title = ''
-                    rowTop, ok = QtWidgets.QInputDialog.getText(self, title, text)
+                    rowTop, ok = QtWidgets.QInputDialog.getText(self, title,
+                                                                text)
                     ok
                     if check_row(rowTop):
                         rowTop = ''
@@ -489,13 +508,19 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 rowBot = ''
                 while not rowBot:
                     title = ''
-                    rowBot, ok = QtWidgets.QInputDialog.getText(self, title, text)
+                    rowBot, ok = QtWidgets.QInputDialog.getText(self, title,
+                                                                text)
                     if check_row(rowBot):
                         rowBot = ''
 
                 general['cellBotDn'] = rowBot
 
     def check_clone_app(self, form):
+        """
+        Проверяет наличие текущей заявки в системе
+        :param form:
+        :return:
+        """
         collected_path = os.path.join(
             self.restoredData['general']['mainPath'],
             form['method'],
@@ -626,63 +651,130 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
             self.settingsform.displayDesired(data)
 
     def __set_lastform_triggers(self):
-        """ Последние заполненные заявки. """
+        """
+        Выпадающее меню 'Последние заявки'
+        :return:
+        """
         apps = self.localRestored['completedApps']
         if len(apps) > 0:
             i = -1
-            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            name = '%s (%s)' % (
+                apps[i]['name'],
+                apps[i]['category']
+            )
+
             try:
                 self.action1.setText(name)
-                self.action1.triggered.connect(lambda: __get_old_form(apps[-1]['path']))
+                self.action1.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-1]['path']
+                    )
+                )
             except AttributeError:
                 self.action1 = QtWidgets.QAction(self)
                 self.action1.setText(name)
                 self.chose_lasts.addAction(self.action1)
-                self.action1.triggered.connect(lambda: __get_old_form(apps[-1]['path']))
+
+                self.action1.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-1]['path']
+                    )
+                )
         if len(apps) > 1:
             i = -2
-            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            name = '%s (%s)' % (
+                apps[i]['name'],
+                apps[i]['category']
+            )
+
             try:
                 self.action2.setText(name)
-                self.action2.triggered.connect(lambda: __get_old_form(apps[-2]['path']))
+
+                self.action2.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-2]['path']
+                    )
+                )
             except AttributeError:
                 self.action2 = QtWidgets.QAction(self)
                 self.action2.setText(name)
                 self.chose_lasts.addAction(self.action2)
-                self.action2.triggered.connect(lambda: __get_old_form(apps[-2]['path']))
+
+                self.action2.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-2]['path'])
+                )
         if len(apps) > 2:
             i = -3
             name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
             try:
                 self.action3.setText(name)
-                self.action3.triggered.connect(lambda: __get_old_form(apps[-3]['path']))
+
+                self.action3.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-3]['path']
+                    )
+                )
             except AttributeError:
                 self.action3 = QtWidgets.QAction(self)
                 self.action3.setText(name)
                 self.chose_lasts.addAction(self.action3)
-                self.action3.triggered.connect(lambda: __get_old_form(apps[-3]['path']))
+
+                self.action3.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-3]['path']
+                    )
+                )
         if len(apps) > 3:
             i = -4
-            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            name = '%s (%s)' % (
+                apps[i]['name'],
+                apps[i]['category']
+            )
+
             try:
                 self.action4.setText(name)
-                self.action4.triggered.connect(lambda: __get_old_form(apps[-4]['path']))
+
+                self.action4.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-4]['path']
+                    )
+                )
             except AttributeError:
                 self.action4 = QtWidgets.QAction(self)
                 self.action4.setText(name)
                 self.chose_lasts.addAction(self.action4)
-                self.action4.triggered.connect(lambda: __get_old_form(apps[-4]['path']))
+
+                self.action4.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-4]['path']
+                    )
+                )
         if len(apps) > 4:
             i = -5
-            name = '%s (%s)' % (apps[i]['name'], apps[i]['category'])
+            name = '%s (%s)' % (
+                apps[i]['name'],
+                apps[i]['category']
+            )
+
             try:
                 self.action5.setText(name)
-                self.action5.triggered.connect(lambda: __get_old_form(apps[-5]['path']))
+
+                self.action5.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-5]['path']
+                    )
+                )
             except AttributeError:
                 self.action5 = QtWidgets.QAction(self)
                 self.action5.setText(name)
                 self.chose_lasts.addAction(self.action5)
-                self.action5.triggered.connect(lambda: __get_old_form(apps[-5]['path']))
+
+                self.action5.triggered.connect(
+                    lambda: __get_old_form(
+                        apps[-5]['path']
+                    )
+                )
 
         def setform(form):
             if form['law'] == '44':
@@ -719,6 +811,7 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 QtWidgets.QMessageBox.warning(
                     self, 'Внимание', 'Заявка не существует'
                 )
+
                 self.__clean_deleted_apps()
                 self.__set_lastform_triggers()
 

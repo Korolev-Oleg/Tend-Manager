@@ -6,7 +6,11 @@ import openpyxl
 
 def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     """ Deletes cells from xlsx with OLE COM.
-            file -> str url; count -> int; top_cell -> str 'A2'; end_cell -> str 'P301'; sheet -> str
+    :param file: str url
+    :param count: int
+    :param top_cell: str - example 'A2'
+    :param end_cell: str - example 'P301'
+    :param sheet: str
     """
     pythoncom.CoInitialize()
 
@@ -21,11 +25,11 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
     )
 
     print(top_cell)
-    top_indx = int(re.search(r'[0-9]+', top_cell)[0])
-    end_indx = int(re.search(r'[0-9]+', end_cell)[0])
+    top_index = int(re.search(r'[0-9]+', top_cell)[0])
+    end_index = int(re.search(r'[0-9]+', end_cell)[0])
     top_char = re.search(r'[A-z]+', top_cell)[0]
 
-    calc_rows = end_indx - (end_indx - count) + top_indx
+    calc_rows = end_index - (end_index - count) + top_index
     vrange = '%s%s:%s' % (top_char, calc_rows, end_cell)
     try:
         wbook = Excel.Workbooks.Open(file)
@@ -44,6 +48,7 @@ def rangeDelete(file, count, top_cell, end_cell, sheet=False):
         MessageBox(0, str(error))
 
 
+# TODO Организовать сохранение ихображений
 def find_replace(link, variables):
     if link.count('xlsx'):
         doc = openpyxl.open(link)

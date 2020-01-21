@@ -1,5 +1,6 @@
 import docx, os
 
+
 def init(links, variables):
     ex_variables = []
     for var in variables['word']:
@@ -9,7 +10,7 @@ def init(links, variables):
         ex_variables.append(var)
 
     for link in links:
-        """ Для документов word 2013+ """
+        #  Для документов word 2013+
         if link.count('docx'):
             doc = docx.Document(link)
             findReplace(doc, ex_variables)
@@ -31,14 +32,13 @@ def init(links, variables):
             doc.save(link)
 
 
-
 def findReplace(obj, variables):
     """ Производит поиск и замену в документах."""
     for paragraph in obj.paragraphs:
         for var in variables:
             if paragraph.text.count(var['var']):
-
                 # if not var['value']:
                 #     var['value'] = 
-                
-                paragraph.text = paragraph.text.replace(var['var'], str(var['value']))
+
+                paragraph.text = paragraph.text.replace(var['var'],
+                                                        str(var['value']))
