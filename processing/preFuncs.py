@@ -74,6 +74,7 @@ def getDate(full=0, day=0, mounth=0, year=0, monstr=0):
                   'октября', 'ноября', 'декабря',
                   ]
         result = months[date[1]]
+
     return result
 
 
@@ -111,15 +112,18 @@ def getPublishDate(reg_num):
 
     html = requests.get(url, headers=headers, allow_redirects=True)
     regular = '%s%s' % (rgx_container, rgx_date)
-    date_from_html = re.search(regular, html.text)[0]
-    date = re.sub(rgx_container, '', date_from_html)
+
+    date_from_html = re.search(regular, html.text)
+    date = False
+    if date_from_html:
+        date = re.sub(rgx_container, '', date_from_html[0])
 
     if not date:
         MessageBox(0, (
                 'Не удалось получить дату размещения закупки '
                 '\n№%s в ЕИС \nвнесите изменения вручную!' % reg_num
+            )
         )
-                   )
 
     else:
         # return date[0]
