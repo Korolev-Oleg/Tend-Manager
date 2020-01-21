@@ -5,7 +5,9 @@ import shutil
 
 from PyQt5 import (QtWidgets, QtCore, QtGui, Qt)
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtCore import QCoreApplication
 from win32api import MessageBeep
+from pynput import keyboard
 
 from interface.ui.RESOURSE import resource_path
 from interface.progress import Progress_Ui
@@ -140,7 +142,10 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         QMessageBox.aboutQt(self, 'Лицензия')
 
     def eventFilter(self, obj, event):
-        self.menubar.setGeometry(QtCore.QRect(630, 0, 755, 21))
+
+        if self.WND_MODE == 1:
+            self.menubar.setGeometry(QtCore.QRect(630, 0, 755, 21))
+
         if not event.type() == 13:
             if not event.type() == 129:
                 if not event.type() == 12:
@@ -295,7 +300,7 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         :param obj: {} link to file or path
         :param text: str message
         :param flag: str xlsx filter
-        :return:
+        :return: None
         """
 
         path = ''
@@ -385,6 +390,7 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
             if self._comboMethod.currentText():
                 self._btnView.setEnabled(True)
                 self.pushButton.setEnabled(True)
+
             self._btnGenerate.setEnabled(True)
             self.__update_list()
 
@@ -442,9 +448,17 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
 
         MessageBeep()
         self.setDisabled(True)
+
         buttons = QMessageBox.Ok | QMessageBox.No
-        chose = QMessageBox.warning(self, "Файл ненайден", text, buttons)
+        chose = QMessageBox.warning(
+            self,
+            "Файл ненайден",
+            text,
+            buttons
+        )
+
         self.setDisabled(False)
+
         if chose == QMessageBox.Ok:
             # edit Path
             old_path = doc['dir']
@@ -485,7 +499,13 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 self.setDisabled(True)
 
                 text = 'Укажите числовой номер!'
-                QMessageBox.warning(self, 'Внимание!', text, QMessageBox.Ok)
+                QMessageBox.warning(
+                    self,
+                    'Внимание!',
+                    text,
+                    QMessageBox.Ok
+                )
+
                 self.setDisabled(False)
                 return True
 
@@ -496,11 +516,15 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 rowTop = ''
                 while not rowTop:
                     title = ''
-                    rowTop, ok = QtWidgets.QInputDialog.getText(self, title,
-                                                                text)
-                    ok
+                    rowTop, ok = QtWidgets.QInputDialog.getText(
+                        self,
+                        title,
+                        text
+                    )
+
                     if check_row(rowTop):
                         rowTop = ''
+
                 general['cellTopLeft'] = rowTop
 
             if not general['cellBotDn']:
@@ -508,8 +532,12 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 rowBot = ''
                 while not rowBot:
                     title = ''
-                    rowBot, ok = QtWidgets.QInputDialog.getText(self, title,
-                                                                text)
+                    rowBot, ok = QtWidgets.QInputDialog.getText(
+                        self,
+                        title,
+                        text
+                    )
+
                     if check_row(rowBot):
                         rowBot = ''
 
@@ -573,7 +601,11 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                             doc['often'] += 1
 
         def get_cash(line):
-            line = line.text().strip()
+            try:
+                line = line.text().strip()
+            except Exception as error:
+                line = line.currentText().strip()
+
             if '.' in line:
                 return line.replace('.', ',')
             else:
@@ -635,8 +667,9 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         for key in form:
             if form[key] == '':
                 return True
+
             if key == 'calculation':
-                if form[key] == False:
+                if not form[key]:
                     break
 
     def __open_settings(self, data=False):
@@ -644,9 +677,13 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         self.win_animate.popup_hide()
         self.setDisabled(True)
 
-        self.settingsform = GeneralTab(self.restoredData, self.localGeneral)
+        self.settingsform = GeneralTab(
+            self.restoredData, self.localGeneral
+        )
+
         self.settingsform.params.connect(self.__settings_callback)
         self.settingsform.show()
+
         if data:
             self.settingsform.displayDesired(data)
 
@@ -792,8 +829,8 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
             if form['calculation']:
                 self._checkBoxPayment.setChecked(True)
                 self.__touggle_payment()
-                self._lineAppSecurity.setText(form['appSecurity'])
-                self._lineContractSecurity.setText(form['contractSecurity'])
+                self._lineAppSecurity.setCurrentText(form['appSecurity'])
+                self._lineContractSecurity.setCurrentText(form['contractSecurity'])
                 self._lineCurrentPrice.setText(form['currentPrice'])
                 self._linePlace.setText(form['place'])
                 self._linePeriod.setText(form['peiod'])
@@ -824,9 +861,9 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         self.__update_tend_method()
         self._lineObject.setText('')
         self._checkBoxPayment.setChecked(False)
-        self._lineAppSecurity.setText('')
-        self._lineContractSecurity.setText('')
-        self._lineCurrentPrice.setText('')
+        self._lineAppSecurity.setCurrentText('')
+        self._lineContractSecurity.setCurrentText('')
+        self._lineCurrentPrice.setCurrentText('')
         self._linePlace.setText('')
         self._linePeriod.setText('')
         self._linePositionCount.setText('')
@@ -879,6 +916,21 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         self.clear_form()
         self._listDocuments.clear()
         self.attachs = []
+
+    def key_listener(self):
+        """
+        Назначает горячие клавиши
+        :return: None
+        """
+        def on_press(key):
+            print(self.win_animate.popup_status)
+            if key == keyboard.KeyCode(192):
+                print("UOOP")
+
+
+        with keyboard.Listener(
+                on_press=on_press) as listener:
+            listener.join()
 
 
 def show(restored, localRestored):

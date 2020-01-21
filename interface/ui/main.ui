@@ -284,10 +284,23 @@ color: rgb(41, 134, 255);</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_lineAppSecurity">
+              <widget class="QComboBox" name="_lineAppSecurity">
                <property name="enabled">
                 <bool>false</bool>
                </property>
+               <property name="editable">
+                <bool>true</bool>
+               </property>
+               <item>
+                <property name="text">
+                 <string/>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Не требуется</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>
@@ -301,10 +314,23 @@ color: rgb(41, 134, 255);</string>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="_lineContractSecurity">
+              <widget class="QComboBox" name="_lineContractSecurity">
                <property name="enabled">
                 <bool>false</bool>
                </property>
+               <property name="editable">
+                <bool>true</bool>
+               </property>
+               <item>
+                <property name="text">
+                 <string/>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Не требуется</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>
