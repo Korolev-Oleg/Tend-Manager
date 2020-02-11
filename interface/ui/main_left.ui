@@ -397,6 +397,11 @@
                  <string>Не требуется</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>5%</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>
@@ -425,6 +430,11 @@
                <item>
                 <property name="text">
                  <string>Не требуется</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>5%</string>
                 </property>
                </item>
               </widget>

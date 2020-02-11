@@ -1,7 +1,7 @@
 import docx
 from win32api import MessageBox
 
-from interface.ui.progress  import Ui_Progress_Form
+from interface.ui.UI_progress  import Ui_Progress_Form
 from PyQt5                  import QtWidgets
 from PyQt5                  import QtGui
 from PyQt5                  import QtCore

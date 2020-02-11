@@ -4,9 +4,9 @@ from PyQt5          import QtCore
 from PyQt5          import QtGui
 
 from interface.ui.RESOURSE  import resource_path
-from interface.ui   import editForm
+from interface.ui   import UI_formEdit
 
-class EditForm(Qtw.QMainWindow, editForm.Ui_editForm):
+class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
     """ Открывает диалоговое окно для заполнения tenderMethodsNames..
         
         Keyword arguments:

@@ -301,6 +301,11 @@ color: rgb(41, 134, 255);</string>
                  <string>Не требуется</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>5%</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>
@@ -329,6 +334,11 @@ color: rgb(41, 134, 255);</string>
                <item>
                 <property name="text">
                  <string>Не требуется</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>5%</string>
                 </property>
                </item>
               </widget>

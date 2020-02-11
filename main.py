@@ -1,4 +1,4 @@
-from interface import mainUi
+from interface import UX_main
 from processing import dbase
 
 if __name__ == '__main__':
@@ -11,6 +11,6 @@ if __name__ == '__main__':
         
         # расшареная база
         sharedRestored = dbase.read(localGeneral['shared'])
-        form = mainUi.show(sharedRestored, localRestored)
+        form = UX_main.show(sharedRestored, localRestored)
     else:
-        form = mainUi.show(localRestored, localRestored)
+        form = UX_main.show(localRestored, localRestored)

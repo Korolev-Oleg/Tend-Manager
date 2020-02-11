@@ -1,13 +1,15 @@
-from interface.ui.progress  import Ui_Progress_Form
-from PyQt5                  import QtWidgets
-from PyQt5                  import QtGui
-from PyQt5                  import QtCore
-from interface.ui.RESOURSE  import resource_path
+from interface.ui.UI_progress import Ui_Progress_Form
+from PyQt5 import QtWidgets
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from interface.ui.RESOURSE import resource_path
 
 import time
 
-class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
+
+class Progress(QtWidgets.QMainWindow, Ui_Progress_Form):
     signal = QtCore.pyqtSignal(object)
+
     def __init__(self, data, validator=False, parent=None):
         super().__init__()
         self.setupUi(self)
@@ -17,7 +19,10 @@ class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
         # linking
         if not validator:
             form, restored, localRestored, Processing = data
-            self.processing = Processing((form, restored, localRestored))
+            self.processing = Processing(
+                (form, restored, localRestored)
+            )
+
             self.processing.progress.connect(self.change_status)
             self.processing.start()
 
@@ -34,7 +39,9 @@ class Progress_Ui(QtWidgets.QMainWindow, Ui_Progress_Form):
         def setup(icon, item, window=False):
             path = resource_path(icon)
             icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            icon.addPixmap(QtGui.QPixmap(path),
+                           QtGui.QIcon.Normal,
+                           QtGui.QIcon.Off)
             if window:
                 item.setWindowIcon(icon)
             else:

@@ -1,5 +1,6 @@
 import math
 
+
 class Window():
     """ Smoth win mover.
         
@@ -7,6 +8,7 @@ class Window():
         mode -> 0, 1, 2  (none, left, right)
         
     """
+
     def __init__(self, window, mode):
         self.wnd = window
         self.corn_status = 0
@@ -24,7 +26,7 @@ class Window():
 
         y = self.wnd.screen.height() / 2 - self.wnd.height() / 2
         self.wnd.move(x, y)
-        
+
     def popup_corner_show(self):
         """ Show corner. """
         if not self.popup_status:
@@ -60,7 +62,7 @@ class Window():
 
                 else:
                     return
-                    
+
                 self.win_move(pos_start, pos_end)
                 self.corn_status = 0
 
@@ -74,7 +76,7 @@ class Window():
             # left
             elif self.MODE == 1:
                 width = 0
-            
+
             else:
                 return
 
@@ -85,7 +87,7 @@ class Window():
             # right
             if self.MODE == 2:
                 width = self.wnd.screen.width() - self.wnd.width()
-            
+
             # left
             elif self.MODE == 1:
                 width = 0
@@ -100,12 +102,12 @@ class Window():
         if self.MODE == 2:
             pos_start = self.wnd.screen.width() - 26
             pos_end = self.wnd.screen.width() - self.wnd.width() / 2
-        
+
         # left
         elif self.MODE == 1:
             pos_start = -self.wnd.width() + 26
             pos_end = -self.wnd.width() + self.wnd.width() / 2
-        
+
         else:
             return
 
@@ -127,14 +129,14 @@ class Window():
                 pos_end = -self.wnd.width() + 10
             else:
                 return
-        
+
         # все окно
         elif self.popup_status == 2:
             # right
             if self.MODE == 2:
                 pos_start = self.wnd.screen.width() - self.wnd.width()
                 pos_end = self.wnd.screen.width() - 10
-            
+
             # left
             elif self.MODE == 1:
                 pos_start = -self.wnd.width() + self.wnd.width()
@@ -165,3 +167,32 @@ class Window():
             i = -2 if speed else -1
         for coords in range(pos_start, pos_end, i):
             self.wnd.move(coords, height)
+
+
+def stylesheet(object, property, values, delay):
+    """
+    Анимирование css свойств
+    :param object: css
+    :param property: css
+    :param values: [value, from, to]
+    :param delay: int
+    :return: None
+    """
+    from time import sleep
+
+    value = values[0]
+    v_from = values[1]
+    v_to = values[2]
+
+    for i in range(v_from, v_to):
+        style = '%s: %s%s' % (
+            property,
+            value,
+            i
+        )
+        object.setStyleSheet(style)
+        sleep(delay)
+
+    object.setStyleSheet(
+        style
+    )

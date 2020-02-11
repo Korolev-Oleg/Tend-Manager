@@ -2,7 +2,7 @@ import os, sys, pyperclip, win32api, win32con, time
 
 from PyQt5                  import QtCore
 from PyQt5                  import QtWidgets
-from interface.progress     import Progress_Ui
+from interface.progress     import Progress
 
 from processing             import dbase, linking, excel, preVars, word
 
