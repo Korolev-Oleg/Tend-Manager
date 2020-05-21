@@ -3,7 +3,7 @@ import sys
 import re
 import shutil
 
-from PyQt5 import (QtWidgets, QtCore, QtGui, Qt)
+from PyQt5 import (QtWidgets, QtCore, QtGui)
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QCoreApplication
 from win32api import MessageBeep
@@ -33,11 +33,8 @@ def get_cash(line):
 
 
 class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
-
     def __init__(self, restoredData, localRestored):
         super().__init__()
-
-        # self.setlock()
         # restored
         self.restoredData = restoredData
         self.localRestored = localRestored
@@ -46,8 +43,6 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
 
         # window opts
         self.set_self_flags()
-
-        # wtf
         self.set_attributes()
         self.__update_tend_method()
         self.__update_categories()
@@ -86,6 +81,7 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
 
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.installEventFilter(self)
+        self.frame.setMaximumWidth(370)
 
     def about(self):
         text = '<b>Tend Manager</b><br><br>'
@@ -103,10 +99,8 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
             sys.exit(0)
 
     def set_self_flags(self):
-
         if self.WND_MODE == 0:
             self.setupUi(self)
-
         if self.WND_MODE == 1:
             UiLeft.Ui_Ui.setupUi(self, self)
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint |
@@ -114,7 +108,6 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                                 QtCore.Qt.Tool)
 
             self.menu.setTitle('Опции   ')
-
         if self.WND_MODE == 2:
             UiRight.Ui_Ui.setupUi(self, self)
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint |
@@ -158,8 +151,6 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
                 if sec_contract == '5%':
                     self._lineContractSecurity.setCurrentText(price)
                     self.setStyleSheet()
-
-
         except Exception as error:
             print(error)
 
@@ -445,7 +436,6 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
 
     def __check_path(self, path):
         """ Проверяет наличие прикрепляемых файлов. """
-
         if os.path.exists(path):
             return (True)
         else:
@@ -453,7 +443,6 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
 
     def __update_list(self):
         """ Обновляет список прикрепляемых документов. """
-
         if self.law:
             _translate = QtCore.QCoreApplication.translate
             self.methodName = self._comboMethod.currentText()
@@ -462,8 +451,8 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
             QCoreApplication.processEvents()
             for doc in self.restoredData['documentList']:
                 if self.__check_path(doc["dir"]):  # Check file exist
-                    if doc['law'] == self.law and doc[
-                        'method'] == self.methodName:
+                    if doc['law'] == self.law and \
+                            doc['method'] == self.methodName:
                         if not doc['checked']:
                             check = QtCore.Qt.Checked if \
                                 doc['often'] >= 2 else QtCore.Qt.Unchecked
