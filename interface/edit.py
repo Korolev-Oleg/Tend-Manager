@@ -1,10 +1,12 @@
-from PyQt5          import QtWidgets as Qtw
-from PyQt5.QtCore   import pyqtSignal, Qt
-from PyQt5          import QtCore
-from PyQt5          import QtGui
+# coding=utf-8
+from PyQt5 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets as Qtw
+from PyQt5.QtCore import pyqtSignal, Qt
 
-from interface.ui.RESOURSE  import resource_path
-from interface.ui   import UI_formEdit
+from interface.ui import UI_formEdit
+from interface.ui.RESOURSE import resource_path
+
 
 class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
     """ Открывает диалоговое окно для заполнения tenderMethodsNames..
@@ -13,7 +15,8 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
             methodNames -> ссылка на список способов закупок
         
     """
-    params = pyqtSignal(object) # передача аргументов обратно в settings
+    params = pyqtSignal(object)  # передача аргументов обратно в settings
+
     def __init__(self, data, flag=False, title='Новый элемент'):
         super().__init__()
         self.setWindowModality(Qt.ApplicationModal)
@@ -31,13 +34,14 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
         self.pushButton.clicked.connect(self.__save)
 
         self.updateItems()
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.Sheet)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.Sheet)
 
     def _set_icons(self):
         def setup(icon, item, window=False):
             path = resource_path(icon)
             icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(path),                  QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            icon.addPixmap(QtGui.QPixmap(path), QtGui.QIcon.Normal,
+                           QtGui.QIcon.Off)
             if window:
                 item.setWindowIcon(icon)
             else:
@@ -46,7 +50,6 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
         setup('add.ico', self.btn_pushTotree)
         setup('remove.ico', self.btn_removeFromtree)
         setup('new-item.ico', self, 1)
-        
 
     def __save(self):
         """ отправляет сигнаал в DocumentsTab о сохранении. """
@@ -59,14 +62,14 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
         lists.clear()
         self.methodNames.sort()
         lists.addItems(self.methodNames)
-            
+
     def addItem(self):
         """ Добавляет новый item в список. """
         lists = self.listTenderMethods
         line = self.lineEdit
         text = line.text().strip()
 
-        search = lists.findItems( text, QtCore.Qt.MatchFixedString )
+        search = lists.findItems(text, QtCore.Qt.MatchFixedString)
 
         if not search:
             lists.addItem(text)
@@ -76,7 +79,7 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
         self.updateItems()
 
     def lineEvent(self):
-        """ Переключает видимость кнопок. """  
+        """ Переключает видимость кнопок. """
         text = self.lineEdit.text()
 
         if not text.strip() == "":
@@ -85,7 +88,7 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
             self.btn_pushTotree.setEnabled(False)
 
     def listEvent(self):
-        """ Включает кнопку удаления. """    
+        """ Включает кнопку удаления. """
         self.btn_removeFromtree.setEnabled(True)
 
     def delItem(self):
@@ -95,14 +98,14 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
         try:
             currentName = lists.currentItem().text()
 
-            lists.takeItem( lists.currentRow() )
+            lists.takeItem(lists.currentRow())
             if self.methodNames.count(currentName):
                 self.methodNames.remove(currentName)
         except AttributeError:
             pass
 
-    def keyPressEvent(self, event):            
-        key_enter = QtCore.Qt.Key_Enter -1
+    def keyPressEvent(self, event):
+        key_enter = QtCore.Qt.Key_Enter - 1
         if event.key() == key_enter:
             text = self.lineEdit.text()
             if not text.strip() == "":
@@ -124,7 +127,6 @@ class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):
             self.params.emit(1)
             self.hide()
             event.accept()
-        
 
     def closeEvent(self, event):
         self.params.emit(1)

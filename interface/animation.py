@@ -1,7 +1,7 @@
 import math
 
 
-class Window():
+class Window:
     """ Smoth win mover.
         
         window -> self:
