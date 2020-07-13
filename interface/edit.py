@@ -4,8 +4,8 @@ from PyQt5 import QtGui
 from PyQt5 import QtWidgets as Qtw
 from PyQt5.QtCore import pyqtSignal, Qt
 
-from interface.ui import UI_formEdit
-from interface.ui.RESOURSE import resource_path
+from interface.UI import UI_formEdit
+from interface.UI.RESOURSE import resource_path
 
 
 class EditForm(Qtw.QMainWindow, UI_formEdit.Ui_editForm):

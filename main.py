@@ -1,4 +1,4 @@
-from interface import UX_main
+from interface.UX import UX_main
 from processing import dbase
 
 if __name__ == '__main__':

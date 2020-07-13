@@ -1,7 +1,11 @@
 import pickle
 import os
 
-from processing import dataTemplate
+try:
+    from processing import dataTemplate
+except ModuleNotFoundError:
+    import dataTemplate
+
 # import dataTemplate
 lock_path = os.path.expanduser(r'~\Documents\TendManager\.lock')
 
@@ -65,14 +69,16 @@ def save(data, path=False):
 
 
 if __name__ == "__main__":
-    data = read(r'\\192.168.200.1\Shared\ Тендерная_документация\storage.old')
+    data = read()
+
+    print(data['completedApps'])
     # data = read()
-    data['general']['other']  = {
-        'wndPosition': 2,
-        'wndOnTop': False
-    }
+    # data['general']['other']  = {
+    #     'wndPosition': 2,
+    #     'wndOnTop': False
+    # }
     # print(data['general'])
     # # m.append(variables)
     # # m.remove({})
     # print(m)
-    save(data)
+    # save(data)

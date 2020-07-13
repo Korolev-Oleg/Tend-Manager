@@ -1,8 +1,8 @@
-from interface.ui.UI_progress import Ui_Progress_Form
+from interface.UI.UI_progress import Ui_Progress_Form
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5 import QtCore
-from interface.ui.RESOURSE import resource_path
+from interface.UI.RESOURSE import resource_path
 
 import time
 
