@@ -1,14 +1,18 @@
-import os, sys, pyperclip, win32api, win32con, time
+import os
+import pyperclip
+import sys
+import win32api
+import win32con
 
-from PyQt5                  import QtCore
-from PyQt5                  import QtWidgets
-from interface.progress     import Progress
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 
-from processing             import dbase, linking, excel, preVars, word
+from processing import dbase, linking, excel, preVars, word
 
 
 class Processing(QtCore.QThread):
     progress = QtCore.pyqtSignal(object)
+
     def __init__(self, data, parent=None):
         super(Processing, self).__init__(parent)
         form, restored, localRestored = data
@@ -25,8 +29,7 @@ class Processing(QtCore.QThread):
         main_path = self.localGeneral['mainPath']
         self.restored['general']['mainPath'] = main_path
         dbase.save(self.localRestored)
-        
-        
+
     def run(self):
         form = self.form
         restored = self.restored
@@ -43,43 +46,43 @@ class Processing(QtCore.QThread):
         # make paths and pushing files
         dynamic_files = form['links']
         static_files = linking.make_static_srcs(documents, form)
-        dist = linking.make_dist(self.localRestored, form) # files dist
+        dist = linking.make_dist(self.localRestored, form)  # files dist
 
         self.progress.emit(('Копирование документов', 30))
         links = linking.push_files(
-            dist, 
-            static_files, 
-            dynamic_files, 
+            dist,
+            static_files,
+            dynamic_files,
             payment_path
-            )
+        )
 
         self.progress.emit(('Подготовка расчета', 40))
         payment = dist[-1]
         excel.init(
-            links, 
-            payment, 
-            variables, 
-            general, 
+            links,
+            payment,
+            variables,
+            general,
             form
-            )
+        )
 
         self.progress.emit(('Заполнение переменных', 90))
 
         print("Заполнение переменных")
         word.init(links, variables)
-        
+
         print('пути')
         project_path = dist[-2]
 
         data_path = os.path.join(project_path, 'data')
-        
+
         if os.path.exists(data_path):
             os.remove(data_path)
 
         dbase.save(form, data_path)
 
         win32api.SetFileAttributes(data_path, win32con.FILE_ATTRIBUTE_HIDDEN)
-        
+
         project_path = project_path.replace('/', '\\')
         if general['openfolder']:
             os.system('explorer "%s"' % project_path)
@@ -107,15 +110,16 @@ class Processing(QtCore.QThread):
         self.progress.emit(('Готово!', self.localRestored['completedApps']))
         self.save()
 
+
 def start(self, form, restored, localGeneral):
     print('start progress')
     app_process = QtWidgets.QApplication(sys.argv)
     # window = Progress_Ui(
-    #     form, 
-    #     restored, 
-    #     Processing, 
+    #     form,
+    #     restored,
+    #     Processing,
     #     localGeneral
     #     )
-        
+
     window.show()
     app_process.exec_()

@@ -1,8 +1,8 @@
 import os
 import re
 import shutil
-import sys
 import subprocess
+import sys
 
 from PyQt5 import (QtWidgets, QtCore, QtGui)
 from PyQt5.QtCore import QCoreApplication
@@ -938,48 +938,54 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         self.localRestored['completedApps'] = apps
         self.__set_lastform_triggers()
 
-    def start_processing(self):
-        self.win_animate.popup_hide()
 
-        data = self.form, self.restoredData, self.localRestored, Processing
-        self.progress = Progress(data)
-        self.progress.signal.connect(self.set_completted_apps)
-        self.progress.show()
-        self.clear_form()
-        self._listDocuments.clear()
-        self.attachs = []
-
-    hot_key_counter = 0
 
     # TODO убрать хоткей "Для защиты диплома"
     def keyPressEvent(self, event):
+        def smooth_set_text(e, text):
+            import time
+            import random
+
+            for i, _ in enumerate(text):
+                e.setText(text[:i])
+                QCoreApplication.processEvents()
+                time.sleep(random.randint(4, 10) / 200)
+
+            print('Done')
+
         if event.key() == QtCore.Qt.Key_F12:
             print(self.hot_key_counter)
             if self.hot_key_counter == 0:
-                self._lineName.setText('Московски Университет им. С.Ю. Витте')
+                smooth_set_text(self._lineName, 'Общество с ограниченной ответственностью ПРОДЛОГИСТИКА ЮГ ')
                 self.hot_key_counter += 1
 
             elif self.hot_key_counter == 1:
-                self._lineRegNumber.setText('0373100028116000098')
+                smooth_set_text(self._lineRegNumber, '0373100028116000098 ')
                 self.hot_key_counter += 1
+
             elif self.hot_key_counter == 2:
-                self._lineObject.setText('ноутбуков для нужд М.У. им. С.Ю. Витте')
+                smooth_set_text(self._lineObject, 'ноутбуков для нужд М.У. им. С.Ю. Витте ')
                 self.hot_key_counter += 1
+
             elif self.hot_key_counter == 3:
-                self._lineCurrentPrice.setText('291760.23')
+                smooth_set_text(self._lineCurrentPrice, '291760.23 ')
                 self.hot_key_counter += 1
+
             elif self.hot_key_counter == 4:
-                self._linePlace.setText('2-й Кожуховский пр., 12, стр. 1, Москва')
+                smooth_set_text(self._linePlace, '2-й Кожуховский пр., 12, стр. 1, Москва ')
                 self.hot_key_counter += 1
+
             elif self.hot_key_counter == 5:
-                self._linePeriod.setText('с 01 сентября 2016 г. 31 декабря 2016')
+                smooth_set_text(self._linePeriod, 'с 01 сентября 2019 г. 31 декабря 2021 ')
                 self.hot_key_counter += 1
+
             elif self.hot_key_counter == 6:
-                self._linePositionCount.setText('25')
+                smooth_set_text(self._linePositionCount, '25 ')
                 self.hot_key_counter = 0
 
         if event.key() == QtCore.Qt.Key_F11:
             self.clear_form()
+            self.hot_key_counter = 0
             print('CLEARED!')
 
     def key_listener(self):
@@ -998,7 +1004,20 @@ class MainUi(QtWidgets.QMainWindow, UiRight.Ui_Ui, UiLeft.Ui_Ui):
         #         on_press=on_press) as listener:
         #     listener.join()
 
+    def start_processing(self):
+        self.win_animate.popup_hide()
 
+        data = self.form, self.restoredData, self.localRestored, Processing
+        self.progress = Progress(data)
+        self.progress.signal.connect(self.set_completted_apps)
+        self.progress.show()
+        self.clear_form()
+        self._listDocuments.clear()
+        self.attachs = []
+
+    hot_key_counter = 0
+
+    
 def show(restored, localRestored):
     """ Возвращает заполненую форму. """
     app = QtWidgets.QApplication(sys.argv)

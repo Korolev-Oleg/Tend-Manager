@@ -1,11 +1,11 @@
-import pyperclip, time
-
-from PyQt5.QtWidgets import QTreeWidgetItem
-from PyQt5.QtGui import QFont
-from PyQt5.QtGui import QBrush
-from PyQt5.QtGui import QColor
+import pyperclip
+import time
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QBrush
+from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QTreeWidgetItem
 
 from interface.UX.TabExcel import ExcelTab
 
